@@ -1,0 +1,29 @@
+def error = null
+currentBuild.result = "SUCCESS"
+
+def jenkins_dir = "/var/lib/jenkins/repos/esgf_jenkins"
+def prepare_vm = "${jenkins_dir}/scripts/prepare_vm.py"
+def esgf_url = "https://github.com/ESGF/esgf-installer.git"
+def vm_host = 'grim.llnl.gov'
+def vmx_file = '/var/lib/jenkins/vmware/esgf-lina/esgf-lina.vmx'
+def vm_snapshot = "SnapshotForJenkins1"
+def vm_node = 'esgf-dev1'
+
+try {
+    stage('prepare_vm') {
+      node('master') {
+        sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+      }
+    }
+    stage('esgf_bootstrap') {
+      node('esgf-dev1')	    {
+        sh "sudo git clone https://github.com/ESGF/esgf-installer.git"
+        sh "cd esgf-installer; sudo git checkout tags/v3.0.0-alpha-release -b 3.0_alpha"
+        sh "cd esgf-installer; sudo ./esg_bootstrap.sh"
+      } 
+    }
+} catch (caughtException) {
+    error = caughtException
+    currentBuild.result = "FAILURE"
+}
+
