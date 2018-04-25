@@ -26,13 +26,19 @@ try {
         sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
       }
     }
-    stage('esgf_bootstrap') {
+    stage('esg_bootstrap') {
       node('esgf-dev1')	{
         echo "xxx esgf_bootstrap xxx"
 	sh "mkdir -p ~/repos"
         sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull -u"
         sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d 'master' -v '2.6/7'"
+      } 
+    }
+    stage('esg_node') {
+      node('esgf-dev1')	{
+        echo "xxx esg_node xxx"
+        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_node.py -d 'master' -v '2.6/7'"
       } 
     }
     stage('stop_vm') {
