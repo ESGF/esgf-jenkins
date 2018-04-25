@@ -80,7 +80,7 @@ def do_yum_update(vm_node):
     if ret_code != SUCCESS:
         print("FAIL...{cmd}".format(cmd=cmd))
 
-    cmd = "ssh jenkins@{n} \"sudo yum update\"".format(n=vm_node)
+    cmd = "ssh jenkins@{n} \"sudo yum update -y\"".format(n=vm_node)
     run_cmd(cmd, True, False, True)
 
     return ret_code
