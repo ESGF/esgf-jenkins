@@ -38,7 +38,7 @@ try {
     stage('esg_node') {
       node('esgf-dev1')	{
         echo "xxx esg_node xxx"
-        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_node.py -d 'master' -v '2.6/7'"
+        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_node.py -d 'master' -v '2.6/7' -w ${workdir}"
       } 
     }
     stage('stop_vm') {

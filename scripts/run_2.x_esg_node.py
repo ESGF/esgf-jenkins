@@ -20,6 +20,7 @@ parser.add_argument("-w", "--workdir", help="work directory")
 args = parser.parse_args()
 dist = args.dist
 version = args.version
+workdir = args.workdir
 
 cmd = "hostname -s"
 status, cmd_output = run_cmd_capture_output(cmd, True, False, True)
