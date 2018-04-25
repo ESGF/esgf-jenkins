@@ -93,6 +93,16 @@ def get_vm_ready(vm_node):
 
     return ret_code
 
+def do_yum_update(vm_node):
+    cmd = "ssh jenkins@{n} \"sudo yum clean all\"".format(n=vm_node)
+    ret_code = run_cmd(cmd, True, False, True)
+    if ret_code != SUCCESS:
+        print("FAIL...{cmd}".format(cmd=cmd))
+
+    cmd = "ssh jenkins@{n} \"sudo yum update\"".format(n=vm_node)
+    run_cmd(cmd, True, False, True)
+
+    return ret_code
 
 # stop vm if running
 ret_code = stop_vm_if_running(vm_host, vmx)
@@ -109,5 +119,9 @@ if ret_code != SUCCESS:
     sys.exit(ret_code)
 
 ret_code = get_vm_ready(vm_node)
+if ret_code != SUCCESS:
+    sys.exit(ret_code)
+
+ret_code = do_yum_update(vm_node)
 sys.exit(ret_code)
 
