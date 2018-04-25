@@ -2,6 +2,8 @@ import sys
 import os
 import re
 
+from Util import *
+
 def check_num_of_vm_running(vm_host):
 
     # check if vm is running
