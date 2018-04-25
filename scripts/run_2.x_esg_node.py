@@ -37,13 +37,14 @@ if status != SUCCESS:
     sys.exit(status)
 
 
-cmd = "sudo script -c '/usr/local/bin/esg-autoinstall' {w}/installation.log".format(w=workdir)
-status = run_cmd(cmd, True, False)
+#cmd = "sudo script -c '/usr/local/bin/esg-autoinstall' {w}/installation.log".format(w=workdir)
+cmd = "sudo /usr/local/bin/esg-autoinstall"
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "grep 'Node installation is complete.' {w}/installation.log".format(w=workdir)
-status = run_cmd(cmd, True, False)
+status = run_cmd(cmd, True, False, True)
 
 sys.exit(status)
 
