@@ -14,7 +14,6 @@ parser.add_argument("-d", "--dist", required=True, choices=['master', 'devel'],
 parser.add_argument("-v", "--version", required=True,
                     help="distribution, 'devel' or 'master'")
 
-
 args = parser.parse_args()
 dist = args.dist
 version = args.version
@@ -29,19 +28,19 @@ else:
     url = "{b}/{v}/esgf-installer/esg-bootstrap".format(b=base_url,
                                                         v=version)
     
-cmd = "wget -O esg-bootstrap {u} --no-check-certificate".format(u=url)
+cmd = "sudo wget -O esg-bootstrap {u} --no-check-certificate".format(u=url)
 
 status = run_cmd(cmd, True, False, True, bin_dir)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "chmod 555 esg-bootstrap"
+cmd = "sudo chmod 555 esg-bootstrap"
 status = run_cmd(cmd, True, False, True, bin_dir)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "./esg-bootstrap"
+cmd = "sudo ./esg-bootstrap"
 status = run_cmd(cmd, True, False, True, bin_dir)
-if status != SUCCESS:
-    sys.exit(status)
+
+sys.exit(status)
 

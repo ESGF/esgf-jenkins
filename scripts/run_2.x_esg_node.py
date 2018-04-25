@@ -19,32 +19,6 @@ args = parser.parse_args()
 dist = args.dist
 version = args.version
 
-# get esg-bootstrap
-base_url = "http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist"
-bin_dir = "/usr/local/bin"
-if dist == 'devel':
-    url = "{b}/devel/{v}/esgf-installer/esg-bootstrap".format(b=base_url,
-                                                             v=version)
-else:
-    url = "{b}/{v}/esgf-installer/esg-bootstrap".format(b=base_url,
-                                                        v=version)
-    
-cmd = "sudo wget -O esg-bootstrap {u} --no-check-certificate".format(u=url)
-
-status = run_cmd(cmd, True, False, True, bin_dir)
-if status != SUCCESS:
-    sys.exit(status)
-
-cmd = "sudo chmod 555 esg-bootstrap"
-status = run_cmd(cmd, True, False, True, bin_dir)
-if status != SUCCESS:
-    sys.exit(status)
-
-cmd = "sudo ./esg-bootstrap"
-status = run_cmd(cmd, True, False, True, bin_dir)
-if status != SUCCESS:
-    sys.exit(status)
-
 cmd = "hostname -s"
 status, cmd_output = run_cmd_capture_output(cmd, True, False, True)
 if status != SUCCESS:
