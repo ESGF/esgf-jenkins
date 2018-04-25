@@ -6,6 +6,8 @@ this_dir = os.path.abspath(os.path.dirname(__file__))
 modules_dir = os.path.join(this_dir, '..', 'modules')
 sys.path.append(modules_dir)
 
+from Util import *
+
 parser = argparse.ArgumentParser(description="install esgf 2.x",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
