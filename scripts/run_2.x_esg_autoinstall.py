@@ -38,7 +38,7 @@ if status != SUCCESS:
 
 
 #cmd = "sudo script -c '/usr/local/bin/esg-autoinstall' {w}/installation.log".format(w=workdir)
-cmd = "sudo -E bash -c '/usr/local/bin/esg-autoinstall'"
+cmd = "sudo -- sh -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
