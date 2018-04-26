@@ -17,6 +17,7 @@ def url = "https://github.com/ESGF/esgf-jenkins"
 try {
     stage('git_clone_esgf_jenkins') {
       node('master') {
+        echo "xxx git_clone_esgf_jenkins xxx"
         sh "mkdir -p ${workdir}/repos"
         sh "cd ${workdir}/repos; git clone ${url}"
         sh "cd ${repo_dir}; git pull -u"
@@ -45,6 +46,7 @@ try {
     }
     stage('stop_vm') {
       node('master') {
+        echo "xxx stop_vm xxx"
         sh "python ${stop_vm} -H ${vm_host} -x ${vmx_file}"
       }
     }
