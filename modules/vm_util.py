@@ -7,7 +7,7 @@ from Util import *
 def check_num_of_vm_running(vm_host):
 
     # check if vm is running
-    cmd = "ssh jenkins@{h} \"vmrun list\"".format(h=vm_host)
+    cmd = "ssh -t jenkins@{h} \"vmrun list\"".format(h=vm_host)
     ret_code, output = run_cmd_capture_output(cmd, True, False, True)
 
     n_running_vm = 0
@@ -27,7 +27,7 @@ def stop_vm_if_running(vm_host, vmx):
 
     if n_running_vm == '1':
         print("vm is running... shutting it down")
-        cmd = "ssh jenkins@{h} \"vmrun stop {vmx}\"".format(h=vm_host,
+        cmd = "ssh -t jenkins@{h} \"vmrun stop {vmx}\"".format(h=vm_host,
                                                             vmx=vmx)
         ret_code = run_cmd(cmd, True, False, True)
         if ret_code != SUCCESS:
@@ -41,7 +41,7 @@ def stop_vm_if_running(vm_host, vmx):
 
 def revert_vm_to_snapshot(vm_host, vmx, vm_snapshot):
 
-    cmd = "ssh jenkins@{h} \"vmrun revertToSnapshot {vmx} {s}\"".format(h=vm_host,
+    cmd = "ssh -t jenkins@{h} \"vmrun revertToSnapshot {vmx} {s}\"".format(h=vm_host,
                                                                         vmx=vmx,
                                                                         s=vm_snapshot)
     ret_code = run_cmd(cmd, True, False, True)
@@ -52,7 +52,7 @@ def revert_vm_to_snapshot(vm_host, vmx, vm_snapshot):
     
 
 def start_vm(vm_host, vmx):
-    cmd = "ssh jenkins@{h} \"vmrun start {vmx} nogui\"".format(h=vm_host,
+    cmd = "ssh -t jenkins@{h} \"vmrun start {vmx} nogui\"".format(h=vm_host,
                                                                vmx=vmx)
     ret_code = run_cmd(cmd, True, False, True)
     if ret_code != SUCCESS:
@@ -64,23 +64,23 @@ def start_vm(vm_host, vmx):
     return(ret_code)
 
 def get_vm_ready(vm_node):
-    cmd = "ssh jenkins@{n} \"sudo ntpdate -u 0.centos.pool.ntp.org\"".format(n=vm_node)
+    cmd = "ssh -t jenkins@{n} \"sudo ntpdate -u 0.centos.pool.ntp.org\"".format(n=vm_node)
     ret_code = run_cmd(cmd, True, False, True)
     if ret_code != SUCCESS:
         print("FAIL...{cmd}".format(cmd=cmd))
 
-    cmd = "ssh jenkins@{n} \"date\"".format(n=vm_node)
+    cmd = "ssh -t jenkins@{n} \"date\"".format(n=vm_node)
     run_cmd(cmd, True, False, True)
 
     return ret_code
 
 def do_yum_update(vm_node):
-    cmd = "ssh jenkins@{n} \"sudo yum clean all\"".format(n=vm_node)
+    cmd = "ssh -t jenkins@{n} \"sudo yum clean all\"".format(n=vm_node)
     ret_code = run_cmd(cmd, True, False, True)
     if ret_code != SUCCESS:
         print("FAIL...{cmd}".format(cmd=cmd))
 
-    cmd = "ssh jenkins@{n} \"sudo yum update -y\"".format(n=vm_node)
+    cmd = "ssh -t jenkins@{n} \"sudo yum update -y\"".format(n=vm_node)
     run_cmd(cmd, True, False, True)
 
     return ret_code
