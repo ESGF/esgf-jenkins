@@ -29,13 +29,18 @@ if status != SUCCESS:
 
 this_host = cmd_output[0].rstrip()
 dest_file = "/usr/local/etc/esg-autoinstall.conf"
+
+cmd = "sudo mv {d} {d}.ORIG".format(d=dest_file)
+status = run_cmd(cmd, True, False, True)
+if status != SUCCESS:
+    sys.exit(status)
+
 cmd = "sudo cp {w}/repos/esgf-jenkins/configs/esg-autoinstall.conf.{h} {d}".format(w=workdir,
                                                                                    h=this_host,
                                                                                    d=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
-
 
 #cmd = "sudo script -c '/usr/local/bin/esg-autoinstall' {w}/installation.log".format(w=workdir)
 #cmd = "sudo -- sh -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
