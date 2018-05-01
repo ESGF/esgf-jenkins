@@ -52,7 +52,10 @@ if status != SUCCESS:
 ###cmd = "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall installation.log"
 
 #cmd = "sudo -- sh -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
-cmd = "bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
+#cmd = "bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
+
+os.environ["TERM"] = "vt100"
+cmd = "/usr/local/bin/esg-autoinstall"
 
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
