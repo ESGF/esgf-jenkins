@@ -57,7 +57,8 @@ if status != SUCCESS:
 os.environ["TERM"] = "vt100"
 cmd = "/usr/local/bin/esg-autoinstall"
 
-status = run_cmd(cmd, True, False, True)
+#status = run_cmd(cmd, True, False, True)
+status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
 
