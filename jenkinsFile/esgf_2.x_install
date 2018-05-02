@@ -30,19 +30,19 @@ try {
       }
     }
     stage('esg_bootstrap') {
-      node('esgf-dev1')	{
+      node('esgf-dev1') {
         echo "xxx esgf_bootstrap xxx"
 	sh "mkdir -p ~/repos"
         sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull -u"
         sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d 'master' -v '2.6/7'"
-      } 
+      }
     }
     stage('esg_autoinstall') {
-      node('esgf-dev1')	{
+      node('esgf-dev1') {
         echo "xxx esg_node xxx"
-        sh "${vm_python} ${run_esg_autoinstall_script} -d 'master' -v '2.6/7' -w ${vm_jenkins_home}"
-      } 
+        sh "sudo ${vm_python} ${run_esg_autoinstall_script} -d 'master' -v '2.6/7' -w ${vm_jenkins_home}"
+      }
     }
     stage('stop_vm') {
       node('master') {
@@ -54,3 +54,4 @@ try {
     error = caughtException
     currentBuild.result = "FAILURE"
 }
+

@@ -22,6 +22,8 @@ dist = args.dist
 version = args.version
 workdir = args.workdir
 
+sys.stdout.flush()
+
 cmd = "hostname -s"
 status, cmd_output = run_cmd_capture_output(cmd, True, False, True)
 if status != SUCCESS:
@@ -54,6 +56,7 @@ if status != SUCCESS:
 #cmd = "sudo -- sh -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
 #cmd = "bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
 
+sys.stdout.flush()
 os.environ["TERM"] = "vt100"
 cmd = "/usr/local/bin/esg-autoinstall"
 
@@ -62,6 +65,7 @@ status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
 
+sys.stdout.flush()
 cmd = "grep 'Node installation is complete.' {w}/installation.log".format(w=workdir)
 status = run_cmd(cmd, True, False, True)
 
