@@ -65,7 +65,8 @@ status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
 
-#sys.stdout.flush()
+print("xxx RETURNED from esg-autoinstall xxx")
+sys.stdout.flush()
 
 cmd = "grep 'Node installation is complete.' {w}/installation.log".format(w=workdir)
 status = run_cmd(cmd, True, True, True)
