@@ -103,7 +103,7 @@ if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} sudo cp /tmp/esgf-httpd.conf {dest_file}".format(n=vm_node,
-                                                                               dest_file=dest_file)
+                                                                dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
@@ -112,15 +112,14 @@ if status != SUCCESS:
 # reboot vm
 #
 print("REBOOTING...{n}".format(n=vm_node))
-set_term="export TERM=vt100"
-cmd = "ssh  {n} sudo bash -c \"${set_term}; reboot\"".format(n=vm_node)
+cmd = "ssh {n} sudo reboot".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 print("...wait for 15 seconds...")
 time.sleep(15)
-cmd = "ssh  {n} sudo bash -c \"${set_term}; /usr/local/bin/esg-node start\"".format(n=vm_node)
+cmd = "ssh {n} sudo /usr/local/bin/esg-node start".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
