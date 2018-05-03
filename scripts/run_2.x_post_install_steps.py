@@ -36,23 +36,23 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh -t {n} sudo bash -c 'cd /tmp; tar -xvf /tmp/keypair.tar'".format(n=vm_node)
+cmd = "ssh  {n} sudo bash -c 'cd /tmp; tar -xvf /tmp/keypair.tar'".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 # in case this is a rerun, and esgf-test-suite repo already exists
-cmd = "ssh -t {n} rm -rf {workdir}/esgf-test-suite".format(n=vm_node, workdir=workdir)
+cmd = "ssh  {n} rm -rf {workdir}/esgf-test-suite".format(n=vm_node, workdir=workdir)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh -t {n} git clone https://github.com/ESGF/esgf-test-suite".format(n=vm_node)
+cmd = "ssh  {n} git clone https://github.com/ESGF/esgf-test-suite".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh -t {n} sudo bash -c \"expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir,
+cmd = "ssh  {n} sudo bash -c \"expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir,
                                                                                                     n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
@@ -67,19 +67,19 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh -t {n} sudo bash -c \"cp /tmp/server.xml {dest_file}\"".format(n=vm_node,
+cmd = "ssh  {n} sudo bash -c \"cp /tmp/server.xml {dest_file}\"".format(n=vm_node,
                                                                           dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh -t {n} sudo bash -c \"chown tomcat {dest_file}\"".format(n=vm_node,
+cmd = "ssh  {n} sudo bash -c \"chown tomcat {dest_file}\"".format(n=vm_node,
                                                                     dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh -t {n} sudo bash -c \"chgrp tomcat {dest_file}\"".format(n=vm_node,
+cmd = "ssh  {n} sudo bash -c \"chgrp tomcat {dest_file}\"".format(n=vm_node,
                                                                     dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
@@ -94,7 +94,7 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh -t {n} sudo bash -c \"cp /tmp/esgf-httpd.conf {dest_file}\"".format(n=vm_node,
+cmd = "ssh  {n} sudo bash -c \"cp /tmp/esgf-httpd.conf {dest_file}\"".format(n=vm_node,
                                                                                dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
@@ -105,14 +105,14 @@ if status != SUCCESS:
 #
 print("REBOOTING...{n}".format(n=vm_node))
 
-cmd = "ssh -t {n} sudo bash -c \"${set_term}; reboot\"".format(n=vm_node)
+cmd = "ssh  {n} sudo bash -c \"${set_term}; reboot\"".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 print("...wait for 15 seconds...")
 time.sleep(15)
-cmd = "ssh -t {n} sudo bash -c \"${set_term}; /usr/local/bin/esg-node start\"".format(n=vm_node)
+cmd = "ssh  {n} sudo bash -c \"${set_term}; /usr/local/bin/esg-node start\"".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
