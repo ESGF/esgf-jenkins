@@ -39,8 +39,9 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh {n} git clone https://github.com/ESGF/esgf-test-suite".format(n=vm_node)
-status = run_cmd(cmd, True, False, True, workdir)
+cmd = "ssh {n} bash -c \"cd {w}; git clone https://github.com/ESGF/esgf-test-suite\n".format(w=workdir,
+                                                                                             n=vm_node)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
