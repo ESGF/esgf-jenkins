@@ -22,7 +22,6 @@ try {
     stage('git_clone_esgf_jenkins') {
       node('master') {
         echo "xxx git_clone_esgf_jenkins xxx"
-        sh "/bin/rm ${workdir}/repos/esgf-jenkins"
         sh "mkdir -p ${workdir}/repos"
         sh "cd ${workdir}/repos; git clone ${url}"
         sh "cd ${repo_dir}; git pull"
