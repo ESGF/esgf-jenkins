@@ -30,22 +30,22 @@ dir = args.dir
 #
 
 cmd = "scp {dir}/keypair.tar {n}:/tmp".format(dir=dir, n=vm_node)
-status = run_cmd(cmd, True, True, True)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} sudo tar -xvf keypair.tar".format(n=vm_node)
-status = run_cmd(cmd, True, True, True, "/tmp")
+status = run_cmd(cmd, True, False, True, "/tmp")
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} git clone https://github.com/ESGF/esgf-test-suite".format(n=vm_node)
-status = run_cmd(cmd, True, True, True, workdir)
+status = run_cmd(cmd, True, False, True, workdir)
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} sudo expect auto-keypair.exp".format(n=vm_node)
-status = run_cmd(cmd, True, True, True, "{w}/esgf-test-suite/scripts-llnl".format(w=workdir))
+status = run_cmd(cmd, True, False, True, "{w}/esgf-test-suite/scripts-llnl".format(w=workdir))
 if status != SUCCESS:
     sys.exit(status)
 
@@ -54,25 +54,25 @@ if status != SUCCESS:
 #
 dest_file = '/usr/local/tomcat/conf/server.xml'
 cmd = "scp {d}/server.xml {n}:/tmp".format(n=node, d=dir)
-status = run_cmd(cmd, True, True, True)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} sudo cp /tmp/server.xml {dest_file}".format(n=vm_node,
                                                            dest_file=dest_file)
-status = run_cmd(cmd, True, True, True)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} sudo chown tomcat {dest_file}".format(n=vm_node,
                                                      dest_file=dest_file)
-status = run_cmd(cmd, True, True, True)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} sudo chgrp tomcat {dest_file}".format(n=vm_node,
                                                      dest_file=dest_file)
-status = run_cmd(cmd, True, True, True)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
@@ -81,12 +81,12 @@ if status != SUCCESS:
 #
 dest_file = "/etc/httpd/conf/esgf-httpd.conf"
 cmd = "scp {d}/esgf-httpd.conf {n}:/tmp".format(n=node, d=dir)
-status = run_cmd(cmd, True, True, True)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
 cmd = "ssh {n} sudo cp /tmp/esgf-httpd.conf {dest_file}".format(n=vm_node,
                                                                 dest_file=dest_file)
-status = run_cmd(cmd, True, True, True)
+status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
