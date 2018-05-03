@@ -55,7 +55,7 @@ if status != SUCCESS:
 # update /usr/local/tomcat/conf/server.xml
 #
 dest_file = '/usr/local/tomcat/conf/server.xml'
-cmd = "scp {d}/server.xml {n}:/tmp".format(n=vm_node, d=dir)
+cmd = "scp {d}/tomcat.server.xml {n}:/tmp/server.xml".format(n=vm_node, d=dir)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
