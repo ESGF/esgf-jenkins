@@ -52,7 +52,7 @@ try {
     }
     stage('post_install') {
        node('master') {
-          sh "python ${repo_dir}/scripts/run_2.x_post_install_steps.py -n ${vm_node} -d ${conf_dir} -H {vm_jenkins_home}"
+          sh "python ${repo_dir}/scripts/run_2.x_post_install_steps.py -n ${vm_node} -d ${conf_dir} -H ${vm_jenkins_home}"
        }
     }
     stage('stop_vm') {

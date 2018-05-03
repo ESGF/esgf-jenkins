@@ -82,7 +82,7 @@ if status != SUCCESS:
 # updated /etc/httpd/conf/esgf-httpd.conf
 #
 dest_file = "/etc/httpd/conf/esgf-httpd.conf"
-cmd = "scp {d}/esgf-httpd.conf {n}:/tmp".format(n=node, d=dir)
+cmd = "scp {d}/esgf-httpd.conf {n}:/tmp".format(n=vm_node, d=dir)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
