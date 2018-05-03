@@ -19,8 +19,8 @@ args = parser.parse_args()
 vm_node = args.vm_node
 dir = args.dir
 workdir = args.vm_jenkins_home
-print("xxx workdir: ", workdir)
-print("xxx dir: ", dir)
+
+sys.stdout.flush()
 
 #
 # run this on master node as user 'jenkins'
@@ -96,6 +96,8 @@ if status != SUCCESS:
 #
 # reboot vm
 #
+print("REBOOTING...{n}".format(n=vm_node))
+
 cmd = "ssh {n} sudo reboot".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
@@ -103,7 +105,7 @@ if status != SUCCESS:
 
 print("...wait for 15 seconds...")
 time.sleep(15)
-cmd = "ssh {n} sudo esg-node start".format(n=vm_node)
+cmd = "ssh {n} sudo /usr/local/bin/esg-node start".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
