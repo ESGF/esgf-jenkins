@@ -120,7 +120,7 @@ if status != SUCCESS:
 print("...wait for 15 seconds...")
 time.sleep(15)
 #cmd = "ssh {n} sudo /usr/local/bin/esg-node start".format(n=vm_node)
-cmd = "ssh {n} sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node start'".format(n=vm_node)
+cmd = "ssh -t {n} sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node start'".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
