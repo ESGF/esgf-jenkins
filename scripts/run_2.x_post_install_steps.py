@@ -13,16 +13,17 @@ parser = argparse.ArgumentParser(description="install esgf 2.x",
 
 parser.add_argument("-n", "--vm_node", required=True, help="node to copy keypair from")
 parser.add_argument("-d", "--dir", required=True, help="directory on master where keypair and other files for vm node will be copied from")
+parser.add_argument("-H", "--vm_jenkins_home", required=True, help="vm user jenkins home directory")
 
 args = parser.parse_args()
 vm_node = args.vm_node
 dir = args.dir
-workdir = "/tmp"
+workdir = args.vm_jenkins_home
 print("xxx workdir: ", workdir)
 print("xxx dir: ", dir)
 
 #
-# run this on master node
+# run this on master node as user 'jenkins'
 #
 
 #
@@ -39,14 +40,14 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh {n} bash -c \"cd {w}; git clone https://github.com/ESGF/esgf-test-suite\"".format(w=workdir,
-                                                                                             n=vm_node)
+cmd = "ssh {n} git clone https://github.com/ESGF/esgf-test-suite".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh {n} sudo expect auto-keypair.exp".format(n=vm_node)
-status = run_cmd(cmd, True, False, True, "{w}/esgf-test-suite/scripts-llnl".format(w=workdir))
+cmd = "ssh {n} sudo expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp".format(w=workdir,
+                                                                                     n=vm_node)
+status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
