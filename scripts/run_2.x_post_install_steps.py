@@ -68,18 +68,18 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-#cmd = "scp {d}/tomcat.server.xml {n}:/tmp/server.xml".format(n=vm_node, d=dir)
-cmd = "scp {d}/tomcat.server.xml {n}:{dest_file}".format(d=dir, n=vm_node,
-                                                         dest_file=dest_file)
+cmd = "scp {d}/tomcat.server.xml {n}:/tmp/server.xml".format(n=vm_node, d=dir)
+#cmd = "scp {d}/tomcat.server.xml {n}:{dest_file}".format(d=dir, n=vm_node,
+#                                                         dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-#cmd = "ssh  {n} sudo bash  \"cp /tmp/server.xml {dest_file}\"".format(n=vm_node,
-#                                                                        dest_file=dest_file)
-#status = run_cmd(cmd, True, False, True)
-#if status != SUCCESS:
-#    sys.exit(status)
+cmd = "ssh {n} sudo cp /tmp/server.xml {dest_file}".format(n=vm_node,
+                                                           dest_file=dest_file)
+status = run_cmd(cmd, True, False, True)
+if status != SUCCESS:
+    sys.exit(status)
 
 cmd = "ssh {n} sudo chown tomcat {dest_file}".format(n=vm_node,
                                                      dest_file=dest_file)
