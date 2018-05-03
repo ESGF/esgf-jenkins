@@ -11,15 +11,15 @@ from Util import *
 parser = argparse.ArgumentParser(description="install esgf 2.x",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("-w", "--workdir", required=True, 
-                    help="work directory that this script can use as scratch area")
 parser.add_argument("-n", "--vm_node", required=True, help="node to copy keypair from")
 parser.add_argument("-d", "--dir", required=True, help="directory on master where keypair and other files for vm node will be copied from")
 
 args = parser.parse_args()
-workdir = args.workdir
 vm_node = args.vm_node
 dir = args.dir
+workdir = "/tmp"
+print("xxx workdir: ", workdir)
+print("xxx dir: ", dir)
 
 #
 # run this on master node
