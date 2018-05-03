@@ -26,8 +26,6 @@ sys.stdout.flush()
 # run this on master node as user 'jenkins'
 #
 
-def get_esgf_test_suite():
-
 
 #
 # install keypair
