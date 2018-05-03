@@ -62,8 +62,8 @@ if status != SUCCESS:
 # update /usr/local/tomcat/conf/server.xml
 #
 dest_file = '/usr/local/tomcat/conf/server.xml'
-cmd = "ssh {n} bash -c \"mv ${orig} ${orig}.ORIG\"".format(n=vm_node,
-                                                        orig=dest_file)
+cmd = "ssh {n} bash -c \"mv {orig} {orig}.ORIG\"".format(n=vm_node,
+                                                         orig=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
