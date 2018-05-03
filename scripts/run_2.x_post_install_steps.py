@@ -34,7 +34,7 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh {n} sudo bash -c 'cd /tmp; tar -xvf keypair.tar'".format(n=vm_node)
+cmd = "ssh {n} sudo bash -c 'cd /tmp; tar -xvf /tmp/keypair.tar'".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
