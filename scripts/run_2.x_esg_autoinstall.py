@@ -65,16 +65,12 @@ status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
 
-print("xxx RETURNED from esg-autoinstall xxx")
-sys.stdout.flush()
-
 cmd = "grep 'Node installation is complete.' {w}/installation.log".format(w=workdir)
 status = run_cmd(cmd, True, True, True)
 
 # touch a file
-#cmd = "touch {w}/esg-autoinstall.COMPLETE".format(w=workdir)
-#status1 = run_cmd(cmd, True, True, True)
-#sys.stdout.flush()
-print("xxx...exiting from run_2.x_esg_autoinstall.py...")
+cmd = "touch {w}/esg-autoinstall.COMPLETE".format(w=workdir)
+status1 = run_cmd(cmd, True, True, True)
+
 sys.exit(status)
 
