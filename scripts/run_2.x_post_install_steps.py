@@ -25,7 +25,7 @@ dir = args.dir
 # install keypair
 #
 
-cmd = "scp {n}:{dir}/keypair.tar /tmp".format(n=node, dir=dir)
+cmd = "scp jenkins@{n}:{dir}/keypair.tar /tmp".format(n=node, dir=dir)
 status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
@@ -49,7 +49,7 @@ if status != SUCCESS:
 # update /usr/local/tomcat/conf/server.xml
 #
 dest_file = '/usr/local/tomcat/conf/server.xml'
-cmd = "sudo scp {n}:{d}/server.xml {dest_file}".format(n=node, d=dir,
+cmd = "sudo scp jenkins@{n}:{d}/server.xml {dest_file}".format(n=node, d=dir,
                                                        dest_file=dest_file)
 status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
