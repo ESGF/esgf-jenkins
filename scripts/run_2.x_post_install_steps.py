@@ -62,8 +62,8 @@ if status != SUCCESS:
 # update /usr/local/tomcat/conf/server.xml
 #
 dest_file = '/usr/local/tomcat/conf/server.xml'
-cmd = "ssh {n} bash -c \"mv {orig} {orig}.ORIG\"".format(n=vm_node,
-                                                         orig=dest_file)
+cmd = "ssh {n} sudo mv {orig} {orig}.ORIG".format(n=vm_node,
+                                                  orig=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
@@ -81,14 +81,14 @@ if status != SUCCESS:
 #if status != SUCCESS:
 #    sys.exit(status)
 
-cmd = "ssh  {n} sudo bash -c \"chown tomcat {dest_file}\"".format(n=vm_node,
-                                                                    dest_file=dest_file)
+cmd = "ssh {n} sudo chown tomcat {dest_file}".format(n=vm_node,
+                                                     dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh  {n} sudo bash -c \"chgrp tomcat {dest_file}\"".format(n=vm_node,
-                                                                    dest_file=dest_file)
+cmd = "ssh {n} sudo chgrp tomcat {dest_file}".format(n=vm_node,
+                                                     dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
@@ -102,7 +102,7 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh  {n} sudo bash -c \"cp /tmp/esgf-httpd.conf {dest_file}\"".format(n=vm_node,
+cmd = "ssh {n} sudo cp /tmp/esgf-httpd.conf {dest_file}".format(n=vm_node,
                                                                                dest_file=dest_file)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
