@@ -36,14 +36,15 @@ try {
     stage('esg_bootstrap') {
       node('esgf-dev1') {
         echo "xxx esgf_bootstrap xxx"
-	//sh "mkdir -p ~/repos"
-        //sh "cd ~/repos; git clone ${url}"
-        //sh "cd ~/repos/esgf-jenkins; git pull -u"
+	sh "mkdir -p ~/repos"
+        sh "cd ~/repos; git clone ${url}"
+        sh "cd ~/repos/esgf-jenkins; git pull -u"
         //sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\""
       }
     }
     stage('esg_autoinstall') {
       node('esgf-dev1') {
+        echo "xxx esg_autoinstall xxx"
         //sh "sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
         //sh "sudo cp ${vm_jenkins_home}/repos/esgf-jenkins/configs/esg-autoinstall.conf.${vm_node} /usr/local/etc/esg-autoinstall.conf"
 	//sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
