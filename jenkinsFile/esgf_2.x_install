@@ -16,8 +16,8 @@ def vm_python = "${vm_jenkins_home}/miniconda2/bin/python"
 def url = "https://github.com/ESGF/esgf-jenkins"
 def release = "2.6/7"
 def branch = "master"
-def conf_node = 'aims1'
 def conf_dir = "/var/lib/jenkins/esgf"
+
 try {
     stage('git_clone_esgf_jenkins') {
       node('master') {
@@ -51,8 +51,8 @@ try {
       }
     }
     stage('post_install') {
-       node('esgf-dev1') {
-          sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -w ${vm_jenkins_home} -n ${conf_node} -d ${conf_dir}"
+       node('master') {
+          sh "python ${repo_dir}/scripts/run_2.x_post_install_steps.py -w ${vm_jenkins_home} -n ${vm_node} -d ${conf_dir}"
        }
     }
     stage('stop_vm') {

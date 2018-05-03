@@ -13,34 +13,38 @@ parser = argparse.ArgumentParser(description="install esgf 2.x",
 
 parser.add_argument("-w", "--workdir", required=True, 
                     help="work directory that this script can write to.")
-parser.add_argument("-n", "--node", required=True, help="node to copy keypair from")
-parser.add_argument("-d", "--dir", required=True, help="directory on node where keypair and other files for vm host will be copied from")
+parser.add_argument("-n", "--vm_node", required=True, help="node to copy keypair from")
+parser.add_argument("-d", "--dir", required=True, help="directory on master where keypair and other files for vm node will be copied from")
 
 args = parser.parse_args()
 workdir = args.workdir
-node = args.node
+vm_node = args.vm_node
 dir = args.dir
+
+#
+# run this on master node
+#
 
 #
 # install keypair
 #
 
-cmd = "scp jenkins@{n}:{dir}/keypair.tar /tmp".format(n=node, dir=dir)
+cmd = "scp {dir}/keypair.tar {n}:/tmp".format(dir=dir, n=vm_node)
 status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "tar -xvf keypair.tar"
+cmd = "ssh {n} sudo tar -xvf keypair.tar".format(n=vm_node)
 status = run_cmd(cmd, True, True, True, "/tmp")
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "git clone https://github.com/ESGF/esgf-test-suite"
+cmd = "ssh {n} git clone https://github.com/ESGF/esgf-test-suite".format(n=vm_node)
 status = run_cmd(cmd, True, True, True, workdir)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "sudo expect auto-keypair.exp"
+cmd = "ssh {n} sudo expect auto-keypair.exp".format(n=vm_node)
 status = run_cmd(cmd, True, True, True, "{w}/esgf-test-suite/scripts-llnl".format(w=workdir))
 if status != SUCCESS:
     sys.exit(status)
@@ -49,18 +53,25 @@ if status != SUCCESS:
 # update /usr/local/tomcat/conf/server.xml
 #
 dest_file = '/usr/local/tomcat/conf/server.xml'
-cmd = "sudo scp jenkins@{n}:{d}/server.xml {dest_file}".format(n=node, d=dir,
-                                                       dest_file=dest_file)
+cmd = "scp {d}/server.xml {n}:/tmp".format(n=node, d=dir)
 status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "sudo chown tomcat {dest_file}".format(dest_file=dest_file)
+cmd = "ssh {n} sudo cp /tmp/server.xml {dest_file}".format(n=vm_node,
+                                                           dest_file=dest_file)
 status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "sudo chgrp tomcat {dest_file}".format(dest_file=dest_file)
+cmd = "ssh {n} sudo chown tomcat {dest_file}".format(n=vm_node,
+                                                     dest_file=dest_file)
+status = run_cmd(cmd, True, True, True)
+if status != SUCCESS:
+    sys.exit(status)
+
+cmd = "ssh {n} sudo chgrp tomcat {dest_file}".format(n=vm_node,
+                                                     dest_file=dest_file)
 status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
@@ -69,9 +80,13 @@ if status != SUCCESS:
 # updated /etc/httpd/conf/esgf-httpd.conf
 #
 dest_file = "/etc/httpd/conf/esgf-httpd.conf"
-cmd = "sudo scp {n}:{d}/esgf-httpd.conf {dest_file}".format(n=node, d=dir,
-                                                            dest_file=dest_file)
+cmd = "scp {d}/esgf-httpd.conf {n}:/tmp".format(n=node, d=dir)
 status = run_cmd(cmd, True, True, True)
 if status != SUCCESS:
     sys.exit(status)
+
+cmd = "ssh {n} sudo cp /tmp/esgf-httpd.conf {dest_file}".format(n=vm_node,
+                                                                dest_file=dest_file)
+status = run_cmd(cmd, True, True, True)
+sys.exit(status)
 
