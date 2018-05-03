@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description="install esgf 2.x",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("-w", "--workdir", required=True, 
-                    help="work directory that this script can write to.")
+                    help="work directory that this script can use as scratch area")
 parser.add_argument("-n", "--vm_node", required=True, help="node to copy keypair from")
 parser.add_argument("-d", "--dir", required=True, help="directory on master where keypair and other files for vm node will be copied from")
 
