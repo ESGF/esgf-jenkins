@@ -52,7 +52,7 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "ssh  {n} sudo bash  \"expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir,
+cmd = "ssh  {n} sudo bash -c \"expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir,
                                                                                                     n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
