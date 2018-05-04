@@ -88,7 +88,7 @@ if status != SUCCESS:
 # reboot vm
 #
 print("REBOOTING...{n}".format(n=vm_node))
-cmd = "ssh {n} sudo reboot".format(n=vm_node)
+cmd = "sudo reboot".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
@@ -99,7 +99,7 @@ time.sleep(15)
 #cmd = "ssh -t -t {n} sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node start'".format(n=vm_node)
 
 #cmd = "ssh -t -t jenkins@{n} sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node start'".format(n=vm_node)
-cmd = "ssh -t -t {n} sudo /usr/local/bin/esg-node start".format(n=vm_node)
+cmd = "sudo /usr/local/bin/esg-node start".format(n=vm_node)
 status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
