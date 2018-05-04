@@ -11,11 +11,9 @@ from Util import *
 parser = argparse.ArgumentParser(description="run esgf 2.x post install steps",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("-d", "--dir", required=True, help="directory on master where keypair and other files for vm node will be copied from")
 parser.add_argument("-H", "--vm_jenkins_home", required=True, help="vm user jenkins home directory")
 
 args = parser.parse_args()
-dir = args.dir
 workdir = args.vm_jenkins_home
 
 sys.stdout.flush()
@@ -40,7 +38,7 @@ if status != SUCCESS:
     sys.exit(status)
 
 cmd = "git clone https://github.com/ESGF/esgf-test-suite"
-status = run_cmd(cmd, True, False, True)
+status = run_cmd(cmd, True, False, True, workdir)
 if status != SUCCESS:
     sys.exit(status)
 
