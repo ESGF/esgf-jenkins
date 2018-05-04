@@ -36,8 +36,8 @@ try {
     stage('esg_bootstrap') {
       node('esgf-dev1') {
         echo "xxx esgf_bootstrap xxx"
-	//sh "mkdir -p ~/repos"
-        //sh "cd ~/repos; git clone ${url}"
+	sh "mkdir -p ~/repos"
+        sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull"
         //sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\""
       }
@@ -45,9 +45,9 @@ try {
     stage('prep_for_autoinstall') {
        node('master') {
           echo "xxx prep_for_autoinstall xxx"
-          //sh "ssh ${vm_node} sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
-          //sh "scp ${conf_dir}/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
-          //sh "ssh ${vm_node} sudo mv /tmp/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf"
+          sh "ssh ${vm_node} sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
+          sh "scp ${conf_dir}/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
+          sh "ssh ${vm_node} sudo mv /tmp/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf"
        }
     }
     stage('esg_autoinstall') {
