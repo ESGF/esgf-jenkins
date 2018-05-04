@@ -80,11 +80,6 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-
-#cmd = "ssh {n} sudo /usr/local/bin/esg-node start".format(n=vm_node)
-#cmd = "ssh -t -t {n} sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node start'".format(n=vm_node)
-#cmd = "ssh -t -t jenkins@{n} sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node start'".format(n=vm_node)
-
 cmd = "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
 status = run_cmd(cmd, True, False, True)
 sys.exit(status)

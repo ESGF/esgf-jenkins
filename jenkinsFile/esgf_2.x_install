@@ -30,7 +30,7 @@ try {
     stage('prepare_vm') {
       node('master') {
         echo "xxx prepare_vm xxx"
-        //sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+        sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
       }
     }
     stage('esg_bootstrap') {
@@ -39,7 +39,7 @@ try {
 	sh "mkdir -p ~/repos"
         sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull"
-        //sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\""
+        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\""
       }
     }
     stage('prep_for_autoinstall') {
@@ -53,7 +53,7 @@ try {
     stage('esg_autoinstall') {
        node('esgf-dev1') {
           echo "xxx esg_autoinstall xxx"
-          //sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
+          sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
       }
     }
     stage('prep_install') {
@@ -66,12 +66,12 @@ try {
           sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -H ${vm_jenkins_home}"
        }
     }
-    stage('stop_vm') {
-      node('master') {
-        echo "xxx stop_vm xxx"
+    //stage('stop_vm') {
+      //node('master') {
+        //echo "xxx stop_vm xxx"
         //sh "python ${stop_vm} -H ${vm_host} -x ${vmx_file}"
-      }
-    }
+      //}
+    //}
 } catch (caughtException) {
     error = caughtException
     currentBuild.result = "FAILURE"
