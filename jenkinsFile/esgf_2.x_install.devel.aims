@@ -13,9 +13,10 @@ def vm_jenkins_home = "/home/jenkins"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
 def vm_python = "${vm_jenkins_home}/miniconda2/bin/python"
 def url = "https://github.com/ESGF/esgf-jenkins"
-def release = "2.6/7"
-def branch = "master"
+def release = "2.6/0"
+def branch = "devel"
 def conf_dir = "/var/lib/jenkins/esgf"
+def mirror = "aims"
 
 try {
     stage('git_clone_esgf_jenkins') {
@@ -38,7 +39,7 @@ try {
 	sh "mkdir -p ~/repos"
         sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull"
-        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\""
+        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
       }
     }
     stage('prep_for_autoinstall') {
