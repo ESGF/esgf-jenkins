@@ -32,29 +32,33 @@ elif mirror == 'aims':
 
 
 bin_dir = "/usr/local/bin"
+bootstrap_filename = "esg-bootstrap.aims"
+
 if dist == 'devel':
     # TEMPORARY TEMPORARY remove the .aims
-    url = "{b}/devel/{v}/esgf-installer/esg-bootstrap.aims".format(b=base_url,
-                                                             v=version)
+    url = "{b}/devel/{v}/esgf-installer/{f}".format(b=base_url,
+                                                    v=version, 
+                                                    f=bootstrap_filename)
 else:
-    url = "{b}/{v}/esgf-installer/esg-bootstrap".format(b=base_url,
-                                                        v=version)
+    url = "{b}/{v}/esgf-installer/{f}".format(b=base_url,
+                                              v=version,
+                                              f=bootstrap_filename)
     
-cmd = "sudo wget -O esg-bootstrap {u} --no-check-certificate".format(u=url)
+cmd = "sudo wget {u} --no-check-certificate".format(u=url)
 
 status = run_cmd(cmd, True, False, True, bin_dir)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "sudo chmod 555 esg-bootstrap"
+cmd = "sudo chmod 555 {f}".format(f=bootstrap_filename)
 status = run_cmd(cmd, True, False, True, bin_dir)
 if status != SUCCESS:
     sys.exit(status)
 
 if dist == 'devel':
-    cmd = "sudo ./esg-bootstrap --devel"
+    cmd = "sudo ./{f} --devel".format(f=bootstrap_filename)
 else:
-    cmd = "sudo ./esg-bootstrap"
+    cmd = "sudo ./{f}".format(f=bootstrap_filename)
 status = run_cmd(cmd, True, False, True, bin_dir)
 
 sys.exit(status)
