@@ -15,7 +15,7 @@ parser.add_argument("-d", "--dist", required=True, choices=['master', 'devel'],
                     help="distribution, 'devel' or 'master'")
 parser.add_argument("-v", "--version", required=True,
                     help="version, for ex: '2.6/7'")
-parser.add_argument("-m", "--mirror", required=True,
+parser.add_argument("-m", "--mirror", required=True, default='aims',
                     help="mirror url, 'fr' or 'aims'")
 
 args = parser.parse_args()
