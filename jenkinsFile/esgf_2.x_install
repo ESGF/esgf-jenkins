@@ -39,7 +39,7 @@ try {
 	sh "mkdir -p ~/repos"
         sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull"
-        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m 'fr'"
+        sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
       }
     }
     stage('prep_for_autoinstall') {
