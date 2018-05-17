@@ -23,16 +23,22 @@ branch = args.branch
 def get_esgf_test_suite(branch='master'):
     current_time = time.localtime(time.time())
     time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
-    workdir = "$HOME/work/esgf-test-suite-{time_stamp}".format(time_stamp=time_str)
+    user_home = os.environ['HOME']
+    workdir = "{home}/work/esgf-test-suite-{time_stamp}".format(home=user_home,
+                                                                time_stamp=time_str)
     cmd = "mkdir -p {workdir}".format(workdir=workdir)
     ret_code = run_cmd(cmd, True, False, True)
+    if ret_code != SUCCESS:
+        print("FAIL...{cmd}".format(cmd=cmd))
+        return ret_code
 
     if branch == 'master':
-        cmd = "git clone https://github.com/ESGF/esgf-test-suite.git"
+        cmd = "git clone https://github.com/ESGF/esgf-test-suite.git {d}".format(d=workdir)
     else:
-        cmd = "git clone -b {b} https://github.com/ESGF/esgf-test-suite.git".format(b=branch)
+        cmd = "git clone -b {b} https://github.com/ESGF/esgf-test-suite.git {d}".format(d=workdir,
+                                                                                        b=branch)
     
     ret_code = run_cmd(cmd, True, False, True, workdir)
-
+    return(ret_code)
 
 ret_code = get_esgf_test_suite(branch)
