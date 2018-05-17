@@ -23,7 +23,7 @@ branch = args.branch
 def get_esgf_test_suite(branch='master'):
     current_time = time.localtime(time.time())
     time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
-    workdir = "~/work/esgf-test-suite-{time_stamp}".format(time_stamp=time_str)
+    workdir = "$HOME/work/esgf-test-suite-{time_stamp}".format(time_stamp=time_str)
     cmd = "mkdir -p {workdir}".format(workdir=workdir)
     ret_code = run_cmd(cmd, True, False, True)
 
