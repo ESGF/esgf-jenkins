@@ -36,6 +36,11 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
+cmd = "scp {d}/auto-keypair.exp {n}:/tmp/auto-keypair.exp".format(n=vm_node, d=dir)
+status = run_cmd(cmd, True, False, True)
+if status != SUCCESS:
+    sys.exit(status)
+
 dest_file = "/etc/httpd/conf/esgf-httpd.conf"
 cmd = "scp {d}/esgf-httpd.conf {n}:/tmp".format(n=vm_node, d=dir)
 status = run_cmd(cmd, True, False, True)
