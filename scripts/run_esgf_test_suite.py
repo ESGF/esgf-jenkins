@@ -14,13 +14,14 @@ parser = argparse.ArgumentParser(description="run esgf-test-suite",
 
 parser.add_argument("-b", "--branch", required=True, default='master',
                     help="git branch")
-parser.add_argument("-o", "--run_test_suite_options", required=True, 
+parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
                     help="options to run testsuite with - this will be passed as value to -a option ")
 
 args = parser.parse_args()
 branch = args.branch
 run_options = args.run_test_suite_options
+print("xxx run_options: {o}".format(o=run_options))
 
 def get_esgf_test_suite(workdir, branch='master'):
 
