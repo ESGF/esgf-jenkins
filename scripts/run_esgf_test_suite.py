@@ -44,7 +44,7 @@ def run_esgf_test_suite(workdir, run_options):
     cmd = "python esgf-test.py {std_opt} {conf_opt} -a {opts}".format(std_opt=std_options,
                                                                       conf_opt=conf_file_options,
                                                                       opts=run_options)
-    test_dir = "{w}/esgf-test-suite/esgf-test-suite".format(w=workdir)
+    test_dir = "{w}/esgf-test-suite".format(w=workdir)
 
     ret_code = run_cmd(cmd, True, False, True, test_dir)
     return(ret_code)
