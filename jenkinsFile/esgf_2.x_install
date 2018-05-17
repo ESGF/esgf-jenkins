@@ -7,7 +7,7 @@ def prepare_vm = "${repo_dir}/scripts/prepare_vm.py"
 def stop_vm = "${repo_dir}/scripts/stop_vm.py"
 def vm_host = 'grim.llnl.gov'
 def vmx_file = "/var/lib/jenkins/vmware/jenkinsVM/jenkinsVM.vmx"
-def vm_snapshot = "SnapshotForJenkins7"
+def vm_snapshot = "SnapshotForJenkins9"
 def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
@@ -59,6 +59,7 @@ try {
     stage('prep_install') {
        node('master') {
           sh "python ${repo_dir}/scripts/prep_2.x_post_install.py -n ${vm_node} -d ${conf_dir}"
+          sh "scp ${conf_dir}/auto-keypair.exp ${vm_node}:/tmp"
        }
     }
     stage('post_install') {
