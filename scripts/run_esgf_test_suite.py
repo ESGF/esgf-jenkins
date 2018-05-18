@@ -23,6 +23,8 @@ parser.add_argument("-o", "--run_test_suite_options",
 args = parser.parse_args()
 branch = args.branch
 run_options = args.run_test_suite_options
+python_path = args.python_path
+
 print("xxx run_options: {o}".format(o=run_options))
 
 def install_packages():
@@ -45,9 +47,10 @@ def run_esgf_test_suite(workdir, run_options):
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {home}/configs/my_config.ini".format(home=user_home)
     
-    cmd = "${python_path}/python esgf-test.py {std_opt} {conf_opt} -a {opts}".format(std_opt=std_options,
-                                                                                     conf_opt=conf_file_options,
-                                                                                     opts=run_options)
+    cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a {opts}".format(path=python_path,
+                                                                             std_opt=std_options,
+                                                                             conf_opt=conf_file_options,
+                                                                             opts=run_options)
     test_dir = "{w}/esgf-test-suite".format(w=workdir)
 
     ret_code = run_cmd(cmd, True, False, True, test_dir)
