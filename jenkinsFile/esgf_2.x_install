@@ -11,7 +11,7 @@ def vm_snapshot = "SnapshotForJenkins9"
 def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
-def vm_python = "${vm_jenkins_home}/miniconda2/bin/python"
+def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def url = "https://github.com/ESGF/esgf-jenkins"
 def release = "2.6/7"
 def branch = "master"
@@ -39,7 +39,7 @@ try {
 	//sh "mkdir -p ~/repos"
         //sh "cd ~/repos; git clone ${url}"
         //sh "cd ~/repos/esgf-jenkins; git pull"
-        //sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
+        //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
       }
     }
     stage('prep_for_autoinstall') {
@@ -65,12 +65,12 @@ try {
     stage('post_install') {
        node('esgf-dev1') {
           echo "xxx post_install xxx"
-          //sh "${vm_python} ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -H ${vm_jenkins_home}"
+          //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -H ${vm_jenkins_home}"
        }
     }
     stage('run_tests') {
        node('esgf-dev1') {
-         sh "{vm_python} ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -a '!compute,!cog_create_user,!slcs'"
+         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -o '!compute,!cog_create_user,!slcs' -p ${vm_python_path}"
        }
     }
     //stage('stop_vm') {

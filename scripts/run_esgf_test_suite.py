@@ -12,8 +12,10 @@ from Util import *
 parser = argparse.ArgumentParser(description="run esgf-test-suite",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("-b", "--branch", required=True, default='master',
+parser.add_argument("-b", "--branch", default='master',
                     help="git branch")
+parser.add_argument("-p", "--python_path", required=True, 
+                    help="python path")
 parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
                     help="options to run testsuite with - this will be passed as value to -a option ")
@@ -22,6 +24,8 @@ args = parser.parse_args()
 branch = args.branch
 run_options = args.run_test_suite_options
 print("xxx run_options: {o}".format(o=run_options))
+
+def install_packages():
 
 def get_esgf_test_suite(workdir, branch='master'):
 
@@ -41,9 +45,9 @@ def run_esgf_test_suite(workdir, run_options):
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {home}/configs/my_config.ini".format(home=user_home)
     
-    cmd = "python esgf-test.py {std_opt} {conf_opt} -a {opts}".format(std_opt=std_options,
-                                                                      conf_opt=conf_file_options,
-                                                                      opts=run_options)
+    cmd = "${python_path}/python esgf-test.py {std_opt} {conf_opt} -a {opts}".format(std_opt=std_options,
+                                                                                     conf_opt=conf_file_options,
+                                                                                     opts=run_options)
     test_dir = "{w}/esgf-test-suite".format(w=workdir)
 
     ret_code = run_cmd(cmd, True, False, True, test_dir)
