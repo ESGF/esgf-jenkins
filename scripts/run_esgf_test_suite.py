@@ -45,7 +45,7 @@ def run_esgf_test_suite(workdir, run_options):
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {home}/configs/my_config.ini".format(home=user_home)
     
-    cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a '{opts}'".format(path=python_path,
+    cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
                                                                              std_opt=std_options,
                                                                              conf_opt=conf_file_options,
                                                                              opts=run_options)
