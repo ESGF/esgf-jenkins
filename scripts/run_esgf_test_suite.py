@@ -50,6 +50,7 @@ def run_esgf_test_suite(workdir, run_options):
                                                                              conf_opt=conf_file_options,
                                                                              opts=run_options)
     test_dir = "{w}/esgf-test-suite".format(w=workdir)
+    print("xxx xxx test_dir: {d}".format(d=test_dir))
 
     ret_code = run_cmd(cmd, True, False, True, test_dir)
     return(ret_code)
