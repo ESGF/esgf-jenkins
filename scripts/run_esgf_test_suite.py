@@ -12,10 +12,8 @@ from Util import *
 parser = argparse.ArgumentParser(description="run esgf-test-suite",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("-b", "--branch", default='master',
-                    help="git branch")
-parser.add_argument("-p", "--python_path", required=True, 
-                    help="python path")
+parser.add_argument("-b", "--branch", default='master', help="git branch")
+parser.add_argument("-p", "--python_path", required=True, help="python path")
 parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
                     help="options to run testsuite with - this will be passed as value to -a option ")
@@ -27,7 +25,7 @@ python_path = args.python_path
 
 print("xxx run_options: {o}".format(o=run_options))
 
-def install_packages():
+
 
 def get_esgf_test_suite(workdir, branch='master'):
 
