@@ -17,11 +17,15 @@ parser.add_argument("-p", "--python_path", required=True, help="python path")
 parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
                     help="options to run testsuite with - this will be passed as value to -a option ")
+parser.add_argument("-f", "--firefox_path", required=True, help="path where firefox binary is installed")
+parser.add_argument("-g", "--geckodriver_path", required=True, help="path where geckodriver is installed")
 
 args = parser.parse_args()
 branch = args.branch
 run_options = args.run_test_suite_options
 python_path = args.python_path
+firefox_path = args.firefox_path
+geckodriver_path = args.geckodriver_path
 
 print("xxx run_options: {o}".format(o=run_options))
 
@@ -40,6 +44,8 @@ def get_esgf_test_suite(workdir, branch='master'):
 
 
 def run_esgf_test_suite(workdir, run_options):
+
+    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"]
 
     std_options = "--nocapture --nologcapture --with-html --with-id -v"
     user_home = os.environ['HOME']
