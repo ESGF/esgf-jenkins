@@ -20,7 +20,7 @@ parser.add_argument("-o", "--run_test_suite_options",
 parser.add_argument("-f", "--firefox_path", required=True, help="path where firefox binary is installed")
 parser.add_argument("-g", "--geckodriver_path", required=True, help="path where geckodriver is installed")
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
-parser.add_argument("-c", "--config_ini", required=True, help="full path of my_config.ini file that will be used to run test suite with")
+
 
 args = parser.parse_args()
 branch = args.branch
@@ -29,14 +29,16 @@ python_path = args.python_path
 firefox_path = args.firefox_path
 geckodriver_path = args.geckodriver_path
 workdir = args.workdir
-config_ini = args.config_ini
+config_ini = "{workdir}/my_config.ini".format(workdir=workdir)
+
 print("xxx run_options: {o}".format(o=run_options))
 
 #
 # ASSUMPTIONS -- the node where this script is running should have the following:
-#    miniconda is installed under <workdir>/miniconda2/bin
+#    miniconda is installed under <workdir>/esgf/miniconda2/bin
 #    firefox is installed under <firefox_path>
 #    geckodriver is installed under <geckodriver_path>
+#    my_config.ini is available in this node's <workdir>
 #
 
 def get_esgf_test_suite(workdir, branch='master'):
