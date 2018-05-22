@@ -29,6 +29,7 @@ python_path = args.python_path
 firefox_path = args.firefox_path
 geckodriver_path = args.geckodriver_path
 esgf_node = args.esgf_node
+workdir = args.work_dir
 
 print("xxx run_options: {o}".format(o=run_options))
 
