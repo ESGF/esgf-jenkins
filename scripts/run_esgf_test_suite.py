@@ -20,7 +20,7 @@ parser.add_argument("-o", "--run_test_suite_options",
 parser.add_argument("-f", "--firefox_path", required=True, help="path where firefox binary is installed")
 parser.add_argument("-g", "--geckodriver_path", required=True, help="path where geckodriver is installed")
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
-parser.add_argument("-c", "--conf_ini", required=True, help="full path of my_config.ini file that will be used to run test suite with")
+parser.add_argument("-c", "--config_ini", required=True, help="full path of my_config.ini file that will be used to run test suite with")
 
 args = parser.parse_args()
 branch = args.branch
@@ -29,7 +29,7 @@ python_path = args.python_path
 firefox_path = args.firefox_path
 geckodriver_path = args.geckodriver_path
 workdir = args.workdir
-
+config_ini = args.config_ini
 print("xxx run_options: {o}".format(o=run_options))
 
 #
