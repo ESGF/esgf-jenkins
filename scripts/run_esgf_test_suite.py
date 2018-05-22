@@ -69,7 +69,7 @@ def run_esgf_test_suite(esgf_node, workdir, run_options):
     os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
 
-    node_config_ini = "{esgf_node}_config_ini".format(esgf_node=esgf_node)
+    node_config_ini = "{esgf_node}_config.ini".format(esgf_node=esgf_node)
     std_options = "--nocapture --nologcapture --with-html --with-id -v"
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {home}/configs/{config_ini}".format(config_ini=node_config_ini,
