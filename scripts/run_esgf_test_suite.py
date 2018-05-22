@@ -42,12 +42,12 @@ print("xxx run_options: {o}".format(o=run_options))
 def get_esgf_test_suite(workdir, branch='master'):
 
     repo_dir = "{d}/repos".format(d=workdir)
-    if !os.path.isdir(repo_dir):
+    if os.path.isdir(repo_dir) is False:
         cmd = "mkdir -p {d}".format(repo_dir)
-    ret_code = run_cmd(cmd, True, False, True)
-    if ret_code != SUCCESS:
-        print("FAIL...{c}".format(c=cmd))
-        return ret_code
+        ret_code = run_cmd(cmd, True, False, True)
+        if ret_code != SUCCESS:
+            print("FAIL...{c}".format(c=cmd))
+            return ret_code
 
     if branch == 'master':
         cmd = "git clone https://github.com/ESGF/esgf-test-suite.git {d}".format(d=repo_dir)
