@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser(description="run esgf-test-suite",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("-b", "--branch", default='master', help="git branch")
+parser.add_argument("-n", "--esgf_node", required=True, help="ESGF node name")
 parser.add_argument("-p", "--python_path", required=True, help="python path")
 parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
@@ -26,10 +27,9 @@ run_options = args.run_test_suite_options
 python_path = args.python_path
 firefox_path = args.firefox_path
 geckodriver_path = args.geckodriver_path
+esgf_node = args.esgf_node
 
 print("xxx run_options: {o}".format(o=run_options))
-
-
 
 def get_esgf_test_suite(workdir, branch='master'):
 
@@ -61,7 +61,7 @@ def install_packages(python_path):
     ret_code = run_cmd(cmd, True, False, True)
     return(ret_code)
 
-def run_esgf_test_suite(workdir, run_options):
+def run_esgf_test_suite(esgf_node, workdir, run_options):
 
     #
     # assumptions: miniconda is installed under <workdir>/miniconda2/bin
@@ -69,10 +69,11 @@ def run_esgf_test_suite(workdir, run_options):
     os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
 
-
+    node_config_ini = "{esgf_node}_config_ini".format(esgf_node=esgf_node)
     std_options = "--nocapture --nologcapture --with-html --with-id -v"
     user_home = os.environ['HOME']
-    conf_file_options = "--tc-file {home}/my_config.ini".format(home=user_home)
+    conf_file_options = "--tc-file {home}/{config_ini}".format(config_ini=node_config_ini,
+                                                               home=user_home)
 
     cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
                                                                              std_opt=std_options,
@@ -107,7 +108,7 @@ if status != SUCCESS:
     print("FAIL...get_esgf_test_suite")
     sys.exit(status)
 
-status = run_esgf_test_suite(workdir, run_options)
+status = run_esgf_test_suite(esgf_node, workdir, run_options)
 if status != SUCCESS:
     print("FAIL...run_esgf_test_suite")
 
