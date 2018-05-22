@@ -1,8 +1,7 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-//def workdir = "${env.JENKINS_HOME}/testdir/${env.JOB_NAME}/test_${env.BUILD_NUMBER}"
-def workdir = "/var/lib/jenkins/testdir/esgf_2.x_install/test_166"
+def workdir = "${env.JENKINS_HOME}/testdir/${env.JOB_NAME}/test_${env.BUILD_NUMBER}"
 def repo_dir = "${workdir}/repos/esgf-jenkins"
 def prepare_vm = "${repo_dir}/scripts/prepare_vm.py"
 def stop_vm = "${repo_dir}/scripts/stop_vm.py"

@@ -40,21 +40,35 @@ def get_esgf_test_suite(workdir, branch='master'):
                                                                                         b=branch)
     
     ret_code = run_cmd(cmd, True, False, True)
+
     return(ret_code)
 
+def install_packages(python_path):
+
+    os.environ["PATH"] = python_path + os.pathsep + os.environ["PATH"]
+    cmd = "env | grep PATH"
+    ret_code = run_cmd(cmd, True, False, True)
+
+    cmd = "which python"
+    ret_code = run_cmd(cmd, True, False, True)
+
+    cmd = "pip install -U nose pyopenssl MyProxyClient selenium requests nose-testconfig nose-htmloutput lxml"
+    ret_code = run_cmd(cmd, True, False, True)
+    if ret_code != SUCCESS:
+        return ret_code
+
+    cmd = "pip install --upgrade pip"
+    ret_code = run_cmd(cmd, True, False, True)
+    return(ret_code)
 
 def run_esgf_test_suite(workdir, run_options):
 
     #
     # assumptions: miniconda is installed under <workdir>/miniconda2/bin
     #
-    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + python_path + os.pathsep +  os.environ["PATH"] 
+    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
-    cmd = "env"
-    ret_code = run_cmd(cmd, True, False, True)
 
-    cmd = "which python"
-    ret_code = run_cmd(cmd, True, False, True)
 
     std_options = "--nocapture --nologcapture --with-html --with-id -v"
     user_home = os.environ['HOME']
@@ -74,6 +88,12 @@ def run_esgf_test_suite(workdir, run_options):
 current_time = time.localtime(time.time())
 time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
 user_home = os.environ['HOME']
+
+status = install_packages(python_path)
+if status != SUCCESS:
+    print("FAIL...install_packages")
+    sys.exit(status)
+
 workdir = "{home}/work/esgf-test-suite-{time_stamp}".format(home=user_home,
                                                                 time_stamp=time_str)
 cmd = "mkdir -p {workdir}".format(workdir=workdir)
