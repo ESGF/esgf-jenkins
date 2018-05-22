@@ -72,7 +72,7 @@ def run_esgf_test_suite(workdir, run_options):
 
     std_options = "--nocapture --nologcapture --with-html --with-id -v"
     user_home = os.environ['HOME']
-    conf_file_options = "--tc-file {home}/configs/my_config.ini".format(home=user_home)
+    conf_file_options = "--tc-file {home}/my_config.ini".format(home=user_home)
 
     cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
                                                                              std_opt=std_options,
