@@ -17,7 +17,9 @@ def branch = "master"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "fr"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
-
+def run_options = '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http'
+def test_suite_node = 'pcmdi8'
+def test_suite_node_jenkins_home = '/home/jenkins'
 try {
     stage('git_clone_esgf_jenkins') {
       node('master') {
@@ -48,7 +50,7 @@ try {
           //sh "ssh ${vm_node} sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
           //sh "scp ${conf_dir}/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
           //sh "ssh ${vm_node} sudo mv /tmp/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf"
-	  sh "scp ${conf_dir}/${vm_node}_config.ini ${vm_node}:${vm_jenkins_home}/my_config.ini"
+	  sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/my_config.ini"
        }
     }
     stage('esg_autoinstall') {
@@ -74,7 +76,8 @@ try {
           sh "rm -rf ~/repos/esgf-jenkins"
           sh "cd ~/repos; git clone ${url}"
           sh "cd ~/repos/esgf-jenkins; git pull"
-          sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!slcs' -f '/opt/firefox58' -g '/home/jenkins/bin' -n ${vm_node} -w ${vm_jenkins_home}"
+          //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http,!myproxy_get_credentials' -f '/opt/firefox58' -g '/home/jenkins/bin' -n ${vm_node} -w ${vm_jenkins_home}"
+	  sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o ${run_options} -f '/opt/firefox58' -g '/home/jenkins/bin' -n ${vm_node} -w ${vm_jenkins_home} -c ${test_suite_node_jenkins_home}/my_config.ini"
        }
     }
     //stage('stop_vm') {

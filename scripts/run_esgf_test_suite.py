@@ -13,7 +13,6 @@ parser = argparse.ArgumentParser(description="run esgf-test-suite",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("-b", "--branch", default='master', help="git branch")
-parser.add_argument("-n", "--esgf_node", required=True, help="ESGF node name")
 parser.add_argument("-p", "--python_path", required=True, help="python path")
 parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
@@ -21,6 +20,7 @@ parser.add_argument("-o", "--run_test_suite_options",
 parser.add_argument("-f", "--firefox_path", required=True, help="path where firefox binary is installed")
 parser.add_argument("-g", "--geckodriver_path", required=True, help="path where geckodriver is installed")
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
+parser.add_argument("-c", "--conf_ini", required=True, help="full path of my_config.ini file that will be used to run test suite with")
 
 args = parser.parse_args()
 branch = args.branch
@@ -28,7 +28,6 @@ run_options = args.run_test_suite_options
 python_path = args.python_path
 firefox_path = args.firefox_path
 geckodriver_path = args.geckodriver_path
-esgf_node = args.esgf_node
 workdir = args.workdir
 
 print("xxx run_options: {o}".format(o=run_options))
@@ -80,16 +79,15 @@ def install_packages(python_path):
     ret_code = run_cmd(cmd, True, False, True)
     return(ret_code)
 
-def run_esgf_test_suite(esgf_node, workdir, run_options):
+def run_esgf_test_suite(conf_ini_file, workdir, run_options):
 
     os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
 
-    node_config_ini = "{esgf_node}_config.ini".format(esgf_node=esgf_node)
     std_options = "--nocapture --nologcapture --with-html --with-id -v"
     user_home = os.environ['HOME']
-    conf_file_options = "--tc-file {home}/configs/{config_ini}".format(config_ini=node_config_ini,
-                                                                       home=user_home)
+    conf_file_options = "--tc-file {config_ini}".format(config_ini=config_ini_file,
+                                                        home=user_home)
 
     cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
                                                                                  std_opt=std_options,
@@ -116,7 +114,7 @@ if status != SUCCESS:
     print("FAIL...get_esgf_test_suite")
     sys.exit(status)
 
-status = run_esgf_test_suite(esgf_node, workdir, run_options)
+status = run_esgf_test_suite(config_ini, workdir, run_options)
 if status != SUCCESS:
     print("FAIL...run_esgf_test_suite")
 
