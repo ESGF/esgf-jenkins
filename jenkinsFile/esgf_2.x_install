@@ -20,6 +20,9 @@ def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/
 def run_options = '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http'
 def test_suite_node = 'pcmdi8'
 def test_suite_node_jenkins_home = '/home/jenkins'
+def geckodriver_path = 'home/jenkins/bin'
+def firefox_path = '/opt/firefox58'
+
 try {
     stage('git_clone_esgf_jenkins') {
       node('master') {
@@ -76,8 +79,8 @@ try {
           sh "rm -rf ~/repos/esgf-jenkins"
           sh "cd ~/repos; git clone ${url}"
           sh "cd ~/repos/esgf-jenkins; git pull"
-          //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http,!myproxy_get_credentials' -f '/opt/firefox58' -g '/home/jenkins/bin' -n ${vm_node} -w ${vm_jenkins_home}"
-	  sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o ${run_options} -f '/opt/firefox58' -g '/home/jenkins/bin' -w ${test_suite_node_jenkins_home} "
+          //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http,!myproxy_get_credentials' -f ${firefox_path} -g ${geckodriver_path} -n ${vm_node} -w ${vm_jenkins_home}"
+	  sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} "
        }
     }
     //stage('stop_vm') {
