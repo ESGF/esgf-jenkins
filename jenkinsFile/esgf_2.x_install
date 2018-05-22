@@ -10,13 +10,13 @@ def vmx_file = "/var/lib/jenkins/vmware/jenkinsVM/jenkinsVM.vmx"
 def vm_snapshot = "SnapshotForJenkins9"
 def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
-def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def url = "https://github.com/ESGF/esgf-jenkins"
 def release = "2.6/7"
 def branch = "master"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "fr"
+def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
 
 try {
     stage('git_clone_esgf_jenkins') {
@@ -71,7 +71,10 @@ try {
     }
     stage('run_tests') {
        node('pcmdi8') {
-         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!slcs' -f '/opt/firefox58' -g '/home/jenkins/bin'"
+          sh "rm -rf ~/repos/esgf-jenkins"
+          sh "cd ~/repos; git clone ${url}"
+          sh "cd ~/repos/esgf-jenkins; git pull"
+          sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!slcs' -f '/opt/firefox58' -g '/home/jenkins/bin' -n ${vm_node}"
        }
     }
     //stage('stop_vm') {
