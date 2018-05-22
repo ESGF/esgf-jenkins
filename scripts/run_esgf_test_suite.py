@@ -48,9 +48,11 @@ def run_esgf_test_suite(workdir, run_options):
     #
     # assumptions: miniconda is installed under <workdir>/miniconda2/bin
     #
-    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"]
     conda_path = os.path.join(workdir, 'miniconda2', 'bin')
-    os.environ["PATH"] += os.pathsep + conda_path
+    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] + os.pathsep + conda_path
+
+    cmd = "which python"
+    ret_code = run_cmd(cmd, True, False, True)
 
     std_options = "--nocapture --nologcapture --with-html --with-id -v"
     user_home = os.environ['HOME']
