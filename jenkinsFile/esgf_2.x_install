@@ -70,7 +70,7 @@ try {
     }
     stage('run_tests') {
        node('esgf-dev1') {
-         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!slcs'"
+         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!slcs' -f '/opt/firefox58' -g '/home/jenkins/bin'"
        }
     }
     //stage('stop_vm') {
