@@ -50,12 +50,16 @@ def get_esgf_test_suite(workdir, branch='master'):
             print("FAIL...{c}".format(c=cmd))
             return ret_code
 
-    if branch == 'master':
-        cmd = "git clone https://github.com/ESGF/esgf-test-suite.git {d}".format(d=repo_dir)
-    else:
-        cmd = "git clone -b {b} https://github.com/ESGF/esgf-test-suite.git {d}".format(d=repo_dir,
-                                                                                    b=branch)
-    ret_code = run_cmd(cmd, True, False, True)
+    if os.path.isdir("{d}/esgf-test-suite".format(d=repo_dir)) is False:
+        if branch == 'master':
+            cmd = "git clone https://github.com/ESGF/esgf-test-suite.git {d}".format(d=repo_dir)
+        else:
+            cmd = "git clone -b {b} https://github.com/ESGF/esgf-test-suite.git {d}".format(d=repo_dir,
+                                                                                            b=branch)
+        ret_code = run_cmd(cmd, True, False, True)
+    cmd = "git pull"
+    ret_code = run_cmd(cmd, True, False, True, "{d}/esgf-test-suite".format(d=repo_dir))
+
     return(ret_code)
 
 def install_packages(python_path):
