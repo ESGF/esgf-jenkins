@@ -20,6 +20,7 @@ parser.add_argument("-o", "--run_test_suite_options",
                     help="options to run testsuite with - this will be passed as value to -a option ")
 parser.add_argument("-f", "--firefox_path", required=True, help="path where firefox binary is installed")
 parser.add_argument("-g", "--geckodriver_path", required=True, help="path where geckodriver is installed")
+parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
 
 args = parser.parse_args()
 branch = args.branch
@@ -32,19 +33,28 @@ esgf_node = args.esgf_node
 print("xxx run_options: {o}".format(o=run_options))
 
 #
-# the node where we will launch this script from has: 
+# ASSUMPTIONS -- the node where this script is running should have the following:
+#    miniconda is installed under <workdir>/miniconda2/bin
+#    firefox is installed under <firefox_path>
+#    geckodriver is installed under <geckodriver_path>
 #
 
 def get_esgf_test_suite(workdir, branch='master'):
 
-    if branch == 'master':
-        cmd = "git clone https://github.com/ESGF/esgf-test-suite.git {d}".format(d=workdir)
-    else:
-        cmd = "git clone -b {b} https://github.com/ESGF/esgf-test-suite.git {d}".format(d=workdir,
-                                                                                        b=branch)
-    
+    repo_dir = "{d}/repos".format(d=workdir)
+    if !os.path.isdir(repo_dir):
+        cmd = "mkdir -p {d}".format(repo_dir)
     ret_code = run_cmd(cmd, True, False, True)
+    if ret_code != SUCCESS:
+        print("FAIL...{c}".format(c=cmd))
+        return ret_code
 
+    if branch == 'master':
+        cmd = "git clone https://github.com/ESGF/esgf-test-suite.git {d}".format(d=repo_dir)
+    else:
+        cmd = "git clone -b {b} https://github.com/ESGF/esgf-test-suite.git {d}".format(d=repo_dir,
+                                                                                    b=branch)
+    ret_code = run_cmd(cmd, True, False, True)
     return(ret_code)
 
 def install_packages(python_path):
@@ -67,9 +77,6 @@ def install_packages(python_path):
 
 def run_esgf_test_suite(esgf_node, workdir, run_options):
 
-    #
-    # assumptions: miniconda is installed under <workdir>/miniconda2/bin
-    #
     os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
 
@@ -80,10 +87,10 @@ def run_esgf_test_suite(esgf_node, workdir, run_options):
                                                                        home=user_home)
 
     cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
-                                                                             std_opt=std_options,
-                                                                             conf_opt=conf_file_options,
-                                                                             opts=run_options)
-    test_dir = "{w}/esgf-test-suite".format(w=workdir)
+                                                                                 std_opt=std_options,
+                                                                                 conf_opt=conf_file_options,
+                                                                                 opts=run_options)
+    test_dir = "{w}/esgf-test-suite/esgf-test-suite".format(w=workdir)
     print("xxx xxx test_dir: {d}".format(d=test_dir))
 
     ret_code = run_cmd(cmd, True, False, True, test_dir)
@@ -99,7 +106,6 @@ if status != SUCCESS:
     print("FAIL...install_packages")
     sys.exit(status)
 
-workdir = user_home
 status = get_esgf_test_suite(workdir, branch)
 if status != SUCCESS:
     print("FAIL...get_esgf_test_suite")

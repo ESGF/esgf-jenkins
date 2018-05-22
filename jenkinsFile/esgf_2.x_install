@@ -74,7 +74,7 @@ try {
           sh "rm -rf ~/repos/esgf-jenkins"
           sh "cd ~/repos; git clone ${url}"
           sh "cd ~/repos/esgf-jenkins; git pull"
-          sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!slcs' -f '/opt/firefox58' -g '/home/jenkins/bin' -n ${vm_node}"
+          sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${vm_python_path} -o '!compute,!cog_create_user,!slcs' -f '/opt/firefox58' -g '/home/jenkins/bin' -n ${vm_node} -w ${vm_jenkins_home}"
        }
     }
     //stage('stop_vm') {
