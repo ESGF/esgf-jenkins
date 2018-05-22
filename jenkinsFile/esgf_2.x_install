@@ -1,7 +1,8 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-def workdir = "${env.JENKINS_HOME}/testdir/${env.JOB_NAME}/test_${env.BUILD_NUMBER}"
+//def workdir = "${env.JENKINS_HOME}/testdir/${env.JOB_NAME}/test_${env.BUILD_NUMBER}"
+def workdir = "/var/lib/jenkins/testdir/esgf_2.x_install/test_166"
 def repo_dir = "${workdir}/repos/esgf-jenkins"
 def prepare_vm = "${repo_dir}/scripts/prepare_vm.py"
 def stop_vm = "${repo_dir}/scripts/stop_vm.py"
@@ -22,7 +23,7 @@ try {
     stage('git_clone_esgf_jenkins') {
       node('master') {
         echo "xxx git_clone_esgf_jenkins xxx"
-        sh "mkdir -p ${workdir}/repos"
+        //sh "mkdir -p ${workdir}/repos"
         sh "cd ${workdir}/repos; git clone ${url}"
         sh "cd ${repo_dir}; git pull"
       }
@@ -37,7 +38,7 @@ try {
       node('esgf-dev1') {
         echo "xxx esgf_bootstrap xxx"
 	//sh "mkdir -p ~/repos"
-        //sh "cd ~/repos; git clone ${url}"
+        sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull"
         //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
       }
