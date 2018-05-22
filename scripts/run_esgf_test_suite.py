@@ -66,9 +66,7 @@ def get_esgf_test_suite(workdir, branch='master'):
 def install_packages(python_path):
 
     os.environ["PATH"] = python_path + os.pathsep + os.environ["PATH"]
-    cmd = "env | grep PATH"
-    ret_code = run_cmd(cmd, True, False, True)
-
+ 
     cmd = "which python"
     ret_code = run_cmd(cmd, True, False, True)
 
@@ -85,8 +83,11 @@ def run_esgf_test_suite(config_ini_file, workdir, run_options):
 
     os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
+    cmd = "which firefox"
+    ret_code = run_cmd(cmd, True, False, True)
 
-    std_options = "--nocapture --nologcapture --with-html --with-id -v"
+    #std_options = "--nocapture --nologcapture --with-html --with-id -v"
+    std_options = "--with-html --with-id -v"
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {config_ini}".format(config_ini=config_ini_file,
                                                         home=user_home)
