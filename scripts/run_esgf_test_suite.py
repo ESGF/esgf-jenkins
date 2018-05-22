@@ -31,6 +31,10 @@ esgf_node = args.esgf_node
 
 print("xxx run_options: {o}".format(o=run_options))
 
+#
+# the node where we will launch this script from has: 
+#
+
 def get_esgf_test_suite(workdir, branch='master'):
 
     if branch == 'master':
@@ -95,14 +99,7 @@ if status != SUCCESS:
     print("FAIL...install_packages")
     sys.exit(status)
 
-workdir = "{home}/work/esgf-test-suite-{time_stamp}".format(home=user_home,
-                                                                time_stamp=time_str)
-cmd = "mkdir -p {workdir}".format(workdir=workdir)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    print("FAIL...{cmd}".format(cmd=cmd))
-    sys.exit(status)
-
+workdir = user_home
 status = get_esgf_test_suite(workdir, branch)
 if status != SUCCESS:
     print("FAIL...get_esgf_test_suite")
