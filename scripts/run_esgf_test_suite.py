@@ -51,6 +51,9 @@ def run_esgf_test_suite(workdir, run_options):
     conda_path = os.path.join(workdir, 'miniconda2', 'bin')
     os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + conda_path + os.pathsep +  os.environ["PATH"] 
 
+    cmd = "env"
+    ret_code = run_cmd(cmd, True, False, True)
+
     cmd = "which python"
     ret_code = run_cmd(cmd, True, False, True)
 
