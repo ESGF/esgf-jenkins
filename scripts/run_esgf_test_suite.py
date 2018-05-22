@@ -79,7 +79,7 @@ def install_packages(python_path):
     ret_code = run_cmd(cmd, True, False, True)
     return(ret_code)
 
-def run_esgf_test_suite(conf_ini_file, workdir, run_options):
+def run_esgf_test_suite(config_ini_file, workdir, run_options):
 
     os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
