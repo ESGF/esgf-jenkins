@@ -81,7 +81,5 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
-status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 

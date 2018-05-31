@@ -36,43 +36,44 @@ try {
     stage('prepare_vm') {
       node('master') {
         echo "xxx prepare_vm xxx"
-        //sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+        sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
       }
     }
     stage('esg_bootstrap') {
       node('esgf-dev1') {
         echo "xxx esgf_bootstrap xxx"
-	//sh "mkdir -p ~/repos"
-        //sh "cd ~/repos; git clone ${url}"
+	sh "mkdir -p ~/repos"
+        sh "cd ~/repos; git clone ${url}"
         sh "cd ~/repos/esgf-jenkins; git pull"
-        //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
+        sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
       }
     }
     stage('prep_for_autoinstall') {
        node('master') {
           echo "xxx prep_for_autoinstall xxx"
-          //sh "ssh ${vm_node} sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
-          //sh "scp ${conf_dir}/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
-          //sh "ssh ${vm_node} sudo mv /tmp/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf"
+          sh "ssh ${vm_node} sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
+          sh "scp ${conf_dir}/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
+          sh "ssh ${vm_node} sudo mv /tmp/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf"
 	  sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/my_config.ini"
        }
     }
     stage('esg_autoinstall') {
        node('esgf-dev1') {
           echo "xxx esg_autoinstall xxx"
-          //sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
+          sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
       }
     }
     stage('prep_install') {
        node('master') {
           echo "xxx prep_install xxx"
-          //sh "python ${repo_dir}/scripts/prep_2.x_post_install.py -n ${vm_node} -d ${conf_dir}"
+          sh "python ${repo_dir}/scripts/prep_2.x_post_install.py -n ${vm_node} -d ${conf_dir}"
        }
     }
     stage('post_install') {
        node('esgf-dev1') {
           echo "xxx post_install xxx"
-          //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -H ${vm_jenkins_home}"
+          sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -H ${vm_jenkins_home}"
+	  sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
        }
     }
     stage('run_tests') {
@@ -80,7 +81,6 @@ try {
           sh "rm -rf ~/repos/esgf-jenkins"
           sh "cd ~/repos; git clone ${url}"
           sh "cd ~/repos/esgf-jenkins; git pull"
-          //sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${test_suite_node_python_path} -o '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http,!myproxy_get_credentials' -f ${firefox_path} -g ${geckodriver_path} -n ${vm_node} -w ${vm_jenkins_home}"
 	  sh "${test_suite_node_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} "
        }
     }
