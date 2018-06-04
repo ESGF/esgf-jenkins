@@ -44,7 +44,7 @@ def generate_copy_of_updated_file(file_to_update, var_val_pairs_list, separator,
     src_f.close()
     temp_file.close()
     if update_count == len(var_val_pairs_list):
-        return temp_file
+        return temp_file_name
     else:
         print("FAIL...generate_copy_of_updated_file()...")
         return None
