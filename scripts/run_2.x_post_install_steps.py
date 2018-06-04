@@ -7,7 +7,7 @@ modules_dir = os.path.join(this_dir, '..', 'modules')
 sys.path.append(modules_dir)
 
 from Util import *
-from MiscUtil import 
+from MiscUtil import *
 
 parser = argparse.ArgumentParser(description="run esgf 2.x post install steps",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
