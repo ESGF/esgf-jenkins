@@ -19,10 +19,10 @@ def generate_copy_of_updated_file(file_to_update, var_val_pairs_list, separator,
     time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
     fname = os.path.basename(file_to_update)
     temp_file_name = "{f}.{d}.txt".format(f=fname, d=time_str)
-    temp_file = os.path.join(workdir, temp_file_name)
+    temp_file_full_path = os.path.join(workdir, temp_file_name)
 
     src_f = open(file_to_update, "r")
-    temp_file = open(temp_file, "w+")
+    temp_file = open(temp_file_full_path, "w+")
     update_count = 0
     for a_line in src_f:
         if len(a_line.split(separator)) > 1:
@@ -44,8 +44,8 @@ def generate_copy_of_updated_file(file_to_update, var_val_pairs_list, separator,
     src_f.close()
     temp_file.close()
     if update_count == len(var_val_pairs_list):
-        print("xxx DEBUG...returning temp_file_name: {f}".format(f=temp_file))
-        return temp_file
+        print("xxx DEBUG...returning temp_file_name: {f}".format(f=temp_file_full_path))
+        return temp_file_full_path
     else:
         print("FAIL...generate_copy_of_updated_file()...")
         return None
