@@ -7,7 +7,7 @@ modules_dir = os.path.join(this_dir, '..', 'modules')
 sys.path.append(modules_dir)
 
 from Util import *
-#from MiscUtil import *
+from MiscUtil import 
 
 parser = argparse.ArgumentParser(description="run esgf 2.x post install steps",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -85,12 +85,11 @@ if status != SUCCESS:
 #
 # update /usr/local/cog/cog_config/cog_settings.cfg
 #
-#file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
-#var_val_pairs_list = ['USE_CAPTCHA=False']
-#temp_file = generate_copy_of_updated_file(file_to_update, var_val_pairs_list, '=', workdir)
-#if not temp_file:
-#    sys.exit(FAILURE)
-
+file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
+var_val_pairs_list = ['USE_CAPTCHA=False']
+temp_file = generate_copy_of_updated_file(file_to_update, var_val_pairs_list, '=', workdir)
+if not temp_file:
+    sys.exit(FAILURE)
 
 sys.exit(status)
 
