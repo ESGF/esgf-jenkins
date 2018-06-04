@@ -78,3 +78,4 @@ def update_cog_settings_conf(var_val_pairs_list, separator, workdir):
     if ret_code != SUCCESS:
         return ret_code
 
+    return ret_code
