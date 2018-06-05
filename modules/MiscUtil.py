@@ -53,7 +53,7 @@ def generate_copy_of_updated_file(file_to_update, var_val_pairs_list, separator,
 
     
 def update_cog_settings_conf(var_val_pairs_list, separator, workdir):
-    file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg.TEMP'
+    file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
     var_val_pairs_list = ['USE_CAPTCHA=False']
     temp_file = generate_copy_of_updated_file(file_to_update, var_val_pairs_list, '=', workdir)
     if not temp_file:

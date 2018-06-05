@@ -43,8 +43,8 @@ status = run_cmd(cmd, True, False, True, workdir)
 if status != SUCCESS:
     sys.exit(status)
 
-#cmd = "sudo bash -c \"expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir)
-cmd = "sudo bash -c \"expect /tmp/auto-keypair.exp\"".format(w=workdir)
+cmd = "sudo bash -c \"expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir)
+#cmd = "sudo bash -c \"expect /tmp/auto-keypair.exp\"".format(w=workdir)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
@@ -85,9 +85,10 @@ if status != SUCCESS:
 #
 # update /usr/local/cog/cog_config/cog_settings.cfg
 #
-#file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
-#var_val_pairs_list = ['USE_CAPTCHA=False']
-#status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
+file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
+var_val_pairs_list = ['USE_CAPTCHA=False']
+status1 = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
+# TEMPORARY --- when done testing, replace status1 above with status
 
 sys.exit(status)
 
