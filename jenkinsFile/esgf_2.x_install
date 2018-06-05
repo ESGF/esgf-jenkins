@@ -38,14 +38,15 @@ try {
       node('master') {
         echo "xxx prepare_vm xxx"
         sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+	echo "xxx done preparing vm xxx"
       }
     }
     stage('esg_bootstrap') {
       node('esgf-dev1') {
-        echo "xxx esgf_bootstrap xxx"
-	sh "mkdir -p ~/repos"
-        sh "cd ~/repos; git clone ${url}"
-        sh "cd ~/repos/esgf-jenkins; git pull"
+        echo "xxx esgf_bootstrap xxx xxx"
+	sh "mkdir -p ${vm_jenkins_home}/repos"
+        sh "cd ${vm_jenkins_home}/repos; git clone ${url}"
+        sh "cd ${vm_jenkins_home}/repos/esgf-jenkins; git pull"
 	echo "xxx calling run_2.x_esg_bootstrap.py xxx"
         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
       }
