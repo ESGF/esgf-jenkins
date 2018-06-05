@@ -84,6 +84,7 @@ if status != SUCCESS:
 #
 # update /usr/local/cog/cog_config/cog_settings.cfg
 #
+print("xxx DEBUG...going to update cog_settings.cfg to set USE_CAPTCHA to False")
 file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
 var_val_pairs_list = ['USE_CAPTCHA=False']
 status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
