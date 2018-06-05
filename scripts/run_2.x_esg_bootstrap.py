@@ -45,7 +45,6 @@ else:
                                               f=bootstrap_filename)
     
 cmd = "sudo wget {u} --no-check-certificate".format(u=url)
-
 status = run_cmd(cmd, True, False, True, bin_dir)
 if status != SUCCESS:
     sys.exit(status)
@@ -59,6 +58,7 @@ if dist == 'devel':
     cmd = "sudo ./{f} --devel".format(f=bootstrap_filename)
 else:
     cmd = "sudo ./{f}".format(f=bootstrap_filename)
+
 status = run_cmd(cmd, True, False, True, bin_dir)
 
 sys.exit(status)
