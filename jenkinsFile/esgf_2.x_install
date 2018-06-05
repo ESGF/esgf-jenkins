@@ -44,10 +44,11 @@ try {
     stage('esg_bootstrap') {
       node('esgf-dev1') {
         echo "xxx esgf_bootstrap xxx xxx"
+	echo "...sleep for 10 seconds to make sure vm node is ready..."
+	sleep 10
 	sh "mkdir -p ${vm_jenkins_home}/repos"
         sh "cd ${vm_jenkins_home}/repos; git clone ${url}"
         sh "cd ${vm_jenkins_home}/repos/esgf-jenkins; git pull"
-	echo "xxx calling run_2.x_esg_bootstrap.py xxx"
         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
       }
     }
