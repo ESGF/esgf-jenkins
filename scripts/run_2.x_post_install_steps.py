@@ -43,7 +43,7 @@ status = run_cmd(cmd, True, False, True, workdir)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "sudo bash -c \"expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir)
+cmd = "sudo bash -c \"export TERM=vt100; expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir)
 #cmd = "sudo bash -c \"expect /tmp/auto-keypair.exp\"".format(w=workdir)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
