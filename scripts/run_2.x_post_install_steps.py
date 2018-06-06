@@ -8,7 +8,7 @@ sys.path.append(modules_dir)
 
 from Util import *
 from MiscUtil import *
-from 2xUtil import update_auto_keypair
+from Util2x import update_auto_keypair
 parser = argparse.ArgumentParser(description="run esgf 2.x post install steps",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
