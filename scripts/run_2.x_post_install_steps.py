@@ -8,7 +8,7 @@ sys.path.append(modules_dir)
 
 from Util import *
 from MiscUtil import *
-
+from 2xUtil import update_auto_keypair
 parser = argparse.ArgumentParser(description="run esgf 2.x post install steps",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -40,6 +40,11 @@ if status != SUCCESS:
 
 cmd = "git clone https://github.com/ESGF/esgf-test-suite"
 status = run_cmd(cmd, True, False, True, workdir)
+if status != SUCCESS:
+    sys.exit(status)
+
+auto_keypair_file = "{w}/esgf-test-suite/scripts-llnl/auto-keypair.exp".format(w=workdir)
+status = update_auto_keypair(auto_keypair_file)
 if status != SUCCESS:
     sys.exit(status)
 

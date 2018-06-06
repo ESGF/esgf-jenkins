@@ -1,5 +1,6 @@
 import os
 import time
+import fileinput
 
 from Const import *
 from Util import *
@@ -80,3 +81,10 @@ def update_cog_settings_conf(var_val_pairs_list, separator, workdir):
         return ret_code
 
     return ret_code
+
+def update_file(file_to_update, str_to_replace, replacement_str):
+
+    with fileinput.FileInput(file_to_update, inplace=True, backup='.bak') as f:
+        for line in f:
+            print(line.replace(str_to_replace, replacement_str), end='')
+
