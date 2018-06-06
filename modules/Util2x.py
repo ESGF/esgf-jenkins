@@ -11,6 +11,12 @@ from MiscUtil import update_file
 def update_auto_keypair(file_to_update):
 
     autoinstall_conf = '/usr/local/etc/esg-autoinstall.conf'
+
+    cmd = "sudo bash -c \"chmod 644 {f}\"".format(f=autoinstall.conf)
+    ret_code = run_cmd(cmd, True, False, True)
+    if ret_code != SUCCESS:
+        return ret_code
+
     conf_fh = open(autoinstall_conf, 'r')
 
     p = None
@@ -26,6 +32,10 @@ def update_auto_keypair(file_to_update):
         return FAILURE
 
     update_file(file_to_update, 'CHANGEME', p)
+
+    cmd = "sudo bash -c \"chmod 640 {f}\"".format(f=autoinstall.conf)
+    ret_code = run_cmd(cmd, True, False, True)
+
     return SUCCESS
 
 
