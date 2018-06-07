@@ -44,7 +44,7 @@ if status != SUCCESS:
     sys.exit(status)
 
 auto_keypair_file = "{w}/esgf-test-suite/scripts-llnl/auto-keypair.exp".format(w=workdir)
-status = update_auto_keypair(auto_keypair_file)
+status = update_auto_keypair(auto_keypair_file, workdir)
 if status != SUCCESS:
     sys.exit(status)
 

@@ -8,7 +8,7 @@ from Util import *
 from MiscUtil import update_file
 
 
-def update_auto_keypair(file_to_update):
+def update_auto_keypair(file_to_update, workdir):
 
     autoinstall_conf = '/usr/local/etc/esg-autoinstall.conf'
 
@@ -31,7 +31,7 @@ def update_auto_keypair(file_to_update):
         print("FAIL...did not find the setting for ADMINPASS in {f}".format(f=autoinstall_conf))
         return FAILURE
 
-    update_file(file_to_update, 'CHANGEME', p)
+    update_file(file_to_update, 'CHANGEME', p, workdir)
 
     cmd = "sudo bash -c \"chmod 640 {f}\"".format(f=autoinstall_conf)
     ret_code = run_cmd(cmd, True, False, True)
