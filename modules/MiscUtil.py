@@ -42,6 +42,8 @@ def generate_copy_of_updated_file(file_to_update, var_val_pairs_list, separator,
                 update_count += 1
             else:
                 temp_file.write(a_line)
+        else:
+            temp_file.write(a_line)
          
     src_f.close()
     temp_file.close()
@@ -76,7 +78,7 @@ def update_cog_settings_conf(var_val_pairs_list, separator, workdir):
     if ret_code != SUCCESS:
         return ret_code
 
-    cmd = "sudo bash -c \"chmod -w {f}\"".format(f=file_to_update)
+    cmd = "sudo bash -c \"chmod 644 {f}\"".format(f=file_to_update)
     ret_code = run_cmd(cmd, True, False, True)
     if ret_code != SUCCESS:
         return ret_code
