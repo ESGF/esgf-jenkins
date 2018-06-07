@@ -101,6 +101,6 @@ def update_file(file_to_update, str_to_replace, replacement_str, workdir):
         else:
             temp_file.write(line)
     src_f.close()
-    temp_f.close()
+    temp_file.close()
 
     copyfile(temp_file_full_path, file_to_update)
