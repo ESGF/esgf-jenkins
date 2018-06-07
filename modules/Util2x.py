@@ -21,10 +21,10 @@ def update_auto_keypair(file_to_update, workdir):
 
     p = None
     for line in conf_fh:
-        match_obj = re.match(r'set\s+ADMINPASS\s+(\S+)', line)
+        match_obj = re.match(r'set\s+ADMINPASS\s+\"(\S+)\"', line)
         if match_obj:
             p = match_obj.group(1)
-            p.strip("\"")
+            #p.strip("\"")
             print("xxx xxx DEBUG DEBUG p: {p}".format(p=p))
 
     if not p:
