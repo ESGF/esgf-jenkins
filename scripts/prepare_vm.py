@@ -43,5 +43,6 @@ if ret_code != SUCCESS:
     sys.exit(ret_code)
 
 ret_code = do_yum_update(vm_node)
+print("xxx returning from prepare_vm.py, ret_code: {r}".format(r=ret_code))
 sys.exit(ret_code)
 
