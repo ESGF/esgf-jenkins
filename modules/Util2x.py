@@ -33,7 +33,7 @@ def update_auto_keypair(file_to_update):
 
     update_file(file_to_update, 'CHANGEME', p)
 
-    cmd = "sudo bash -c \"chmod 640 {f}\"".format(f=autoinstall.conf)
+    cmd = "sudo bash -c \"chmod 640 {f}\"".format(f=autoinstall_conf)
     ret_code = run_cmd(cmd, True, False, True)
 
     return SUCCESS
