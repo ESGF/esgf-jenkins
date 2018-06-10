@@ -73,9 +73,8 @@ try {
           echo "xxx prep_install xxx"
           sh "python ${repo_dir}/scripts/prep_2.x_post_install.py -n ${vm_node} -d ${conf_dir}"
 	  // TEMPORARY
-	  //sh "scp ${conf_dir}/tmp.auto-keypair.exp ${vm_node}:${vm_jenkins_home}/esgf-test-suite/scripts-llnl/auto-keypair.exp"
-sh "scp ${conf_dir}/tmp.auto-keypair.exp ${vm_node}:${vm_jenkins_home}/auto-keypair.exp"
-	  
+	  //sh "scp ${conf_dir}/tmp.auto-keypair.exp ${vm_node}:${vm_jenkins_home}/auto-keypair.exp"
+	  sh "scp ${conf_dir}/tmp.auto-keypair.exp ${vm_node}:${vm_jenkins_home}/auto-keypair.exp"
        }
     }
     stage('post_install') {
