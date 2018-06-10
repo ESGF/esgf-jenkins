@@ -72,13 +72,17 @@ try {
        node('master') {
           echo "xxx prep_install xxx"
           sh "python ${repo_dir}/scripts/prep_2.x_post_install.py -n ${vm_node} -d ${conf_dir}"
+	  // TEMPORARY
+	  //sh "scp ${conf_dir}/tmp.auto-keypair.exp ${vm_node}:${vm_jenkins_home}/esgf-test-suite/scripts-llnl/auto-keypair.exp"
+sh "scp ${conf_dir}/tmp.auto-keypair.exp ${vm_node}:${vm_jenkins_home}/auto-keypair.exp"
+	  
        }
     }
     stage('post_install') {
        node('esgf-dev1') {
           echo "xxx post_install xxx"
           sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -H ${vm_jenkins_home}"
-	  sh "sudo bash -c 'export TERM=vt100; expect ${vm_jenkins_home}/esgf-test-suite/scripts-llnl/auto-keypair.exp'"
+	  sh "sudo bash -c 'export TERM=vt100; expect ${vm_jenkins_home}/auto-keypair.exp'"
 	  sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
 	  sleep 30
        }
