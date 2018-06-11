@@ -32,7 +32,7 @@ elif mirror == 'aims':
 
 
 bin_dir = "/usr/local/bin"
-bootstrap_filename = "esg-bootstrap.aims"
+bootstrap_filename = "esg-bootstrap"
 
 if dist == 'devel':
     # TEMPORARY TEMPORARY remove the .aims

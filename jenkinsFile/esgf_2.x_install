@@ -21,9 +21,10 @@ def run_options = '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!
 //def run_options = '!compute,!slcs,!dl_gridftp,!dl_http'
 def test_suite_node = 'pcmdi8'
 def test_suite_node_jenkins_home = '/home/jenkins'
-def geckodriver_path = '/home/jenkins/bin'
+def geckodriver_path = '/home/jenkins/esgf'
 def firefox_path = '/opt/firefox58'
 def test_suite_node_python_path = '/home/jenkins/esgf/miniconda2/bin'
+def config_ini = '/home/jenkins/esgf/my_config.ini'
 
 try {
     stage('git_clone_esgf_jenkins') {
@@ -54,17 +55,18 @@ try {
     stage('prep_for_autoinstall') {
        node('master') {
           echo "xxx prep_for_autoinstall xxx"
-          sh "ssh ${vm_node} sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
+          #sh "ssh ${vm_node} sudo mv /usr/local/etc/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf.ORIG"
           sh "scp ${conf_dir}/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
-          sh "ssh ${vm_node} sudo mv /tmp/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf"
-          sh "ssh ${vm_node} sudo chown root /usr/local/etc/esg-autoinstall.conf"
-          sh "ssh ${vm_node} sudo chgrp root /usr/local/etc/esg-autoinstall.conf"
-	  sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/my_config.ini"
+          #sh "ssh ${vm_node} sudo mv /tmp/esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf"
+          #sh "ssh ${vm_node} sudo chown root /usr/local/etc/esg-autoinstall.conf"
+          #sh "ssh ${vm_node} sudo chgrp root /usr/local/etc/esg-autoinstall.conf"
+	  sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
        }
     }
     stage('esg_autoinstall') {
        node('esgf-dev1') {
           echo "xxx esg_autoinstall xxx"
+	  sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/vm_prep_2.x_autoinstall.py"
           sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
       }
     }
@@ -89,7 +91,7 @@ try {
           sh "rm -rf ~/repos/esgf-jenkins"
           sh "cd ~/repos; git clone ${url}"
           sh "cd ~/repos/esgf-jenkins; git pull"
-	  sh "${test_suite_node_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} "
+	  sh "${test_suite_node_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
        }
     }
     //stage('stop_vm') {
