@@ -64,7 +64,7 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
     cmds_list = ["cd {dir}".format(dir=dir),
                  "export UVCDAT_ANONYMOUS_LOG=False",
-                 "sudo esgtest_publish -x -d"]
+                 "sudo -E bash -c 'esgtest_publish -x -d'"]
     conda_path = "/usr/local/conda/bin"
     ret_code = run_in_conda_env(conda_path, esgf_conda_env, cmds_list)
     return(ret_code)
