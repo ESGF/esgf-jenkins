@@ -50,6 +50,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
 
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
     cmds_list = ["cd {dir}".format(dir=dir),
+                 "export UVCDAT_ANONYMOUS_LOG=False",
                  "python setup.py install",
                  "esgtest_publish -x -d"]
     conda_path = "/usr/local/conda/bin"
