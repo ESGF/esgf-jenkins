@@ -32,12 +32,15 @@ def get_esg_publisher(workdir, env, branch='devel'):
     
     the_repo_dir = "{d}/esg-publisher".format(d=repo_dir)
     if os.path.isdir(the_repo_dir) is False:
-        if branch == 'master':
-            cmd = "git clone https://github.com/ESGF/esg_publisher.git {d}".format(d=the_repo_dir)
-        else:
-            cmd = "git clone -b {b} https://github.com/ESGF/esg_publisher {d}".format(d=the_repo_dir,
-                                                                                            b=branch)
+        cmd = "git clone git clone https://github.com/ESGF/esg-publisher {d}".format(d=the_repo_dir)
         ret_code = run_cmd(cmd, True, False, True)
+        if ret_code != SUCCESS:
+            print("FAIL...{c}".format(c=cmd))
+            return ret_code
+
+        if branch != 'master':
+            cmd = "git checkout {b}".format(b=branch)
+            ret_code = run_cmd(cmd, True, False, True, the_repo_dir)
     cmd = "git pull"
     ret_code = run_cmd(cmd, True, False, True, "{d}".format(d=the_repo_dir))
     if ret_code != SUCCESS:
