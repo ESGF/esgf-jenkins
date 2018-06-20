@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(description="run esgf-test-suite",
 
 parser.add_argument("-b", "--branch", default='devel', help="git branch of esg-publisher repo")
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
-parser.add_argument("-e", "--esgf_conda_env", default='devel', help="esgf conda environment to run test in")
+parser.add_argument("-e", "--esgf_conda_env", default='esgf-pub', help="esgf conda environment to run test in")
 
 args = parser.parse_args()
 branch = args.branch
@@ -24,7 +24,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
 
     repo_dir = "{d}/repos".format(d=workdir)
     if os.path.isdir(repo_dir) is False:
-        cmd = "mkdir -p {d}".format(repo_dir)
+        cmd = "mkdir -p {d}".format(d=repo_dir)
         ret_code = run_cmd(cmd, True, False, True)
         if ret_code != SUCCESS:
             print("FAIL...{c}".format(c=cmd))
