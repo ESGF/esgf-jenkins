@@ -51,15 +51,20 @@ def get_esg_publisher(workdir, env, branch='devel'):
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
     cmds_list = ["cd {dir}".format(dir=dir),
                  "export UVCDAT_ANONYMOUS_LOG=False",
-                 "python setup.py install",
-                 "esgtest_publish -x -d"]
+                 "python setup.py install"]
+
     conda_path = "/usr/local/conda/bin"
     ret_code = run_in_conda_env(conda_path, env, cmds_list)
     return(ret_code)
 
-def run_esgf_publisher_test(esgf_conda_env):
+def run_esgf_publisher_test(workdir, esgf_conda_env):
 
-    cmds_list = ["sudo esgtest_publish -x -d"]
+    repo_dir = "{d}/repos".format(d=workdir)
+    the_repo_dir = "{d}/esg-publisher".format(d=repo_dir)
+    dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
+    cmds_list = ["cd {dir}".format(dir=dir),
+                 "export UVCDAT_ANONYMOUS_LOG=False",
+                 "esgtest_publish -x -d"]
     conda_path = "/usr/local/conda/bin"
     ret_code = run_in_conda_env(conda_path, esgf_conda_env, cmds_list)
     return(ret_code)
