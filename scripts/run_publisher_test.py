@@ -38,9 +38,10 @@ def get_esg_publisher(workdir, env, branch='devel'):
             print("FAIL...{c}".format(c=cmd))
             return ret_code
 
-        if branch != 'master':
-            cmd = "git checkout {b}".format(b=branch)
-            ret_code = run_cmd(cmd, True, False, True, the_repo_dir)
+    if branch != 'master':
+        cmd = "git checkout {b}".format(b=branch)
+        ret_code = run_cmd(cmd, True, False, True, the_repo_dir)
+
     cmd = "git pull"
     ret_code = run_cmd(cmd, True, False, True, "{d}".format(d=the_repo_dir))
     if ret_code != SUCCESS:
