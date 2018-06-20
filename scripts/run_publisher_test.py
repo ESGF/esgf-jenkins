@@ -54,7 +54,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
                  "sudo -E bash -c \"python setup.py install\""]
 
     conda_path = "/usr/local/conda/bin"
-    ret_code = run_in_conda_env(conda_path, env, cmds_list)
+    ret_code = run_in_conda_env_as_root(conda_path, env, cmds_list)
     return(ret_code)
 
 def run_esgf_publisher_test(workdir, esgf_conda_env):
@@ -71,8 +71,8 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
 
     cmds_list = ["cd {dir}".format(dir=dir),
                  "export UVCDAT_ANONYMOUS_LOG=False",
-                 "sudo -E bash -c \"{cmd}\"".format(cmd=cmd)]
-    ret_code = run_in_conda_env(conda_path, esgf_conda_env, cmds_list)
+                 cmd]
+    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmds_list)
     return(ret_code)
 
 status = get_esg_publisher(workdir, esgf_conda_env, branch)
