@@ -73,7 +73,7 @@ status = get_esg_publisher(workdir, esgf_conda_env, branch)
 if status != SUCCESS:
     sys.exit(status)
 
-status = run_esgf_publisher_test(esgf_conda_env)
+status = run_esgf_publisher_test(workdir, esgf_conda_env)
 sys.exit(status)
 
 
