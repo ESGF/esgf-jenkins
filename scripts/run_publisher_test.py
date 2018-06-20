@@ -48,7 +48,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
         print("FAIL...{c}".format(c=cmd))
         return ret_code
 
-    dir = "{repo_dir}/src/python/esgcet".format(repo_dir=repo_dir)
+    dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
     cmds_list = ["cd {dir}".format(dir=dir),
                  "sudo python setup.py install",
                  "sudo esgtest_publish -x -d"]
