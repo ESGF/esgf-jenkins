@@ -8,26 +8,35 @@ sys.path.append(modules_dir)
 
 from Util import *
 
-parser = argparse.ArgumentParser(description="prepare a virtual machine",
+parser = argparse.ArgumentParser(description="run 3.x esg_bootstrap",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("-n", "--vm_node", help="vm node name", required=True)
-parser.add_argument("-t", "--git_tag", help="git tag", required=True)
-parser.add_argument("-b", "--git_branch", help="git branch", required=True)
+parser.add_argument("-w", "--workdir", required=True, 
+                    help="workdir where this script will write to")
+
+parser.add_argument("-b", "--branch", default='master',
+                    help="branch of esgf-installer repo to use")
+
 
 args = parser.parse_args()
-vm_node = args.vm_node
-tag = args.git_tag
-branch = args.git_branch
+workdir = args.workdir
+branch  = args.branch
 
-url = "https://github.com/ESGF/esgf-installer.git"
+repo_url = "https://github.com/ESGF/esgf-installer.git"
+if branch == 'master':
+    cmd = "git clone {repo}".format(repo=repo_url)
+else:
+    cmd = "git clone -b {branch} {repo}".format(branch=branch,
+                                                repo=repo_url)
 
-cmd = "git clone {u}".format(u=url)
-ret_code = run_cmd(cmd, True, False, True)
-if ret_code != SUCCESS:
-    print("FAIL...{c}".format(c=cmd))
-    sys.exit(ret_code)
+status = run_cmd(cmd, True, False, True, workdir)
+if status != SUCCESS:
+    print("FAIL...{cmd}".format(cmd=cmd))
+    sys.exit(status)
 
-cmd = "git checkout {t} -b {b}".format(t=tag, b=branch)
-ret_code = run_cmd(cmd, True, False, True, "esgf-installer")
+repo_dir = "{workdir}/esgf-installer"
+cmd = "{repo_dir}/esg_bootstrap.sh".format(repo_dir=repo_dir)
+status = run_cmd(cmd, True, False, True, repo_dir)
+
+sys.exit(status)
 
