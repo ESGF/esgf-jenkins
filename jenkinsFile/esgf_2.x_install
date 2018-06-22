@@ -86,6 +86,11 @@ try {
 	  sleep 60
        }
     }
+    stage('run_publisher_test') {
+       node('esgf-dev1') {
+         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_publisher_test.py -w ${vm_jenkins_home} -e esgf-pub"         
+       }
+    }
     stage('run_esgf_test_suite') {
        node('pcmdi8') {
           echo "xxx run_esgf_test_suite xxx"
@@ -93,11 +98,6 @@ try {
           sh "cd ~/repos; git clone ${url}"
           sh "cd ~/repos/esgf-jenkins; git pull"
 	  sh "${test_suite_node_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
-       }
-    }
-    stage('run_publisher_test') {
-       node('esgf-dev1') {
-
        }
     }
     //stage('stop_vm') {
