@@ -12,8 +12,8 @@ def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def url = "https://github.com/ESGF/esgf-jenkins"
-def release = "2.6/8b"
-def branch = "master"
+//def release = "2.6/8b"
+def branch = "python_devel"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
@@ -53,7 +53,7 @@ try {
            cd /home/jenkins/repos/esgf-jenkins
 	      git pull
 	         '''
-        sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_3.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
+        sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_3.x_esg_bootstrap.py -w /home/jenkins/repos -b ${branch}"
       }
     }
 

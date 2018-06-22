@@ -34,7 +34,7 @@ if status != SUCCESS:
     print("FAIL...{cmd}".format(cmd=cmd))
     sys.exit(status)
 
-repo_dir = "{workdir}/esgf-installer"
+repo_dir = "{workdir}/esgf-installer".format(workdir=workdir)
 cmd = "{repo_dir}/esg_bootstrap.sh".format(repo_dir=repo_dir)
 status = run_cmd(cmd, True, False, True, repo_dir)
 
