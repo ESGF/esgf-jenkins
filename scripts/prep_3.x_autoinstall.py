@@ -38,10 +38,12 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-cmd = "scp {c}/{n}_config.ini ${ts}:${ts_jenkins_home}/esgf/my_config.ini".format(c=conf_dir,
-                                                                                  n=vm_node,
-                                                                                  ts=test_suite_node,
-                                                                                  ts_jenkins_home=test_suite_node_jenkins_home)
+source = "{c}/esgf-test-suite/{n}_config.ini".format(c=conf_dir,
+                                                     n=vm_node)
+dest = "{ts}:{ts_jh}/esgf/my_config.ini".format(ts=test_suite_node,
+                                                ts_jh=test_suite_node_jenkins_home)
+
+cmd = "scp {s} {d}".format(s=source, d=dest)
 status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
