@@ -59,8 +59,8 @@ try {
     stage('prep_for_autoinstall') {
        node('master') {
           echo "xxx prep_for_autoinstall xxx"
-          sh "scp ${conf_dir}/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
-	  sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
+          sh "scp ${conf_dir}/2.x/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
+	  sh "scp ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
        }
     }
     stage('esg_autoinstall') {
