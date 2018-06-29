@@ -4,6 +4,7 @@ currentBuild.result = "SUCCESS"
 def workdir = "${env.JENKINS_HOME}/testdir/${env.JOB_NAME}/test_${env.BUILD_NUMBER}"
 def repo_dir = "${workdir}/repos/esgf-jenkins"
 def prepare_vm = "${repo_dir}/scripts/prepare_vm.py"
+def prep_autoinstall = "${repo_dir}/scripts/prep_2.x_autoinstall.py"
 def stop_vm = "${repo_dir}/scripts/stop_vm.py"
 def vm_host = 'grim.llnl.gov'
 def vmx_file = "/var/lib/jenkins/vmware/jenkinsVM/jenkinsVM.vmx"
@@ -59,8 +60,9 @@ try {
     stage('prep_for_autoinstall') {
        node('master') {
           echo "xxx prep_for_autoinstall xxx"
-          sh "scp ${conf_dir}/2.x/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
-	  sh "scp ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
+          //sh "scp ${conf_dir}/2.x/esg-autoinstall.conf.${vm_node} ${vm_node}:/tmp/esg-autoinstall.conf"
+	  //sh "scp ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
+	  sh "python ${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home}"
        }
     }
     stage('esg_autoinstall') {
