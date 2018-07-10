@@ -12,6 +12,7 @@ def vm_snapshot = "SnapshotForJenkins10"
 def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
+def vm_conda_path = "/usr/local/conda/bin"
 def url = "https://github.com/ESGF/esgf-jenkins"
 def branch = "python_devel"
 def conf_dir = "/var/lib/jenkins/esgf"
@@ -59,28 +60,20 @@ try {
     stage('prep_for_autoinstall') {
        node('master') {
           echo "xxx prep_for_autoinstall xxx"
-          //sh "scp ${conf_dir}/3.x/esgf.properties.${vm_node} ${vm_node}:/tmp/esgf.properties"
-	  //sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
-        sh "python ${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home}"
+	  sh "python ${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home}"
        }
     }
     stage('esg_autoinstall') {
        node('esgf-dev1') {
           echo "xxx esg_autoinstall xxx"
 	  sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/vm_prep_3.x_autoinstall.py"
-	  sh '''
-	     cd /home/jenkins/repos
-             git clone -b python_devel https://github.com/ESGF/esgf-installer.git
-             cd esgf-installer
-	     source activate esgf-pub
-	     python esg_node.py --install --type all	     	     
-	  '''
+	  sh "sudo bash -c 'export TERM=vt100; export PATH=${vm_conda_path}:$PATH; cd /home/jenkins/repos/esgf-installer; source activate esgf-pub; python esg_node.py --install --type all'" 
       }
     }
-
-
-
 } catch (caughtException) {
     error = caughtException
     currentBuild.result = "FAILURE"
 }
+
+
+//sudo bash -c 'export TERM=vt100; export PATH=/usr/local/conda/bin:$PATH; cd /home/jenkins/repos/esgf-installer; source activate esgf-pub; python esg_node.py --install --type all'

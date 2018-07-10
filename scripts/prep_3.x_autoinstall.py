@@ -45,6 +45,12 @@ dest = "{ts}:{ts_jh}/esgf/my_config.ini".format(ts=test_suite_node,
 
 cmd = "scp {s} {d}".format(s=source, d=dest)
 status = run_cmd(cmd, True, False, True)
+if status != SUCCESS:
+    sys.exit(status)
+
+cmd = "scp {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(c=conf_dir, 
+                                                              n=vm_node)
+status = run_cmd(cmd, True, False, True)
 sys.exit(status)
 
                                                                               
