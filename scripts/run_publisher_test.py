@@ -8,12 +8,14 @@ sys.path.append(modules_dir)
 
 from Util import *
 
-parser = argparse.ArgumentParser(description="run esgf-test-suite",
+parser = argparse.ArgumentParser(description="run esgf-publisher-test",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("-b", "--branch", default='devel', help="git branch of esg-publisher repo")
+parser.add_argument("-b", "--branch", default='devel', help="git branch of esg-publisher repo, assumes -i")
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
 parser.add_argument("-e", "--esgf_conda_env", default='esgf-pub', help="esgf conda environment to run test in")
+parser.add_argument("-i", "--install", help="Install a new version of the publisher", action="store_true")
+
 
 args = parser.parse_args()
 branch = args.branch
@@ -59,8 +61,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
 
 def run_esgf_publisher_test(workdir, esgf_conda_env):
 
-    repo_dir = "{d}/repos".format(d=workdir)
-    the_repo_dir = "{d}/esg-publisher".format(d=repo_dir)
+    tmp_dir = "/tmp/"
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
 
     # /usr/local/conda/envs/esgf-pub/bin/esgtest_publish
@@ -69,15 +70,16 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     cmd = "{c}/../envs/{env}/bin/esgtest_publish".format(c=conda_path,
                                                          env=esgf_conda_env)
 
-    cmds_list = ["cd {dir}".format(dir=dir),
+    cmds_list = ["cd {dir}".format(dir=tmp_dir),
                  "export UVCDAT_ANONYMOUS_LOG=False",
                  cmd]
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmds_list)
     return(ret_code)
 
-status = get_esg_publisher(workdir, esgf_conda_env, branch)
-if status != SUCCESS:
-    sys.exit(status)
+if (args.install):
+    status = get_esg_publisher(workdir, esgf_conda_env, branch)
+    if status != SUCCESS:
+        sys.exit(status)
 
 status = run_esgf_publisher_test(workdir, esgf_conda_env)
 sys.exit(status)
