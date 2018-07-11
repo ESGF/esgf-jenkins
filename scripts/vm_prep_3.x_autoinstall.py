@@ -22,7 +22,7 @@ time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
 cmds_list = []
 esgf_autoinstall_conf = "/esg/config/esgf.properties"
 
-cmd_list = ["sudo mv {conf} {conf}.backup.{time_str}".format(conf=esgf_autoinstall_conf,
+cmds_list = ["sudo mv {conf} {conf}.backup.{time_str}".format(conf=esgf_autoinstall_conf,
                                                              time_str=time_str),
             "sudo mv /tmp/esgf.properties {conf}".format(conf=esgf_autoinstall_conf),
             "sudo chown root {conf}".format(conf=esgf_autoinstall_conf),
@@ -33,7 +33,6 @@ cmd_list = ["sudo mv {conf} {conf}.backup.{time_str}".format(conf=esgf_autoinsta
             "sudo cp /esg/config/.esgf_pass /esg/config/.esg_keystore_pass"]
 
 for cmd in cmds_list:
-
     status = run_cmd(cmd, True, False, True)
     if status != SUCCESS:
         sys.exit(status)
