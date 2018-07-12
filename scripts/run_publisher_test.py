@@ -61,6 +61,9 @@ def get_esg_publisher(workdir, env, branch='devel'):
 
 def run_esgf_publisher_test(workdir, esgf_conda_env):
 
+    repo_dir = "{d}/repos".format(d=workdir)
+    the_repo_dir = "{d}/esg-publisher".format(d=repo_dir)
+
     tmp_dir = "/tmp/"
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
 
