@@ -76,7 +76,7 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
 
     cmds_list = ["cd {dir}".format(dir=tmp_dir),
                  "export UVCDAT_ANONYMOUS_LOG=False",
-                 cmd]
+                 cmd, 'python -c "import esgcet.config.cmip6_handler"']
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmds_list)
     return(ret_code)
 
