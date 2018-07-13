@@ -157,13 +157,13 @@ def run_in_conda_env_as_root(conda_path, env, cmd):
     activate = "source activate {e}".format(e=env)
     deactivate = "source deactivate"
     cmds = "{add}; {activate}; {cmd}; ret=\$?; {deact}; exit \$ret".format(add=add_path,
-                                                                          activate=activate,
-                                                                          cmd=cmd,
-                                                                          deact=deactivate)
-    cmd = "sudo -E bash -c \"{the_cmds}\"".format(the_cmds=cmds)
+                                                                           activate=activate,
+                                                                           cmd=cmd,
+                                                                           deact=deactivate)
+    cmd = "sudo -E bash -c \"{the_cmds}\"; echo \$?".format(the_cmds=cmds)
     print("XXXXXX CMD: {c}".format(c=cmd))
     ret_code = os.system(cmd)
-
+    print("xxxxxx ret_code: {r}".format(r=ret_code))
     #cmd = "sudo -E bash -c\"cat error_file\""
     #print("XXXXXX CMD: {c}".format(c=cmd))
     #os.system(cmd)
