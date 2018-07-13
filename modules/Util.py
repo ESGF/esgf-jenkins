@@ -160,7 +160,7 @@ def run_in_conda_env_as_root(conda_path, env, cmd):
                                                                            activate=activate,
                                                                            cmd=cmd,
                                                                            deact=deactivate)
-    cmd = "sudo -E bash -c \"{the_cmds}\"; echo \$?".format(the_cmds=cmds)
+    cmd = "sudo -E bash -c \"{the_cmds}\"".format(the_cmds=cmds)
     print("XXXXXX CMD: {c}".format(c=cmd))
     ret_code = os.system(cmd)
     print("xxxxxx ret_code: {r}".format(r=ret_code))
