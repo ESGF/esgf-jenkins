@@ -165,6 +165,11 @@ def run_in_conda_env_as_root(conda_path, env, cmds_list):
     print("XXX CMD: {c}".format(c=cmd))
 
     ret_code = os.system(cmd)
+    print("XXX CMD: {c}".format(c=cmd))
+    cmd = "cat error_file"
+
+    os.system(cmd)
+
     print(ret_code)
     return(ret_code)
 
