@@ -103,6 +103,8 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
 
     return(ret_code)
 
+sys.exit(1)
+
 if (args.install):
     status = get_esg_publisher(workdir, esgf_conda_env, branch)
     if status != SUCCESS:
