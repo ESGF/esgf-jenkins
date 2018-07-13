@@ -96,6 +96,10 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     print("xxx ret_code: {r}".format(r=ret_code))
 
+    cmd = "exit 1"
+    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
+    print("xxx ret_code: {r}".format(r=ret_code))
+
     return(ret_code)
 
 if (args.install):
