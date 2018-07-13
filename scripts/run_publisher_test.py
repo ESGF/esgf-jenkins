@@ -94,7 +94,7 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
 
     cmd = "python -c 'import esgcet.config.cmip6_handler'"
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    print("xxx ret_code: {r}".format(r=ret_code)
+    print("xxx ret_code: {r}".format(r=ret_code))
 
     return(ret_code)
 
