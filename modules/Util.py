@@ -156,10 +156,10 @@ def run_in_conda_env_as_root(conda_path, env, cmd):
     add_path = "export PATH={path}:$PATH".format(path=conda_path)
     activate = "source activate {e}".format(e=env)
     deactivate = "source deactivate"
-    cmds = "{add}; {activate}; {cmd}; echo \$?; {deact}".format(add=add_path,
-                                                                activate=activate,
-                                                                cmd=cmd,
-                                                                deact=deactivate)
+    cmds = "{add}; {activate}; {cmd}; ret=\$?; {deact}; exit \$ret".format(add=add_path,
+                                                                          activate=activate,
+                                                                          cmd=cmd,
+                                                                          deact=deactivate)
     cmd = "sudo -E bash -c \"{the_cmds}\"".format(the_cmds=cmds)
     print("XXXXXX CMD: {c}".format(c=cmd))
     ret_code = os.system(cmd)
