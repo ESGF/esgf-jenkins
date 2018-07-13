@@ -165,9 +165,9 @@ def run_in_conda_env_as_root(conda_path, env, cmds_list):
     print("XXXXXX CMD: {c}".format(c=cmd))
     ret_code = os.system(cmd)
 
-    cmd = "sudo -E bash -c\"cat error_file\""
-    print("XXXXXX CMD: {c}".format(c=cmd))
-    os.system(cmd)
+    #cmd = "sudo -E bash -c\"cat error_file\""
+    #print("XXXXXX CMD: {c}".format(c=cmd))
+    #os.system(cmd)
 
     print(ret_code)
     return(ret_code)
