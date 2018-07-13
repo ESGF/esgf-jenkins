@@ -51,12 +51,16 @@ def get_esg_publisher(workdir, env, branch='devel'):
         return ret_code
 
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
-    cmds_list = ["cd {dir}".format(dir=dir),
-                 "export UVCDAT_ANONYMOUS_LOG=False",
-                 "python setup.py install"]
+    #cmds_list = ["cd {dir}".format(dir=dir),
+    #             "export UVCDAT_ANONYMOUS_LOG=False",
+    #             "python setup.py install"]
+
+    set_env = "export UVCDAT_ANONYMOUS_LOG=False"
+    cmd = "cd {dir}; {set_env}; python setup.py install".format(set_env=set_env,
+                                                                dir=dir)
 
     conda_path = "/usr/local/conda/bin"
-    ret_code = run_in_conda_env_as_root(conda_path, env, cmds_list)
+    ret_code = run_in_conda_env_as_root(conda_path, env, cmd)
     return(ret_code)
 
 def run_esgf_publisher_test(workdir, esgf_conda_env):
@@ -73,15 +77,24 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
 
     cmd = "{c}/../envs/{env}/bin/esgtest_publish".format(c=conda_path,
                                                          env=esgf_conda_env)
-    cmds_list = ["cd {dir}".format(dir=tmp_dir),
-                 "export UVCDAT_ANONYMOUS_LOG=False",
-                 cmd]
-    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmds_list)
+    #cmds_list = ["cd {dir}".format(dir=tmp_dir),
+    #             "export UVCDAT_ANONYMOUS_LOG=False",
+    #             cmd]
+    set_env = "export UVCDAT_ANONYMOUS_LOG=False"
+    cmd = "cd {dir}; {set_env}; {cmd}".format(dir=tmp_dir,
+                                              set_env=set_env,
+                                              cmd=cmd)
 
-    cmds_list = ["cd {dir}".format(dir=tmp_dir),
-                 "export UVCDAT_ANONYMOUS_LOG=False",
-                 "python -c 'import esgcet.config.cmip6_handler'"]
-    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmds_list)
+    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
+    print("xxx ret_code: {r}".format(r=ret_code)
+
+    #cmds_list = ["cd {dir}".format(dir=tmp_dir),
+    #             "export UVCDAT_ANONYMOUS_LOG=False",
+    #             "python -c 'import esgcet.config.cmip6_handler'"]
+
+    cmd = "python -c 'import esgcet.config.cmip6_handler'"
+    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
+    print("xxx ret_code: {r}".format(r=ret_code)
 
     return(ret_code)
 
