@@ -135,7 +135,9 @@ def run_in_conda_env_as_root(conda_path, env, cmds_list):
     cmds = "{add_path_cmd}; source activate {e}".format(add_path_cmd=add_path,
                                                        e=env)
     for a_cmd in cmds_list:
-        cmds = "{existing}; {new}".format(existing=cmds, new=a_cmd)        
+        new_cmd = "{cmd} ; exit 1 if \$? != 0".format(cmd=a_cmd)
+        cmds = "{existing}; {new}".format(existing=cmds, new=new_cmd)        
+        #cmds = "{existing}; {new}".format(existing=cmds, new=a_cmd)
     cmds = "{existing}; source deactivate".format(existing=cmds)
 
     cmd = "sudo -E bash -c \"{the_cmds}\"".format(the_cmds=cmds)
