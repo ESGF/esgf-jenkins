@@ -86,7 +86,8 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
                                               cmd=cmd)
 
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    print("xxx ret_code: {r}".format(r=ret_code))
+    if ret_code != 0:
+        return(ret_code)
 
     #cmds_list = ["cd {dir}".format(dir=tmp_dir),
     #             "export UVCDAT_ANONYMOUS_LOG=False",
@@ -94,11 +95,11 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
 
     cmd = "python -c 'import esgcet.config.cmip6_handler'"
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    print("xxx ret_code: {r}".format(r=ret_code))
+    if ret_code != 0:
+        return(ret_code)
 
     cmd = "exit 1"
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    print("xxx ret_code: {r}".format(r=ret_code))
 
     return(ret_code)
 
@@ -108,6 +109,7 @@ if (args.install):
         sys.exit(status)
 
 status = run_esgf_publisher_test(workdir, esgf_conda_env)
+print("xxx xxx run_esgf_publisher_test...returning {s}".format(s=status))
 sys.exit(status)
 
 
