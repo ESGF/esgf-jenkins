@@ -80,7 +80,8 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     #cmds_list = ["cd {dir}".format(dir=tmp_dir),
     #             "export UVCDAT_ANONYMOUS_LOG=False",
     #             cmd]
-    set_env = "export UVCDAT_ANONYMOUS_LOG=False"
+    #set_env = "export UVCDAT_ANONYMOUS_LOG=False"
+    set_env = "export UVCDAT_ANONYMOUS_LOG=no"
     cmd = "cd {dir}; {set_env}; {cmd}".format(dir=tmp_dir,
                                               set_env=set_env,
                                               cmd=cmd)
