@@ -104,10 +104,10 @@ if status != SUCCESS:
     print("FAIL...esgtest_publisher")
     exit_status |= status
 
-status = run_import_test(esgf_conda_env)
-if status != SUCCESS:
-    print("FAIL...import test")
-    exit_status |= status
+#status = run_import_test(esgf_conda_env)
+#if status != SUCCESS:
+#    print("FAIL...import test")
+#    exit_status |= status
 
 sys.exit(exit_status)
 
