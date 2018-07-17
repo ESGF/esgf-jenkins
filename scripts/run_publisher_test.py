@@ -21,6 +21,7 @@ args = parser.parse_args()
 branch = args.branch
 workdir = args.workdir
 esgf_conda_env = args.esgf_conda_env
+conda_path = "/usr/local/conda/bin"
 
 def get_esg_publisher(workdir, env, branch='devel'):
 
@@ -73,42 +74,42 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
 
     # /usr/local/conda/envs/esgf-pub/bin/esgtest_publish
-    conda_path = "/usr/local/conda/bin"
-
+    set_env = "export UVCDAT_ANONYMOUS_LOG=False"
     cmd = "{c}/../envs/{env}/bin/esgtest_publish".format(c=conda_path,
                                                          env=esgf_conda_env)
-    #cmds_list = ["cd {dir}".format(dir=tmp_dir),
-    #             "export UVCDAT_ANONYMOUS_LOG=False",
-    #             cmd]
-    #set_env = "export UVCDAT_ANONYMOUS_LOG=False"
-    set_env = "export UVCDAT_ANONYMOUS_LOG=no"
     cmd = "cd {dir}; {set_env}; {cmd}".format(dir=tmp_dir,
                                               set_env=set_env,
                                               cmd=cmd)
 
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    if ret_code != 0:
-        return(ret_code)
+    return(ret_code)
 
-    #cmds_list = ["cd {dir}".format(dir=tmp_dir),
-    #             "export UVCDAT_ANONYMOUS_LOG=False",
-    #             "python -c 'import esgcet.config.cmip6_handler'"]
+
+def run_import_test(esgf_conda_env):
 
     cmd = "python -c 'import esgcet.config.cmip6_handler'"
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    if ret_code != 0:
-        return(ret_code)
-
     return(ret_code)
 
+
+exit_status = 0
 if (args.install):
     status = get_esg_publisher(workdir, esgf_conda_env, branch)
     if status != SUCCESS:
-        sys.exit(status)
+        print("FAIL...get_esg_publisher")
+        exit_status |= status
 
 status = run_esgf_publisher_test(workdir, esgf_conda_env)
-print("xxx xxx run_esgf_publisher_test...returning {s}".format(s=status))
-sys.exit(status)
+if status != SUCCESS:
+    print("FAIL...esgtest_publisher")
+    exit_status |= status
+
+status = run_import_test(esgf_conda_env)
+if status != SUCCESS:
+    print("FAIL...import test")
+    exit_status |= status
+
+sys.exit(exit_status)
 
 
 
