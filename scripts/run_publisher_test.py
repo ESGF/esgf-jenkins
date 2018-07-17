@@ -22,6 +22,7 @@ branch = args.branch
 workdir = args.workdir
 esgf_conda_env = args.esgf_conda_env
 conda_path = "/usr/local/conda/bin"
+set_env = "export UVCDAT_ANONYMOUS_LOG=False"
 
 def get_esg_publisher(workdir, env, branch='devel'):
 
@@ -74,7 +75,6 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
 
     # /usr/local/conda/envs/esgf-pub/bin/esgtest_publish
-    set_env = "export UVCDAT_ANONYMOUS_LOG=False"
     cmd = "{c}/../envs/{env}/bin/esgtest_publish".format(c=conda_path,
                                                          env=esgf_conda_env)
     cmd = "cd {dir}; {set_env}; {cmd}".format(dir=tmp_dir,
@@ -87,7 +87,7 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
 
 def run_import_test(esgf_conda_env):
 
-    cmd = "python -c 'import esgcet.config.cmip6_handler'"
+    cmd = "{e}; python -c 'import esgcet.config.cmip6_handler'".format(e=set_env)
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
