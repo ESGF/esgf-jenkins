@@ -88,7 +88,7 @@ def run_esgf_test_suite(config_ini_file, workdir, run_options):
     ret_code = run_cmd(cmd, True, False, True)
 
     #std_options = "--nocapture --nologcapture --with-html --with-id -v"
-    std_options = "--with-html --with-id -v"
+    std_options = "--with-html --with-id --verbosity=2 --verbose"
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {config_ini}".format(config_ini=config_ini_file,
                                                         home=user_home)
