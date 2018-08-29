@@ -12,10 +12,17 @@ from Util import *
 parser = argparse.ArgumentParser(description="vm prepare for 3.x esgf autoinstall",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-#sh "scp ${conf_dir}/3.x/esgf.properties.${vm_node} ${vm_node}:/tmp/esgf.properties"
-#sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
-
 # this script is to be run from jenkins master as user 'jenkins'
+#
+# This scripts prepare the vm-node where we are going to run esg_node.py on.
+# + copy over esgf.properties from master to vm node:
+#   scp <conf_dir>/3.x/esgf.properties.<vm_node> <vm_node>:/tmp/esgf.properties
+# + copy over config.ini needed for running esgf-test-suite later on.
+#   scp <conf_dir>/esgf-test-suite/esgf-dev1_config.ini \
+#       <test_suite_node>:<test_suite_node_jenkins_home>/esgf/my_config.ini
+# + copy over esgf_pass to vm node
+#   scp <conf_dir>/3.x/esgf_pass to <vm_node>:/tmp/.esgf_pass
+#
 
 parser.add_argument("-d", "--conf_dir", 
                     help='a directory on master where configs/templates can be found')
@@ -32,25 +39,22 @@ vm_node = args.vm_node
 test_suite_node = args.test_suite_node
 test_suite_node_jenkins_home = args.test_suite_node_jenkins_home
 
-cmd = "scp {c}/3.x/esgf.properties.{n} {n}:/tmp/esgf.properties".format(c=conf_dir, 
-                                                                        n=vm_node)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    sys.exit(status)
+cmds_list = [
+    "scp {c}/3.x/esgf.properties.{n} {n}:/tmp/esgf.properties".format(c=conf_dir,
+                                                                        n=vm_node),
+    "scp {c}/esgf-test-suite/{n}_config.ini {ts}:{ts_jh}/esgf/my_config.ini".format(c=conf_dir,
+                                                                                    n=vm_node,
+                                                                                    ts=test_suite_node,
+                                                                                    ts_jh=test_suite_node_jenkins_home),
+    "scp {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(c=conf_dir,
+                                                       n=vm_node),
+    "scp {c}/keypair.tar {n}:/tmp/keypair.tar".format(c=conf_dir,
+                                                      n=vm_node)
+    ]
 
-source = "{c}/esgf-test-suite/{n}_config.ini".format(c=conf_dir,
-                                                     n=vm_node)
-dest = "{ts}:{ts_jh}/esgf/my_config.ini".format(ts=test_suite_node,
-                                                ts_jh=test_suite_node_jenkins_home)
+for cmd in cmds_list:
+    status = run_cmd(cmd, True, False, True)
+    if status != SUCCESS:
+        sys.exit(status)
 
-cmd = "scp {s} {d}".format(s=source, d=dest)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    sys.exit(status)
-
-cmd = "scp {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(c=conf_dir, 
-                                                              n=vm_node)
-status = run_cmd(cmd, True, False, True)
-sys.exit(status)
-
-                                                                              
+sys.exit(SUCCESS)

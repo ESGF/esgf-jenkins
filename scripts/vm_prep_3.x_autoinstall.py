@@ -24,16 +24,22 @@ esgf_autoinstall_conf = "/esg/config/esgf.properties"
 
 cmds_list = ["sudo mv {conf} {conf}.backup.{time_str}".format(conf=esgf_autoinstall_conf,
                                                              time_str=time_str),
-            "sudo mv /tmp/esgf.properties {conf}".format(conf=esgf_autoinstall_conf),
-            "sudo chown root {conf}".format(conf=esgf_autoinstall_conf),
-            "sudo chgrp root {conf}".format(conf=esgf_autoinstall_conf),
-            "sudo mv /tmp/.esgf_pass /esg/config/.esgf_pass",
-            "sudo cp /esg/config/.esgf_pass /esg/config/.esg_pg_publisher_pass",
-            "sudo cp /esg/config/.esgf_pass /esg/config/.esg_pg_pass",
-            "sudo cp /esg/config/.esgf_pass /esg/config/.esg_keystore_pass"]
+             "sudo mv /tmp/esgf.properties {conf}".format(conf=esgf_autoinstall_conf),
+             "sudo chown root {conf}".format(conf=esgf_autoinstall_conf),
+             "sudo chgrp root {conf}".format(conf=esgf_autoinstall_conf),
+             "sudo mv /tmp/.esgf_pass /esg/config/.esgf_pass",
+             "sudo cp /esg/config/.esgf_pass /esg/config/.esg_pg_publisher_pass",
+             "sudo cp /esg/config/.esgf_pass /esg/config/.esg_pg_pass",
+             "sudo cp /esg/config/.esgf_pass /esg/config/.esg_keystore_pass",
+             "mkdir -p /tmp/keypair",
+             "mv /tmp/keypair.tar /tmp/keypair"]
 
 for cmd in cmds_list:
     status = run_cmd(cmd, True, False, True)
     if status != SUCCESS:
         sys.exit(status)
+
+cmd = "tar -xvf /tmp/keypair.tar"
+status = run_cmd(cmd, True, False, True, "/tmp")
+sys.exit(status)
 
