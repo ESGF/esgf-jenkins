@@ -38,7 +38,7 @@ for cmd in cmds_list:
     if status != SUCCESS:
         sys.exit(status)
 
-cmd = "tar -xvf /tmp/keypair/keypair.tar"
+cmd = "tar -xvf /tmp/keypair.tar"
 status = run_cmd(cmd, True, False, True, "/tmp/keypair")
 sys.exit(status)
 
