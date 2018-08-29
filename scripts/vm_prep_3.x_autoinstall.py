@@ -31,15 +31,14 @@ cmds_list = ["sudo mv {conf} {conf}.backup.{time_str}".format(conf=esgf_autoinst
              "sudo cp /esg/config/.esgf_pass /esg/config/.esg_pg_publisher_pass",
              "sudo cp /esg/config/.esgf_pass /esg/config/.esg_pg_pass",
              "sudo cp /esg/config/.esgf_pass /esg/config/.esg_keystore_pass",
-             "mkdir -p /tmp/keypair",
-             "mv /tmp/keypair.tar /tmp/keypair"]
+             "mkdir -p /tmp/keypair"]
 
 for cmd in cmds_list:
     status = run_cmd(cmd, True, False, True)
     if status != SUCCESS:
         sys.exit(status)
 
-cmd = "tar -xvf /tmp/keypair.tar"
-status = run_cmd(cmd, True, False, True, "/tmp")
+cmd = "tar -xvf /tmp/keypair/keypair.tar"
+status = run_cmd(cmd, True, False, True, "/tmp/keypair")
 sys.exit(status)
 
