@@ -65,7 +65,7 @@ try {
        node('esgf-dev1') {
           echo "xxx esg_autoinstall xxx"
 	  sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/vm_prep_3.x_autoinstall.py"
-	  sh "sudo bash -c 'export TERM=vt100; printenv PATH"
+	  sh "sudo bash -c 'export TERM=vt100; printenv PATH'"
 	  sh "sudo bash -c 'export TERM=vt100; export PATH=${vm_conda_path}:/sbin:/usr/sbin:$PATH; cd /home/jenkins/repos/esgf-installer; source /usr/local/conda/bin/activate esgf-pub; python esg_node.py --install --type all'" 
       }
     }
