@@ -32,5 +32,17 @@ file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
 var_val_pairs_list = ['USE_CAPTCHA=False']
 status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
 
+# add_path = "export PATH={}/miniconda2/bin:$PATH".format(workdir)
+# activate = "source /usr/local/conda/bin/activate esgf-pub"
+cd_cmd = "cd {}/repos/esgf-installer"
+stop = "python esg_node.py --stop"
+start = "python esg_node.py --start"
+
+conda_path = "{jenkins_home}/miniconda2/bin"
+env = "esgf-pub"
+cmd = "{cd}; {stop}; sleep 5; {start}; sleep 10".format(cd=cd_cmd,
+                                                        stop=stop,
+                                                        start=start)
+status = run_in_conda_env_as_root(conda_path, env, cmd) 
 sys.exit(status)
 
