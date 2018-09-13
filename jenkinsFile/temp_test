@@ -1,0 +1,15 @@
+def error = null
+currentBuild.result = "SUCCESS"
+
+
+try {
+    stage('beginning') {
+      node('master') {
+         sh "ls -l"
+      }
+    }
+} catch (caughtException) {
+    error = caughtException
+    currentBuild.result = "FAILURE"
+}
+
