@@ -5,6 +5,8 @@ currentBuild.result = "SUCCESS"
 try {
     stage('beginning') {
       node('master') {
+         echo "hello world"
+	 sh "pwd"
          sh "ls -l"
       }
     }
