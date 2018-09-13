@@ -3,6 +3,11 @@ currentBuild.result = "SUCCESS"
 
 
 try {
+    stage('Checkout code') {
+      node('master') {
+         checkout scm
+       }
+    }
     stage('beginning') {
       node('master') {
          echo "hello world"
