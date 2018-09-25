@@ -32,7 +32,7 @@ file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
 var_val_pairs_list = ['USE_CAPTCHA=False']
 status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
 
-add_path = "export PATH={}/miniconda2/bin:$PATH".format(workdir)
+add_path = "export PATH={}/miniconda2/bin:/sbin:/usr/sbin:$PATH".format(workdir)
 activate = "source /usr/local/conda/bin/activate esgf-pub"
 cd_cmd = "cd {}/repos/esgf-installer".format(workdir)
 stop = "python esg_node.py --stop"
