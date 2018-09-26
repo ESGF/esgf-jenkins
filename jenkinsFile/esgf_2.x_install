@@ -1,26 +1,32 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-def workdir = "${env.JENKINS_HOME}/testdir/${env.JOB_NAME}/test_${env.BUILD_NUMBER}"
-def repo_dir = "${workdir}/repos/esgf-jenkins"
-def prepare_vm = "${repo_dir}/scripts/prepare_vm.py"
-def prep_autoinstall = "${repo_dir}/scripts/prep_2.x_autoinstall.py"
-def stop_vm = "${repo_dir}/scripts/stop_vm.py"
+def esgf_jenkins_branch = 'master'
+def prepare_vm = "scripts/prepare_vm.py"
+def run_bootstrap = "scripts/run_2.x_esg_bootstrap.py"
+def prep_autoinstall = "scripts/prep_2.x_autoinstall.py"
+def vm_prep_autoinstall = "scripts/vm_prep_2.x_autoinstall.py"
+def prep_post_install = "scripts/prep_2.x_post_install.py"
+def post_install = "scripts/run_2.x_post_install_steps.py"
+def run_publisher_test = "scripts/run_publisher_test.py"
+def run_esgf_test_suite = "scripts/run_esgf_test_suite.py"
+
 def vm_host = 'grim.llnl.gov'
 def vmx_file = "/var/lib/jenkins/vmware/jenkinsVM/jenkinsVM.vmx"
 def vm_snapshot = "SnapshotForJenkins10"
 def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
-def url = "https://github.com/ESGF/esgf-jenkins"
-def release = "2.7/0"
-def branch = "master"
+def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
+def release = "2.7/1"
+def esgf_dist_branch = "master"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
 //def run_options = '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http'
 def run_options = '!compute,!dl_gridftp,!dl_http,!myproxy_get_credentials,!myproxy_get_trustroots'
 def run_options1 = 'myproxy_get_credentials,myproxy_get_trustroots'
+
 def test_suite_node = 'pcmdi8'
 def test_suite_node_jenkins_home = '/home/jenkins'
 def geckodriver_path = '/home/jenkins/esgf'
@@ -29,85 +35,85 @@ def test_suite_node_python_path = '/home/jenkins/esgf/miniconda2/bin'
 def config_ini = '/home/jenkins/esgf/my_config.ini'
 
 try {
-    stage('git_clone_esgf_jenkins') {
-      node('master') {
-        echo "xxx git_clone_esgf_jenkins xxx"
-        sh "mkdir -p ${workdir}/repos"
-        sh "cd ${workdir}/repos; git clone ${url}"
-        sh "cd ${repo_dir}; git pull"
-      }
+    stage('checkout') {
+        node('master') {
+            echo "...git_clone_esgf_jenkins..."
+            git branch: "$esgf_jenkins_branch", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+        }
     }
     stage('prepare_vm') {
-      node('master') {
-        echo "xxx prepare_vm xxx"
-        sh "python ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
-	echo "xxx done preparing vm xxx"
-      }
+        node('master') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...prepare_vm..."
+                sh "python ${ws}/${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+            }
+        }
     }
     stage('esg_bootstrap') {
-      node('esgf-dev1') {
-        echo "xxx esgf_bootstrap xxx xxx"
-	sleep 120
-	sh '''
-	   mkdir -p /home/jenkins/repos
-           cd /home/jenkins/repos; 
-	   git clone https://github.com/ESGF/esgf-jenkins
-           cd /home/jenkins/repos/esgf-jenkins
-	   git pull
-	   '''
-        sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_esg_bootstrap.py -d ${branch} -v \"${release}\" -m ${mirror}"
-      }
+        node('esgf-dev1') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...esgf_bootstrap..."
+	        sleep 120
+                git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+                sh "${vm_python_path}/python ${ws}/${run_bootstrap} -d ${esgf_dist_branch} -v \"${release}\" -m ${mirror}"
+            }
+        }
     }
     stage('prep_for_autoinstall') {
-       node('master') {
-          echo "xxx prep_for_autoinstall xxx"
-	  sh "python ${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home}"
-       }
+        node('master') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...prep_for_autoinstall..."
+	        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home}"
+            }
+        }
     }
     stage('esg_autoinstall') {
-       node('esgf-dev1') {
-          echo "xxx esg_autoinstall xxx"
-	  sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/vm_prep_2.x_autoinstall.py"
-          sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
-      }
+        node('esgf-dev1') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...esg_autoinstall..."
+	        sh "${vm_python_path}/python ${ws}/${vm_prep_autoinstall}"
+                sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
+            }
+        }
     }
-    stage('prep_install') {
-       node('master') {
-          echo "xxx prep_install xxx"
-          sh "python ${repo_dir}/scripts/prep_2.x_post_install.py -n ${vm_node} -d ${conf_dir}"
-	  sh "scp ${conf_dir}/auto-keypair.exp ${vm_node}:${vm_jenkins_home}/auto-keypair.exp"
-       }
+    stage('prep_post_install') {
+        node('master') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...prep_post_install..."
+                sh "python ${ws}/${prep_post_install} -n ${vm_node} -d ${conf_dir}"
+	        sh "scp ${conf_dir}/auto-keypair.exp ${vm_node}:${vm_jenkins_home}/auto-keypair.exp"
+            }
+        }
     }
     stage('post_install') {
-       node('esgf-dev1') {
-          echo "xxx post_install xxx"
-          sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_2.x_post_install_steps.py -H ${vm_jenkins_home}"
-	  sh "sudo bash -c 'export TERM=vt100; expect ${vm_jenkins_home}/auto-keypair.exp'"
-	  sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
-	  sleep 60
-       }
+        node('esgf-dev1') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...post_install..."
+                sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
+	        sh "sudo bash -c 'export TERM=vt100; expect ${vm_jenkins_home}/auto-keypair.exp'"
+	        sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
+	        sleep 60
+            }
+        }
     }
     stage('run_publisher_test') {
-       node('esgf-dev1') {
-         sh "${vm_python_path}/python ~/repos/esgf-jenkins/scripts/run_publisher_test.py -w ${vm_jenkins_home} -e esgf-pub"         
-       }
+        node('esgf-dev1') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...run_publisher_test..."
+                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub"
+            }
+        }
     }
     stage('run_esgf_test_suite') {
-       node('pcmdi8') {
-          echo "xxx run_esgf_test_suite xxx"
-          sh "rm -rf ~/repos/esgf-jenkins"
-          sh "cd ~/repos; git clone ${url}"
-          sh "cd ~/repos/esgf-jenkins; git pull"
-	  sh "${test_suite_node_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
-	  sh "${test_suite_node_python_path}/python ~/repos/esgf-jenkins/scripts/run_esgf_test_suite.py -b 'master' -p ${test_suite_node_python_path} -o ${run_options1} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
+        node('pcmdi8') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...run_esgf_test_suite..."
+                git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+	        sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
+	        sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${test_suite_node_python_path} -o ${run_options1} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
+           }
        }
     }
-    //stage('stop_vm') {
-      //node('master') {
-        //echo "xxx stop_vm xxx"
-        //sh "python ${stop_vm} -H ${vm_host} -x ${vmx_file}"
-      //}
-    //}
 } catch (caughtException) {
     error = caughtException
     currentBuild.result = "FAILURE"

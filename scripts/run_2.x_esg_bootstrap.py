@@ -30,12 +30,10 @@ if mirror == 'fr':
 elif mirror == 'aims':
     base_url = "https://aims1.llnl.gov/esgf/dist"
 
-
 bin_dir = "/usr/local/bin"
 bootstrap_filename = "esg-bootstrap"
 
 if dist == 'devel':
-    # TEMPORARY TEMPORARY remove the .aims
     url = "{b}/devel/{v}/esgf-installer/{f}".format(b=base_url,
                                                     v=version, 
                                                     f=bootstrap_filename)
@@ -43,23 +41,20 @@ else:
     url = "{b}/{v}/esgf-installer/{f}".format(b=base_url,
                                               v=version,
                                               f=bootstrap_filename)
-    
-cmd = "sudo wget {u} --no-check-certificate".format(u=url)
-status = run_cmd(cmd, True, False, True, bin_dir)
-if status != SUCCESS:
-    sys.exit(status)
-
-cmd = "sudo chmod 555 {f}".format(f=bootstrap_filename)
-status = run_cmd(cmd, True, False, True, bin_dir)
-if status != SUCCESS:
-    sys.exit(status)
 
 if dist == 'devel':
-    cmd = "sudo ./{f} --devel".format(f=bootstrap_filename)
+    bootstrap_cmd = "sudo ./{f} --devel".format(f=bootstrap_filename)
 else:
-    cmd = "sudo ./{f}".format(f=bootstrap_filename)
+    bootstrap_cmd = "sudo ./{f}".format(f=bootstrap_filename)
 
-status = run_cmd(cmd, True, False, True, bin_dir)
+cmds = ["sudo wget {u} --no-check-certificate".format(u=url),
+        "sudo chmod 555 {f}".format(f=bootstrap_filename),
+        bootstrap_cmd]
+
+for cmd in cmds:
+    status = run_cmd(cmd, True, False, True, bin_dir)
+    if status != SUCCESS:
+        sys.exit(status)
 
 sys.exit(status)
 

@@ -30,9 +30,8 @@ firefox_path = args.firefox_path
 geckodriver_path = args.geckodriver_path
 workdir = args.workdir
 config_ini = args.config_ini
-#config_ini = "{workdir}/esgf/my_config.ini".format(workdir=workdir)
 
-print("xxx run_options: {o}".format(o=run_options))
+print("run_options: {o}".format(o=run_options))
 
 #
 # ASSUMPTIONS -- the node where this script is running should have the following:

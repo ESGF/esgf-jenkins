@@ -43,40 +43,25 @@ status = run_cmd(cmd, True, False, True, workdir)
 if status != SUCCESS:
     sys.exit(status)
 
-#auto_keypair_file = "{w}/esgf-test-suite/scripts-llnl/auto-keypair.exp".format(w=workdir)
 auto_keypair_file = "{w}/auto-keypair.exp".format(w=workdir)
 status = update_auto_keypair(auto_keypair_file, workdir)
 if status != SUCCESS:
     sys.exit(status)
 
-#cmd = "sudo bash -c \"export TERM=vt100; expect {w}/esgf-test-suite/scripts-llnl/auto-keypair.exp\"".format(w=workdir)
-#status = run_cmd(cmd, True, False, True)
-#if status != SUCCESS:
-#    sys.exit(status)
-
 #
 # update /usr/local/tomcat/conf/server.xml
 #
 dest_file = '/usr/local/tomcat/conf/server.xml'
-cmd = "sudo mv {orig} {orig}.ORIG".format(orig=dest_file)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    sys.exit(status)
 
-cmd = "sudo cp /tmp/server.xml {dest_file}".format(dest_file=dest_file)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    sys.exit(status)
-
-cmd = "sudo chown tomcat {dest_file}".format(dest_file=dest_file)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    sys.exit(status)
-
-cmd = "sudo chgrp tomcat {dest_file}".format(dest_file=dest_file)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    sys.exit(status)
+cmds_list = ["sudo mv {orig} {orig}.ORIG".format(orig=dest_file),
+             "sudo cp /tmp/server.xml {dest_file}".format(dest_file=dest_file),
+             "sudo chown tomcat {dest_file}".format(dest_file=dest_file),
+             "sudo chgrp tomcat {dest_file}".format(dest_file=dest_file)
+             ]
+for cmd in cmds_list:
+    status = run_cmd(cmd, True, False, True)
+    if status != SUCCESS:
+        sys.exit(status)
 
 #
 # updated /etc/httpd/conf/esgf-httpd.conf
@@ -90,7 +75,6 @@ if status != SUCCESS:
 #
 # update /usr/local/cog/cog_config/cog_settings.cfg
 #
-print("xxx DEBUG...going to update cog_settings.cfg to set USE_CAPTCHA to False")
 file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
 var_val_pairs_list = ['USE_CAPTCHA=False']
 status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)

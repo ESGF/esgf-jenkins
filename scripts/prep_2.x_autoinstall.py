@@ -12,11 +12,12 @@ from Util import *
 parser = argparse.ArgumentParser(description="vm prepare for 3.x esgf autoinstall",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-#sh "scp ${conf_dir}/3.x/esgf.properties.${vm_node} ${vm_node}:/tmp/esgf.properties"
-#sh "scp ${conf_dir}/${vm_node}_config.ini ${test_suite_node}:${test_suite_node_jenkins_home}/esgf/my_config.ini"
-
+#
 # this script is to be run from jenkins master as user 'jenkins'
-
+# scp <conf_dir>/2.x/esg-autoinstall.conf.<vm> <vm>:/tmp/esg-autoinstall.conf
+# scp <conf_dir>/esgf-test-suite/<vm>_config.ini \
+#        <test_suite_node>:<test_suite_node_jenkins_home>/esgf/my_config.ini
+#
 parser.add_argument("-d", "--conf_dir", 
                     help='a directory on master where configs/templates can be found')
 parser.add_argument("-n", "--vm_node", 
@@ -31,20 +32,26 @@ conf_dir = args.conf_dir
 vm_node = args.vm_node
 test_suite_node = args.test_suite_node
 test_suite_node_jenkins_home = args.test_suite_node_jenkins_home
-
-cmd = "scp {c}/2.x/esg-autoinstall.conf.{n} {n}:/tmp/esg-autoinstall.conf".format(c=conf_dir, 
-                                                                                  n=vm_node)
-status = run_cmd(cmd, True, False, True)
-if status != SUCCESS:
-    sys.exit(status)
-
+autoinstall_conf = 'esg-autoinstall.conf'
+cp_config_cmd = "scp {c}/2.x/{conf}.{n} {n}:/tmp/{conf}".format(c=conf_dir,
+                                                                conf=autoinstall_conf,
+                                                                n=vm_node)
 source = "{c}/esgf-test-suite/{n}_config.ini".format(c=conf_dir,
                                                      n=vm_node)
 dest = "{ts}:{ts_jh}/esgf/my_config.ini".format(ts=test_suite_node,
                                                 ts_jh=test_suite_node_jenkins_home)
 
-cmd = "scp {s} {d}".format(s=source, d=dest)
-status = run_cmd(cmd, True, False, True)
+cp_ts_conf_cmd = "scp {s} {d}".format(s=source, d=dest)
+
+cmds = [cp_config_cmd,
+        cp_ts_conf_cmd
+        ]
+for cmd in cmds:
+    status = run_cmd(cmd, True, False, True)
+    if status != SUCCESS:
+        sys.exit(status)
+
 sys.exit(status)
+
 
                                                                               
