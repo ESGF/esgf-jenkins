@@ -109,7 +109,7 @@ def run_in_conda_env(conda_path, env, cmds_list):
     conda environment.
     """
 
-    add_path = "export PATH={path}:$PATH".format(path=conda_path)
+    add_path = "export PATH={path}:/sbin:/usr/sbin:$PATH".format(path=conda_path)
     cmds = "{add_path_cmd}; source activate {e}".format(add_path_cmd=add_path,
                                                        e=env)
     for a_cmd in cmds_list:
@@ -131,7 +131,7 @@ def run_in_conda_env_as_root(conda_path, env, cmd):
     conda environment.
     """
 
-    add_path = "export PATH={path}:$PATH".format(path=conda_path)
+    add_path = "export PATH={path}:/sbin:/usr/sbin:$PATH".format(path=conda_path)
     activate = "source activate {e}".format(e=env)
     deactivate = "source deactivate"
     cmds = "{add}; {activate}; {cmd}; ret=\$?; {deact}; exit \$ret".format(add=add_path,
@@ -165,7 +165,7 @@ def run_in_conda_env_capture_output(conda_path, env, cmds_list):
     time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
     tmp_file = "/tmp/conda_capture.{curr_time}".format(curr_time=time_str)
 
-    add_path_cmd = "export PATH={path}:$PATH".format(path=conda_path)
+    add_path_cmd = "export PATH={path}:/sbin:/usr/sbin:$PATH".format(path=conda_path)
     activate_cmd = "source activate {env}".format(env=env)
     cmds = None
     for a_cmd in cmds_list:
