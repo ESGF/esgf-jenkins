@@ -24,7 +24,7 @@ sys.stdout.flush()
 # run this on master node as user 'jenkins'
 #
 
-cmd = "scp {dir}/keypair.tar {n}:/tmp".format(dir=dir, n=vm_node)
+cmd = "scp {dir}/keypair.{n}.tar {n}:/tmp/keypair.tar".format(dir=dir, n=vm_node)
 status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)

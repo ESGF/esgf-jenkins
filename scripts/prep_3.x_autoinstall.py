@@ -48,7 +48,7 @@ cmds_list = [
                                                                                     ts_jh=test_suite_node_jenkins_home),
     "scp {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(c=conf_dir,
                                                        n=vm_node),
-    "scp {c}/keypair.tar {n}:/tmp/keypair.tar".format(c=conf_dir,
+    "scp {c}/keypair.{n}.tar {n}:/tmp/keypair.tar".format(c=conf_dir,
                                                       n=vm_node)
     ]
 
