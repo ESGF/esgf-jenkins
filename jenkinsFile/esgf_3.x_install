@@ -28,7 +28,7 @@ def test_suite_node_jenkins_home = '/home/jenkins'
 def geckodriver_path = '/home/jenkins/esgf'
 def firefox_path = '/opt/firefox58'
 def test_suite_node_python_path = '/home/jenkins/esgf/miniconda2/bin'
-def config_ini = '/home/jenkins/esgf/my_config.ini'
+def config_ini = '/home/jenkins/esgf/esgf-dev1_config.ini'
 
 try {
     stage('checkout') {
