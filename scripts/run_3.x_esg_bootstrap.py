@@ -37,8 +37,7 @@ if status != SUCCESS:
 repo_dir = "{workdir}/esgf-installer".format(workdir=workdir)
 cmd = "sudo {repo_dir}/esg_bootstrap.sh".format(repo_dir=repo_dir)
 status = run_cmd(cmd, True, False, True, repo_dir)
+sys.exit(status)
 
-# TEMPORARY
-#sys.exit(status)
-sys.exit(0)
+
 
