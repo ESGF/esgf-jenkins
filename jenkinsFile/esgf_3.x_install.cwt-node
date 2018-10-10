@@ -13,7 +13,7 @@ def run_esgf_test_suite = "scripts/run_esgf_test_suite.py"
 
 def vm_host = 'grim.llnl.gov'
 def vmx_file = "/var/lib/jenkins/vmware/cwt-node/cwt-node.vmx"
-def vm_snapshot = "cwt-node.snapshot3"
+def vm_snapshot = "cwt-node.snapshot6"
 def vm_node = 'cwt-node'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
