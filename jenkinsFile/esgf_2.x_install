@@ -123,7 +123,7 @@ try {
                 cd esgf_scanner
                 git submodule init
                 git submodule update
-                bash rungetpackagelists esgf-dev1
+                bash rungetpackagelists.sh esgf-dev1
                 bash generate_esgfconf.sh
             }
         }
