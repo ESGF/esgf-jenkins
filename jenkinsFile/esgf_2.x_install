@@ -125,6 +125,7 @@ try {
                 git submodule update
                 bash rungetpackagelists esgf-dev1
                 bash generate_esgfconf.sh
+            }
         }
     }
 } catch (caughtException) {
