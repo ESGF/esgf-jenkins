@@ -18,14 +18,12 @@ def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
-def release = "2.7/1"
-def esgf_dist_branch = "master"
+def release = "2.8/b2"
+def esgf_dist_branch = "devel"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
-//def run_options = '!compute,!cog_create_user,!cog_user_login,!slcs,!dl_gridftp,!dl_http'
 def run_options = '!compute,!dl_gridftp,!dl_http,!myproxy_get_credentials,!myproxy_get_trustroots'
-def run_options1 = 'myproxy_get_credentials,myproxy_get_trustroots'
 
 def test_suite_node = 'pcmdi8'
 def test_suite_node_jenkins_home = '/home/jenkins'
@@ -110,7 +108,6 @@ try {
                 echo "...run_esgf_test_suite..."
                 git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
 	        sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
-	        sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${test_suite_node_python_path} -o ${run_options1} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
            }
        }
     }
