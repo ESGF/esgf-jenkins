@@ -108,7 +108,7 @@ current_time = time.localtime(time.time())
 time_str = time.strftime("%Y%b%d%H%M", current_time)
 
 tar_file = "jenkins_cvecheckerrun_{t}.tgz".format(t=time_str)
-report_files = "jarlist cog_packages pub_packages solr_jars lasjars {r}".format(r=report)
+report_files = "packagelists.tgz {r}".format(r=report)
 tar_cmd = "tar -cvzf {tar_file} {files}".format(tar_file=tar_file,
                                                 files=report_files)
 
@@ -122,6 +122,3 @@ for cmd in cmds_list:
         sys.exit(status)
 
 sys.exit(SUCCESS)
-
-
-
