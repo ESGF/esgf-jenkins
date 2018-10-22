@@ -15,14 +15,17 @@ parser.add_argument("-b", "--branch", default='devel', help="git branch of esg-p
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
 parser.add_argument("-e", "--esgf_conda_env", default='esgf-pub', help="esgf conda environment to run test in")
 parser.add_argument("-i", "--install", help="Install a new version of the publisher", action="store_true")
-
+parser.add_argument("-p", "--run_myproxy_logon", default=False, action="store_true")
 
 args = parser.parse_args()
 branch = args.branch
 workdir = args.workdir
 esgf_conda_env = args.esgf_conda_env
+run_myproxy_logon = args.run_myproxy_logon
+
 conda_path = "/usr/local/conda/bin"
 set_env = "export UVCDAT_ANONYMOUS_LOG=False"
+
 
 def get_esg_publisher(workdir, env, branch='devel'):
 
@@ -53,10 +56,6 @@ def get_esg_publisher(workdir, env, branch='devel'):
         return ret_code
 
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
-    #cmds_list = ["cd {dir}".format(dir=dir),
-    #             "export UVCDAT_ANONYMOUS_LOG=False",
-    #             "python setup.py install"]
-
     set_env = "export UVCDAT_ANONYMOUS_LOG=False"
     cmd = "cd {dir}; {set_env}; python setup.py install".format(set_env=set_env,
                                                                 dir=dir)
@@ -84,6 +83,40 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
+def run_myproxy_logon():
+
+    this_host = os.uname()[1]
+    home = os.environ["HOME"]
+    globus_dir = "{h}/.globus".format(h=home)
+    if os.path.isdir(globus_dir) is False:
+        os.mkdir(globus_dir)
+
+    this_dir = os.path.abspath(os.path.dirname(__file__))
+    # TEMPORARY
+    #myproxy_logon_exp = os.path.join(this_dir, 'expect', 'myproxy-logon.exp')
+    myproxy_logon_exp = os.path.join(home, 'myproxy-logon.exp')
+    cmd = "export TERM=vt100; expect {f}".format(f=myproxy_logon_exp)
+    print("CMD: {c}".format(c=cmd))
+    ret_code = os.system(cmd)
+    if ret_code != SUCCESS:
+        print("FAIL...{c}".format(c=cmd))
+        return(ret_code)    
+
+    # copy cert_file to root's .globus dir.
+    root_globus_dir = "~root/.globus"
+    cmd = "[[ -d {d} ]] && echo {d} exists || mkdir {d}".format(d=root_globus_dir)
+    ret_code = run_cmd_as_root(cmd)
+    if ret_code != SUCCESS:
+        print("FAIL...{c}".format(c=cmd))
+        return ret_code
+
+    cmd = "cp -r {src}/* {d}".format(src=globus_dir, 
+                                     d=root_globus_dir)
+    ret_code = run_cmd_as_root(cmd)
+    if ret_code != SUCCESS:
+        print("FAIL...{c}".format(c=cmd))
+
+    return ret_code
 
 def run_import_test(esgf_conda_env):
 
@@ -91,22 +124,31 @@ def run_import_test(esgf_conda_env):
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
+#
+# main code
+#
 
 exit_status = 0
 if (args.install):
     status = get_esg_publisher(workdir, esgf_conda_env, branch)
     if status != SUCCESS:
-        print("FAIL...get_esg_publisher")
+        print("FAIL FAIL ...get_esg_publisher")
+        exit_status |= status
+
+if run_myproxy_logon:
+    status = run_myproxy_logon()
+    if status != SUCCESS:
+        print("FAIL FAIL ...esgtest_publisher")
         exit_status |= status
 
 status = run_esgf_publisher_test(workdir, esgf_conda_env)
 if status != SUCCESS:
-    print("FAIL...esgtest_publisher")
+    print("FAIL FAIL...esgtest_publisher")
     exit_status |= status
 
 status = run_import_test(esgf_conda_env)
 if status != SUCCESS:
-    print("FAIL...import test")
+    print("FAIL FAIL...import test")
     exit_status |= status
 sys.exit(exit_status)
 

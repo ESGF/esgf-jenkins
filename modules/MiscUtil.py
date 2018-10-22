@@ -95,7 +95,8 @@ def update_file(file_to_update, str_to_replace, replacement_str, workdir):
     src_f = open(file_to_update, "r")
     temp_file = open(temp_file_full_path, "w+")
     for line in src_f:
-        match_obj = re.match(r'.*CHANGEME.*', line)
+        match_str = ".*{s}.*".format(s=str_to_replace)
+        match_obj = re.match(match_str, line)
         if match_obj:
             new_line = line.replace(str_to_replace, replacement_str)
             temp_file.write(new_line)

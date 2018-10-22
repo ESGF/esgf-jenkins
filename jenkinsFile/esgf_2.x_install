@@ -1,7 +1,7 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-def esgf_jenkins_branch = 'master'
+def esgf_jenkins_branch = 'add_tests'
 def prepare_vm = "scripts/prepare_vm.py"
 def run_bootstrap = "scripts/run_2.x_esg_bootstrap.py"
 def prep_autoinstall = "scripts/prep_2.x_autoinstall.py"
@@ -18,7 +18,7 @@ def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
-def release = "2.8/b2"
+def release = "2.8/b4"
 def esgf_dist_branch = "devel"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
@@ -78,8 +78,7 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prep_post_install..."
-                sh "python ${ws}/${prep_post_install} -n ${vm_node} -d ${conf_dir}"
-	        sh "scp ${conf_dir}/auto-keypair.exp ${vm_node}:${vm_jenkins_home}/auto-keypair.exp"
+                sh "python ${ws}/${prep_post_install} -n ${vm_node} -d ${conf_dir} -w ${vm_jenkins_home}"
             }
         }
     }
@@ -88,8 +87,6 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
-	        sh "sudo bash -c 'export TERM=vt100; expect ${vm_jenkins_home}/auto-keypair.exp'"
-	        sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
 	        sleep 60
             }
         }

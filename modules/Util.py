@@ -122,6 +122,16 @@ def run_in_conda_env(conda_path, env, cmds_list):
     print(ret_code)
     return(ret_code)
 
+def run_cmd_as_root(cmd):
+
+    the_cmd = "sudo -E bash -c \"{c}\"".format(c=cmd)
+    print("CMD: {c}".format(c=the_cmd))
+    ret_code = os.system(the_cmd)
+    if ret_code != SUCCESS:
+        ret_code = FAILURE
+    print(ret_code)
+    return(ret_code)
+
 def run_in_conda_env_as_root(conda_path, env, cmd):
     """
     conda_path - path to comda command
@@ -141,8 +151,6 @@ def run_in_conda_env_as_root(conda_path, env, cmd):
     cmd = "sudo -E bash -c \"{the_cmds}\"".format(the_cmds=cmds)
     print("XXX CMD: {cmd}".format(cmd=cmd))
     ret_code = os.system(cmd)
-
-
     if ret_code != SUCCESS:
         ret_code = FAILURE
     print(ret_code)
