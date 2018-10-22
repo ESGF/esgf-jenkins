@@ -60,12 +60,12 @@ if status != SUCCESS:
 #
 #
 #
-esgf_node = os.uname()[1]
-user_home = os.environ["HOME"]
-print("xxx xxx calling update_myproxy_logon_exp()")
-status = update_myproxy_logon_exp(esgf_node, user_home, workdir)
-if status != SUCCESS:
-    sys.exit(status)
+#esgf_node = os.uname()[1]
+#user_home = os.environ["HOME"]
+#print("xxx xxx calling update_myproxy_logon_exp()")
+#status = update_myproxy_logon_exp(esgf_node, user_home, workdir)
+#if status != SUCCESS:
+#    sys.exit(status)
 
 #
 # update /usr/local/tomcat/conf/server.xml

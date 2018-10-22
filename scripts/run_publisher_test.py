@@ -135,11 +135,11 @@ if (args.install):
         print("FAIL FAIL ...get_esg_publisher")
         exit_status |= status
 
-if run_myproxy_logon:
-    status = run_myproxy_logon()
-    if status != SUCCESS:
-        print("FAIL FAIL ...esgtest_publisher")
-        exit_status |= status
+#if run_myproxy_logon:
+#    status = run_myproxy_logon()
+#    if status != SUCCESS:
+#        print("FAIL FAIL ...esgtest_publisher")
+#        exit_status |= status
 
 status = run_esgf_publisher_test(workdir, esgf_conda_env)
 if status != SUCCESS:

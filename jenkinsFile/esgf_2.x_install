@@ -1,7 +1,7 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-def esgf_jenkins_branch = 'add_tests'
+def esgf_jenkins_branch = 'master'
 def prepare_vm = "scripts/prepare_vm.py"
 def run_bootstrap = "scripts/run_2.x_esg_bootstrap.py"
 def prep_autoinstall = "scripts/prep_2.x_autoinstall.py"
