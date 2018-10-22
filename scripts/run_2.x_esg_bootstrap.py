@@ -56,5 +56,9 @@ for cmd in cmds:
     if status != SUCCESS:
         sys.exit(status)
 
+#
+# mkdir 'esgf' in jenkins' home directory for later use
+#
+os.mkdir("esgf")
 sys.exit(status)
 
