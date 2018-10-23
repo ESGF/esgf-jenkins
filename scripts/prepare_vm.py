@@ -43,6 +43,11 @@ if ret_code != SUCCESS:
     sys.exit(ret_code)
 
 ret_code = do_yum_update(vm_node)
-print("xxx returning from prepare_vm.py, ret_code: {r}".format(r=ret_code))
+if ret_code != SUCCESS:
+    sys.exit(ret_code)
+
+cmd = "ssh -t jenkins@{n} \"mkdir -p esgf\"".format(n=vm_node)
+ret_code = run_cmd(cmd, True, False, True)
+
 sys.exit(ret_code)
 
