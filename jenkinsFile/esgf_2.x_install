@@ -18,7 +18,7 @@ def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
-def release = "2.8/b4"
+def release = "2.8/0"
 def esgf_dist_branch = "devel"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
@@ -62,7 +62,7 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prep_for_autoinstall..."
-	        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home}"
+	        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
             }
         }
     }
@@ -96,7 +96,7 @@ try {
         node('esgf-dev1') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
-		     sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
+		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
             }
         }
     }
