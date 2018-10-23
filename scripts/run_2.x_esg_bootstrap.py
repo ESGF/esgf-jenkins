@@ -60,5 +60,5 @@ for cmd in cmds:
 # mkdir 'esgf' in jenkins' home directory for later use
 #
 os.mkdir("esgf")
-sys.exit(status)
+sys.exit(SUCCESS)
 

@@ -12,14 +12,14 @@ def run_publisher_test = "scripts/run_publisher_test.py"
 def run_esgf_test_suite = "scripts/run_esgf_test_suite.py"
 
 def vm_host = 'grim.llnl.gov'
-def vmx_file = "/var/lib/jenkins/vmware/jenkinsVM/jenkinsVM.vmx"
-def vm_snapshot = "SnapshotForJenkins10"
-def vm_node = 'esgf-dev1'
+def vmx_file = "/var/lib/jenkins/vmware/cwt-node/cwt-node.vmx"
+def vm_snapshot = "cwt-node.snapshot6"
+def vm_node = 'cwt-node'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
-def release = "2.8/b4"
-def esgf_dist_branch = "devel"
+def release = "2.7/1"
+def esgf_dist_branch = "master"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
@@ -31,7 +31,7 @@ def test_suite_node_jenkins_home = '/home/jenkins'
 def geckodriver_path = '/home/jenkins/esgf'
 def firefox_path = '/opt/firefox58'
 def test_suite_node_python_path = '/home/jenkins/esgf/miniconda2/bin'
-def config_ini = '/home/jenkins/esgf/esgf-dev1_config.ini'
+def config_ini = '/home/jenkins/esgf/cwt-node_config.ini'
 
 try {
     stage('checkout') {
@@ -49,7 +49,7 @@ try {
         }
     }
     stage('esg_bootstrap') {
-        node('esgf-dev1') {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esgf_bootstrap..."
 	        sleep 120
@@ -67,7 +67,7 @@ try {
         }
     }
     stage('esg_autoinstall') {
-        node('esgf-dev1') {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esg_autoinstall..."
 	        sh "${vm_python_path}/python ${ws}/${vm_prep_autoinstall}"
@@ -84,7 +84,7 @@ try {
         }
     }
     stage('post_install') {
-        node('esgf-dev1') {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
@@ -96,12 +96,12 @@ try {
         node('esgf-dev1') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
-		     sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
+		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
             }
         }
     }
     stage('run_publisher_test') {
-        node('esgf-dev1') {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_publisher_test..."
                 sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub"

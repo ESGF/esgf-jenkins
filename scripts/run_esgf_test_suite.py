@@ -17,8 +17,8 @@ parser.add_argument("-p", "--python_path", required=True, help="python path")
 parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
                     help="options to run testsuite with - this will be passed as value to -a option ")
-parser.add_argument("-f", "--firefox_path", required=True, help="path where firefox binary is installed")
-parser.add_argument("-g", "--geckodriver_path", required=True, help="path where geckodriver is installed")
+parser.add_argument("-f", "--firefox_path", help="path where firefox binary is installed")
+parser.add_argument("-g", "--geckodriver_path", help="path where geckodriver is installed")
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
 parser.add_argument("-c", "--config_ini", required=True, help="my_config.ini full path file name")
 
@@ -45,7 +45,7 @@ def get_esgf_test_suite(workdir, branch='master'):
 
     repo_dir = "{d}/repos".format(d=workdir)
     if os.path.isdir(repo_dir) is False:
-        cmd = "mkdir -p {d}".format(repo_dir)
+        cmd = "mkdir -p {d}".format(d=repo_dir)
         ret_code = run_cmd(cmd, True, False, True)
         if ret_code != SUCCESS:
             print("FAIL...{c}".format(c=cmd))
@@ -81,10 +81,22 @@ def install_packages(python_path):
 
 def run_esgf_test_suite(config_ini_file, workdir, run_options):
 
-    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
+    if firefox_path and geckodriver_path:
+        os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
-    cmd = "which firefox"
-    ret_code = run_cmd(cmd, True, False, True)
+        cmd = "which firefox"
+        ret_code = run_cmd(cmd, True, False, True)
+
+    repo_dir = "{w}/repos/esgf-test-suite".format(w=workdir)
+    cmd = "ls -l setup.py"
+    ret_code = run_cmd(cmd, True, False, True, repo_dir)
+    if ret_code != SUCCESS:
+        return ret_code
+
+    cmd = "python setup.py install"
+    ret_code = run_cmd(cmd, True, False, True, repo_dir)
+    #if ret_code != SUCCESS:
+    #    return ret_code
 
     #std_options = "--nocapture --nologcapture --with-html --with-id -v"
     std_options = "--with-html --with-id --verbosity=2 --verbose"
@@ -116,6 +128,11 @@ status = get_esgf_test_suite(workdir, branch)
 if status != SUCCESS:
     print("FAIL...get_esgf_test_suite")
     sys.exit(status)
+
+#status = build_esgf_test_suite(workdir)
+#if status != SUCCESS:
+#    print("FAIL...build_esgf_test_suite")
+#    sys.exit(status)
 
 status = run_esgf_test_suite(config_ini, workdir, run_options)
 if status != SUCCESS:
