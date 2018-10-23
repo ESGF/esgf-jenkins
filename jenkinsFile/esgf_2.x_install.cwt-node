@@ -93,7 +93,7 @@ try {
         }
     }
     stage('run_tests_on_vm') {
-        node('esgf-dev1') {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
 		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
