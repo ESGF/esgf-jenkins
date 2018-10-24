@@ -34,26 +34,9 @@ status = run_cmd(cmd, True, False, True)
 if status != SUCCESS:
     sys.exit(status)
 
-# in case this is a rerun, and esgf-test-suite repo already exists
-##cmd = "rm -rf {workdir}/esgf-test-suite".format(workdir=workdir)
-##status = run_cmd(cmd, True, False, True)
-##if status != SUCCESS:
-#    sys.exit(status)
-
-##cmd = "git clone https://github.com/ESGF/esgf-test-suite"
-##status = run_cmd(cmd, True, False, True, workdir)
-##if status != SUCCESS:
-##    sys.exit(status)
-
 # update the auto_keypair.exp file
 auto_keypair_file = "{w}/auto-keypair.exp".format(w=workdir)
 status = update_auto_keypair(auto_keypair_file, workdir)
-if status != SUCCESS:
-    sys.exit(status)
-
-# run auto_keypair.exp 
-cmd = "export TERM=vt100; expect {w}/auto-keypair.exp".format(w=workdir)
-status = run_cmd_as_root(cmd)
 if status != SUCCESS:
     sys.exit(status)
 
@@ -99,12 +82,6 @@ var_val_pairs_list = ['USE_CAPTCHA=False']
 status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
 if status != SUCCESS:
     sys.exit(status)
-
-#
-# restart the node
-#
-cmd = "export TERM=vt100; /usr/local/bin/esg-node restart"
-status = run_cmd_as_root(cmd)
 
 sys.exit(status)
 
