@@ -27,7 +27,7 @@ sys.stdout.flush()
 #
 #dest_file = "/etc/httpd/conf/esgf-httpd.conf"
 
-src_file = "myproxy-logon.exp.{n}".format(n=vm_node)
+#src_file = "myproxy-logon.exp.{n}".format(n=vm_node)
 
 cmds_list = [
     "scp {dir}/keypairs/keypair.{n}.tar {n}:/tmp/keypair.tar".format(dir=dir, n=vm_node),
@@ -36,11 +36,13 @@ cmds_list = [
     "scp {d}/2.x/auto-keypair.exp {n}:{h}/auto-keypair.exp".format(d=dir,
                                                                    n=vm_node,
                                                                    h=vm_jenkins_home),
-    "scp {d}/2.x/{f} {n}:{h}/myproxy-logon.exp".format(d=dir,
-                                                       f=src_file,
-                                                       n=vm_node,
-                                                       h=vm_jenkins_home)
     ]
+
+#    "scp {d}/2.x/{f} {n}:{h}/myproxy-logon.exp".format(d=dir,
+#                                                       f=src_file,
+#                                                       n=vm_node,
+#                                                       h=vm_jenkins_home)
+
 for cmd in cmds_list:
     status = run_cmd(cmd, True, False, True)
     if status != SUCCESS:

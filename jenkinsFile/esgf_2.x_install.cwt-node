@@ -18,12 +18,13 @@ def vm_node = 'cwt-node'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
-def release = "2.7/1"
+def release = "2.6/5"
 def esgf_dist_branch = "master"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
-def run_options = '!compute,!dl_gridftp,!dl_http,!myproxy_get_credentials,!myproxy_get_trustroots'
+//def run_options = '!compute,!dl_gridftp,!dl_http,!myproxy_get_credentials,!myproxy_get_trustroots'
+def run_options = '!dl,!myproxy,!basic,!cog_create_user,!slcs'
 def vm_run_options = 'myproxy'
 
 def test_suite_node = 'pcmdi8'
@@ -52,7 +53,7 @@ try {
         node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esgf_bootstrap..."
-	        sleep 120
+		sleep 120
                 git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
                 sh "${vm_python_path}/python ${ws}/${run_bootstrap} -d ${esgf_dist_branch} -v \"${release}\" -m ${mirror}"
             }
@@ -62,7 +63,7 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prep_for_autoinstall..."
-	        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
+		        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
             }
         }
     }
@@ -70,7 +71,7 @@ try {
         node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esg_autoinstall..."
-	        sh "${vm_python_path}/python ${ws}/${vm_prep_autoinstall}"
+		sh "${vm_python_path}/python ${ws}/${vm_prep_autoinstall}"
                 sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-autoinstall'"
             }
         }
@@ -88,15 +89,7 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
-	        sleep 60
-            }
-        }
-    }
-    stage('run_tests_on_vm') {
-        node('cwt-node') {
-            withEnv(["ws=${pwd()}"]) {
-                echo "...run_tests_on_vm..."
-		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
+		        sleep 60
             }
         }
     }
@@ -113,12 +106,20 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_esgf_test_suite..."
                 git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
-	        sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
+		sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
            }
        }
     }
+    stage('run_tests_on_vm') {
+        node('cwt-node') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...run_tests_on_vm..."
+		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
+            }
+        }
+    }
+
 } catch (caughtException) {
     error = caughtException
     currentBuild.result = "FAILURE"
 }
-
