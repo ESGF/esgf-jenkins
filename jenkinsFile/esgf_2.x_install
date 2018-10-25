@@ -18,13 +18,14 @@ def vm_node = 'esgf-dev1'
 def vm_jenkins_home = "/home/jenkins"
 def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
-def release = "2.8/0"
-def esgf_dist_branch = "devel"
+def release = "2.7/1"
+def esgf_dist_branch = "master"
 def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
 //def run_options = '!compute,!dl_gridftp,!dl_http,!myproxy_get_credentials,!myproxy_get_trustroots'
-def run_options = '!dl,!myproxy,!basic,!slcs'
+//def run_options = '!dl,!myproxy,!basic,!slcs'
+def run_options = '!dl,!myproxy,!slcs,!compute'
 def vm_run_options = 'myproxy'
 
 def test_suite_node = 'pcmdi8'
@@ -63,7 +64,7 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prep_for_autoinstall..."
-		        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
+		sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
             }
         }
     }
