@@ -38,6 +38,7 @@ parser.add_argument("-w", "--test_suite_node_jenkins_home",
 args = parser.parse_args()
 conf_dir = args.conf_dir
 vm_node = args.vm_node
+vm_jenkins_home = args.vm_jenkins_home
 test_suite_node = args.test_suite_node
 test_suite_node_jenkins_home = args.test_suite_node_jenkins_home
 
