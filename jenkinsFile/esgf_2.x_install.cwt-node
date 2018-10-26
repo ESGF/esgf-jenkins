@@ -108,7 +108,7 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_esgf_test_suite..."
                 git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
-		sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
+		sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'update_setup_py' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
            }
        }
     }
@@ -116,7 +116,7 @@ try {
         node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
-		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'master' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
+		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'update_setup_py' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
             }
         }
     }

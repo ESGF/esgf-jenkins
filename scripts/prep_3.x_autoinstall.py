@@ -28,6 +28,8 @@ parser.add_argument("-d", "--conf_dir",
                     help='a directory on master where configs/templates can be found')
 parser.add_argument("-n", "--vm_node", 
                     help='vm node name where esgf node is to be installed')
+parser.add_argument("-H", "--vm_jenkins_home", 
+                    help='vm node name jenkins home')
 parser.add_argument("-t", "--test_suite_node", 
                     help='name of the node where esgf-test-suite is to be run from')
 parser.add_argument("-w", "--test_suite_node_jenkins_home", 
@@ -39,13 +41,23 @@ vm_node = args.vm_node
 test_suite_node = args.test_suite_node
 test_suite_node_jenkins_home = args.test_suite_node_jenkins_home
 
+source = "{c}/esgf-test-suite/{n}_config.ini".format(c=conf_dir,
+                                                     n=vm_node)
+dest = "{ts}:{ts_jh}/esgf/{n}_config.ini".format(ts=test_suite_node,
+                                                 ts_jh=test_suite_node_jenkins_home,
+                                                 n=vm_node)
+
+vm_dest = "{n}:{vm_jh}/esgf/{n}_config.ini".format(n=vm_node,
+                                                   vm_jh=vm_jenkins_home)
+
+cp_ts_conf_cmd = "scp {s} {d}".format(s=source, d=dest)
+cp_vm_conf_cmd = "scp {s} {d}".format(s=source, d=vm_dest)
+
 cmds_list = [
     "scp {c}/3.x/esgf.properties.{n} {n}:/tmp/esgf.properties".format(c=conf_dir,
                                                                         n=vm_node),
-    "scp {c}/esgf-test-suite/{n}_config.ini {ts}:{ts_jh}/esgf/my_config.ini".format(c=conf_dir,
-                                                                                    n=vm_node,
-                                                                                    ts=test_suite_node,
-                                                                                    ts_jh=test_suite_node_jenkins_home),
+    cp_ts_conf_cmd,
+    cp_vm_conf_cmd,    
     "scp {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(c=conf_dir,
                                                        n=vm_node),
     "scp {c}/keypairs/keypair.{n}.tar {n}:/tmp/keypair.tar".format(c=conf_dir,
