@@ -37,6 +37,7 @@ try {
     stage('checkout') {
         node('master') {
             echo "...git_clone_esgf_jenkins..."
+	    echo "...vm_node: ${vm_node} ..."
             git branch: "$esgf_jenkins_branch", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
         }
     }
@@ -44,8 +45,8 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prepare_vm..."
-		echo "...on ${vm_node}..."
                 sh "python ${ws}/${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+		echo "xxx xxx ${vm_node}"
             }
         }
     }
