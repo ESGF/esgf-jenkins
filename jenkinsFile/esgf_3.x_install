@@ -13,9 +13,10 @@ def run_publisher_test = "scripts/run_publisher_test.py"
 def run_esgf_test_suite = "scripts/run_esgf_test_suite.py"
 def vm_host = 'grim.llnl.gov'
 
-//def vmx_file = "/var/lib/jenkins/vmware/cwt-node/cwt-node.vmx"
-//def vm_snapshot = "cwt-node.snapshot6"
-//def vm_node = 'cwt-node'
+def vm_node = 'cwt-node'
+def vmx_file = "/var/lib/jenkins/vmware/cwt-node/cwt-node.vmx"
+def vm_snapshot = "cwt-node.snapshot6"
+
 //def branch = "python_devel"
 
 def vm_jenkins_home = "/home/jenkins"
@@ -37,7 +38,7 @@ try {
     stage('checkout') {
         node('master') {
             echo "...git_clone_esgf_jenkins..."
-	    echo "...vm_node: ${vm_node} ..."
+	    echo "...vm_node: ${vm_node} ...doing branch: ${branch}"
             git branch: "$esgf_jenkins_branch", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
         }
     }
@@ -51,7 +52,7 @@ try {
         }
     }
     stage('esg_bootstrap') {
-        node(label "${vm_node}") {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esg_bootstrap..."
 		sleep 120
@@ -64,12 +65,12 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prep_for_autoinstall..."
-	        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n label "${vm_node}" -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
+	        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n 'cwt-node' -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
             }
         }
     }
     stage('esg_autoinstall') {
-        node(label "${vm_node}") {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esg_autoinstall..."
 		sh "${vm_python_path}/python ${ws}/${vm_prep_autoinstall}"
@@ -78,7 +79,7 @@ try {
         }
     }
     stage('post_install') {
-        node(label "${vm_node}") {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
@@ -97,7 +98,7 @@ try {
        }
     }
     stage('run_tests_on_vm') {
-        node(label "${vm_node}") {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
 		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'update_setup_py' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
@@ -105,7 +106,7 @@ try {
         }
     }
     stage('run_publisher_test') {
-        node(label "${vm_node}") {
+        node('cwt-node') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_publisher_test..."
                 sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub"
