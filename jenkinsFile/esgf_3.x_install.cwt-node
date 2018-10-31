@@ -51,7 +51,7 @@ try {
         }
     }
     stage('esg_bootstrap') {
-        node(${vm_node}) {
+        node("${env.vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esg_bootstrap..."
 		sleep 120
@@ -69,7 +69,7 @@ try {
         }
     }
     stage('esg_autoinstall') {
-        node(${vm_node}) {
+        node("${env.vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esg_autoinstall..."
 		sh "${vm_python_path}/python ${ws}/${vm_prep_autoinstall}"
@@ -78,7 +78,7 @@ try {
         }
     }
     stage('post_install') {
-        node(${vm_node}) {
+        node("${env.vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
@@ -97,7 +97,7 @@ try {
        }
     }
     stage('run_tests_on_vm') {
-        node(${vm_node}) {
+        node("${env.vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
 		sh "${vm_python_path}/python ${run_esgf_test_suite} -b 'update_setup_py' -p ${vm_python_path} -o ${vm_run_options} -w ${vm_jenkins_home} -c ${config_ini}"
@@ -105,7 +105,7 @@ try {
         }
     }
     stage('run_publisher_test') {
-        node(${vm_node}) {
+        node("${env.vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_publisher_test..."
                 sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub"
