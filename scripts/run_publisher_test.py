@@ -64,7 +64,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
     ret_code = run_in_conda_env_as_root(conda_path, env, cmd)
     return(ret_code)
 
-def run_esgf_publisher_test(workdir, esgf_conda_env):
+def run_esgf_publisher_test(workdir, esgf_conda_env, unpublish=True):
 
     print("xxx xxxx in run_esgf_publisher_test xxx")
     repo_dir = "{d}/repos".format(d=workdir)
@@ -74,8 +74,12 @@ def run_esgf_publisher_test(workdir, esgf_conda_env):
     dir = "{repo_dir}/src/python/esgcet".format(repo_dir=the_repo_dir)
 
     # /usr/local/conda/envs/esgf-pub/bin/esgtest_publish
-    cmd = "{c}/../envs/{env}/bin/esgtest_publish".format(c=conda_path,
-                                                         env=esgf_conda_env)
+    if unpublish:
+        cmd = "{c}/../envs/{env}/bin/esgtest_publish".format(c=conda_path,
+                                                             env=esgf_conda_env)
+    else:
+        cmd = "{c}/../envs/{env}/bin/esgtest_publish -x".format(c=conda_path,
+                                                             env=esgf_conda_env)        
     cmd = "cd {dir}; {set_env}; {cmd}".format(dir=tmp_dir,
                                               set_env=set_env,
                                               cmd=cmd)
@@ -142,6 +146,12 @@ if (args.install):
 #        exit_status |= status
 
 status = run_esgf_publisher_test(workdir, esgf_conda_env)
+if status != SUCCESS:
+    print("FAIL FAIL...esgtest_publisher")
+    exit_status |= status
+
+unpublish = False
+status = run_esgf_publisher_test(workdir, esgf_conda_env, unpublish)
 if status != SUCCESS:
     print("FAIL FAIL...esgtest_publisher")
     exit_status |= status
