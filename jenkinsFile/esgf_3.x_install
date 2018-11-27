@@ -72,7 +72,7 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...esg_autoinstall..."
 		sh "${vm_python_path}/python ${ws}/${vm_prep_autoinstall}"
-	    	sh "sudo bash -c 'export TERM=vt100; export PATH=${vm_conda_path}:/sbin:/usr/sbin:$PATH; cd ${ws}/esgf-installer; source /usr/local/conda/bin/activate esgf-pub; python esg_node.py --install --type all'" 
+	    	sh "sudo bash -c 'export TERM=vt100; export PATH=${vm_conda_path}:/sbin:/usr/sbin:$PATH; cd ${ws}/esgf-installer; source /usr/local/conda/bin/activate esgf-pub; python esg_node.py --install --type ${install_type}'" 
             }
         }
     }
