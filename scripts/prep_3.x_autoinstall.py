@@ -34,6 +34,8 @@ parser.add_argument("-t", "--test_suite_node",
                     help='name of the node where esgf-test-suite is to be run from')
 parser.add_argument("-w", "--test_suite_node_jenkins_home", 
                     help='user jenkins home on the node where esgf-test-suite is to be run from')
+parser.add_argument("-m", "--migrate", default=False, action="store_true",
+                    help="specify if doing migration")
 
 args = parser.parse_args()
 conf_dir = args.conf_dir
@@ -41,6 +43,7 @@ vm_node = args.vm_node
 vm_jenkins_home = args.vm_jenkins_home
 test_suite_node = args.test_suite_node
 test_suite_node_jenkins_home = args.test_suite_node_jenkins_home
+migrate = args.migrate
 
 source = "{c}/esgf-test-suite/{n}_config.ini".format(c=conf_dir,
                                                      n=vm_node)
@@ -54,9 +57,20 @@ vm_dest = "{n}:{vm_jh}/esgf/{n}_config.ini".format(n=vm_node,
 cp_ts_conf_cmd = "scp {s} {d}".format(s=source, d=dest)
 cp_vm_conf_cmd = "scp {s} {d}".format(s=source, d=vm_dest)
 
+prop_file = "esgf.properties"
+
+if migrate:
+    src_prop_file = "{f}.{n}.migration".format(f=prop_file,
+                                               n=vm_node)
+else:
+    src_prop_file = "{f}.{n}.fresh_install".format(f=prop_file,
+                                                   n=vm_node)
+
 cmds_list = [
-    "scp {c}/3.x/esgf.properties.{n} {n}:/tmp/esgf.properties".format(c=conf_dir,
-                                                                        n=vm_node),
+    "scp {c}/3.x/{src_f} {n}:/tmp/{f}".format(c=conf_dir,
+                                              src_f=src_prop_file,
+                                              n=vm_node,
+                                              f=prop_file),
     cp_ts_conf_cmd,
     cp_vm_conf_cmd,    
     "scp {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(c=conf_dir,

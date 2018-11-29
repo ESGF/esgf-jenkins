@@ -67,7 +67,11 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prep_for_autoinstall..."
-	        sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
+		if (params.migrate) {
+	           sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home} -m"
+		} else {
+	           sh "python ${ws}/${prep_autoinstall} -d ${conf_dir} -n ${vm_node} -t ${test_suite_node} -w ${test_suite_node_jenkins_home} -H ${vm_jenkins_home}"
+		}
             }
         }
     }
