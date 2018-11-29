@@ -55,7 +55,11 @@ try {
                 echo "...esg_bootstrap..."
 		sleep 120
                 git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
-		sh "${vm_python_path}/python ${ws}/${run_bootstrap} -w ${ws} -b ${branch}"
+		if (params.migrate) {
+           	    sh "${vm_python_path}/python ${ws}/${run_bootstrap} -w ${ws} -b ${branch} -m"
+		} else {
+		    sh "${vm_python_path}/python ${ws}/${run_bootstrap} -w ${ws} -b ${branch}"
+		}
             }
         }
     }    
