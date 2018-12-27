@@ -88,8 +88,9 @@ def run_esgf_test_suite(config_ini_file, workdir, run_options):
     #    ret_code = run_cmd(cmd, True, False, True)
 
     repo_dir = "{w}/repos/esgf-test-suite".format(w=workdir)
-    cmd = "python setup.py install"
-    ret_code = run_cmd(cmd, True, False, True, repo_dir)
+    ###cmd = "python setup.py install"
+    ###ret_code = run_cmd(cmd, True, False, True, repo_dir)
+
     #if ret_code != SUCCESS:
     #    return ret_code
 
