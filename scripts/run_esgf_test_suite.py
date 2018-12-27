@@ -110,7 +110,7 @@ def run_esgf_test_suite(config_ini_file, workdir, run_options):
     test_dir = "{w}/repos/esgf-test-suite/esgf-test-suite".format(w=workdir)
     print("xxx xxx test_dir: {d}".format(d=test_dir))
 
-    ret_code = run_cmd(cmd, True, False, True, test_dir)
+    ret_code = run_cmd(the_cmd, True, False, True, test_dir)
     return(ret_code)
 
 
