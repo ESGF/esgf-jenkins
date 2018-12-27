@@ -81,11 +81,11 @@ def install_packages(python_path):
 
 def run_esgf_test_suite(config_ini_file, workdir, run_options):
 
-    if firefox_path and geckodriver_path:
-        os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
+    #if firefox_path and geckodriver_path:
+    #    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
 
-        cmd = "which firefox"
-        ret_code = run_cmd(cmd, True, False, True)
+    #    cmd = "which firefox"
+    #    ret_code = run_cmd(cmd, True, False, True)
 
     repo_dir = "{w}/repos/esgf-test-suite".format(w=workdir)
     cmd = "python setup.py install"
@@ -98,11 +98,15 @@ def run_esgf_test_suite(config_ini_file, workdir, run_options):
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {config_ini}".format(config_ini=config_ini_file,
                                                         home=user_home)
-
+    # singularity exec /tmp/singularity-2.5.2/esgf-test-suite_env.singularity.img /home/jenkins/miniconda2/bin/python esgf-test.py --with-id --verbosity=2 --verbose --tc-file /home/jenkins/esgf/esgf-dev1_config.ini -a '!dl,!myproxy,!slcs,!compute,
+    singularity_cmd = "singularity exec /home/jenkins/esgf/esgf-test-suite_env.singularity.img"
     cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
                                                                                  std_opt=std_options,
                                                                                  conf_opt=conf_file_options,
                                                                                  opts=run_options)
+    the_cmd = "{s} {c}".format(s=singularity_cmd,
+                               c=cmd)
+
     test_dir = "{w}/repos/esgf-test-suite/esgf-test-suite".format(w=workdir)
     print("xxx xxx test_dir: {d}".format(d=test_dir))
 
@@ -114,10 +118,12 @@ current_time = time.localtime(time.time())
 time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
 user_home = os.environ['HOME']
 
-status = install_packages(python_path)
-if status != SUCCESS:
-    print("FAIL...install_packages")
-    sys.exit(status)
+#
+
+#status = install_packages(python_path)
+#if status != SUCCESS:
+#    print("FAIL...install_packages")
+#    sys.exit(status)
 
 status = get_esgf_test_suite(workdir, branch)
 if status != SUCCESS:
