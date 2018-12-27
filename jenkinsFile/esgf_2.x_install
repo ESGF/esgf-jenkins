@@ -32,8 +32,6 @@ def run_options = '!dl,!slcs,!compute'
 def esgf_test_suite_branch = 'fix_esg-orp'
 def test_suite_node = 'pcmdi8'
 def test_suite_node_jenkins_home = '/home/jenkins'
-def geckodriver_path = '/home/jenkins/esgf'
-def firefox_path = '/opt/firefox58'
 def test_suite_node_python_path = '/home/jenkins/esgf/miniconda2/bin'
 def config_ini = '/home/jenkins/esgf/esgf-dev1_config.ini'
 
@@ -106,15 +104,6 @@ try {
             }
         }
     }
-    //stage('run_esgf_test_suite') {
-    //    node('pcmdi8') {
-    //        withEnv(["ws=${pwd()}"]) {
-    //            echo "...run_esgf_test_suite..."
-    //            git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
-    //		sh "${test_suite_node_python_path}/python ${run_esgf_test_suite} -b 'fix_esg-orp' -p ${test_suite_node_python_path} -o ${run_options} -f ${firefox_path} -g ${geckodriver_path} -w ${test_suite_node_jenkins_home} -c ${config_ini}"
-    //       }
-    //   }
-    //}
     stage('run_tests_on_vm') {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {

@@ -15,17 +15,16 @@ parser.add_argument("-b", "--branch", default='devel', help="git branch of esg-p
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
 parser.add_argument("-e", "--esgf_conda_env", default='esgf-pub', help="esgf conda environment to run test in")
 parser.add_argument("-i", "--install", help="Install a new version of the publisher", action="store_true")
-parser.add_argument("-p", "--run_myproxy_logon", default=False, action="store_true")
+parser.add_argument("-p", "--myproxyclient", help="Install MyProxyClient", action="store_true")
 
 args = parser.parse_args()
 branch = args.branch
 workdir = args.workdir
 esgf_conda_env = args.esgf_conda_env
-run_myproxy_logon = args.run_myproxy_logon
+install_myproxyclient = args.myproxyclient
 
 conda_path = "/usr/local/conda/bin"
 set_env = "export UVCDAT_ANONYMOUS_LOG=False"
-
 
 def get_esg_publisher(workdir, env, branch='devel'):
 
@@ -87,63 +86,35 @@ def run_esgf_publisher_test(workdir, esgf_conda_env, unpublish=True):
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
-def run_myproxy_logon():
+def install_myproxyclient(esgf_conda_env):
 
-    this_host = os.uname()[1]
-    home = os.environ["HOME"]
-    globus_dir = "{h}/.globus".format(h=home)
-    if os.path.isdir(globus_dir) is False:
-        os.mkdir(globus_dir)
-
-    this_dir = os.path.abspath(os.path.dirname(__file__))
-    # TEMPORARY
-    #myproxy_logon_exp = os.path.join(this_dir, 'expect', 'myproxy-logon.exp')
-    myproxy_logon_exp = os.path.join(home, 'myproxy-logon.exp')
-    cmd = "export TERM=vt100; expect {f}".format(f=myproxy_logon_exp)
-    print("CMD: {c}".format(c=cmd))
-    ret_code = os.system(cmd)
-    if ret_code != SUCCESS:
-        print("FAIL...{c}".format(c=cmd))
-        return(ret_code)    
-
-    # copy cert_file to root's .globus dir.
-    root_globus_dir = "~root/.globus"
-    cmd = "[[ -d {d} ]] && echo {d} exists || mkdir {d}".format(d=root_globus_dir)
-    ret_code = run_cmd_as_root(cmd)
-    if ret_code != SUCCESS:
-        print("FAIL...{c}".format(c=cmd))
-        return ret_code
-
-    cmd = "cp -r {src}/* {d}".format(src=globus_dir, 
-                                     d=root_globus_dir)
-    ret_code = run_cmd_as_root(cmd)
-    if ret_code != SUCCESS:
-        print("FAIL...{c}".format(c=cmd))
-
-    return ret_code
+    cmd = "{e}; pip install -U MyProxyClient".format(e=set_env)
+    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
+    return(ret_code)
 
 def run_import_test(esgf_conda_env):
 
     cmd = "{e}; python -c 'import esgcet.config.cmip6_handler'".format(e=set_env)
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    return(ret_code)
+    return(ret_cod)e
 
 #
 # main code
 #
 
 exit_status = 0
+
+if install_myproxyclient:
+    status = install_myproxyclient(esgf_conda_env)
+    if status != SUCCESS:
+        print("FAIL FAIL ...install_myproxyclient")
+        exit_status |= status
+
 if (args.install):
     status = get_esg_publisher(workdir, esgf_conda_env, branch)
     if status != SUCCESS:
         print("FAIL FAIL ...get_esg_publisher")
         exit_status |= status
-
-#if run_myproxy_logon:
-#    status = run_myproxy_logon()
-#    if status != SUCCESS:
-#        print("FAIL FAIL ...esgtest_publisher")
-#        exit_status |= status
 
 status = run_esgf_publisher_test(workdir, esgf_conda_env)
 if status != SUCCESS:

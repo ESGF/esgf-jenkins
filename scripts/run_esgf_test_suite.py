@@ -33,14 +33,6 @@ config_ini = args.config_ini
 
 print("run_options: {o}".format(o=run_options))
 
-#
-# ASSUMPTIONS -- the node where this script is running should have the following:
-#    miniconda is installed under <workdir>/esgf/miniconda2/bin
-#    firefox is installed under <firefox_path>
-#    geckodriver is installed under <geckodriver_path>
-#    my_config.ini is available in this node's <workdir>
-#
-
 def get_esgf_test_suite(workdir, branch='master'):
 
     repo_dir = "{d}/repos".format(d=workdir)
@@ -81,34 +73,20 @@ def install_packages(python_path):
 
 def run_esgf_test_suite(config_ini_file, workdir, run_options):
 
-    #if firefox_path and geckodriver_path:
-    #    os.environ["PATH"] = firefox_path + os.pathsep + geckodriver_path + os.pathsep + os.environ["PATH"] 
-
-    #    cmd = "which firefox"
-    #    ret_code = run_cmd(cmd, True, False, True)
 
     repo_dir = "{w}/repos/esgf-test-suite".format(w=workdir)
     ###cmd = "python setup.py install"
     ###ret_code = run_cmd(cmd, True, False, True, repo_dir)
-
-    #if ret_code != SUCCESS:
-    #    return ret_code
 
     #std_options = "--nocapture --nologcapture --with-html --with-id -v"
     std_options = "--with-html --with-id --verbosity=2 --verbose"
     user_home = os.environ['HOME']
     conf_file_options = "--tc-file {config_ini}".format(config_ini=config_ini_file,
                                                         home=user_home)
-    # singularity exec /tmp/singularity-2.5.2/esgf-test-suite_env.singularity.img /home/jenkins/miniconda2/bin/python esgf-test.py --with-id --verbosity=2 --verbose --tc-file /home/jenkins/esgf/esgf-dev1_config.ini -a '!dl,!myproxy,!slcs,!compute,
     singularity_cmd = "singularity exec /home/jenkins/esgf/esgf-test-suite_env.singularity.img"
     cmd = "python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(std_opt=std_options,
                                                                           conf_opt=conf_file_options,
                                                                           opts=run_options)
-
-    #cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
-    #                                                                             std_opt=std_options,
-    #                                                                             conf_opt=conf_file_options,
-    #                                                                             opts=run_options)
     the_cmd = "{s} {c}".format(s=singularity_cmd,
                                c=cmd)
 
@@ -123,22 +101,10 @@ current_time = time.localtime(time.time())
 time_str = time.strftime("%b.%d.%Y.%H:%M:%S", current_time)
 user_home = os.environ['HOME']
 
-#
-
-#status = install_packages(python_path)
-#if status != SUCCESS:
-#    print("FAIL...install_packages")
-#    sys.exit(status)
-
 status = get_esgf_test_suite(workdir, branch)
 if status != SUCCESS:
     print("FAIL...get_esgf_test_suite")
     sys.exit(status)
-
-#status = build_esgf_test_suite(workdir)
-#if status != SUCCESS:
-#    print("FAIL...build_esgf_test_suite")
-#    sys.exit(status)
 
 status = run_esgf_test_suite(config_ini, workdir, run_options)
 if status != SUCCESS:
