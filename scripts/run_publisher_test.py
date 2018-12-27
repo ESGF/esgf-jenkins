@@ -89,6 +89,7 @@ def run_esgf_publisher_test(workdir, esgf_conda_env, unpublish=True):
 def install_myproxyclient(esgf_conda_env):
 
     cmd = "{e}; pip install -U MyProxyClient".format(e=set_env)
+    print("xxxxxxxxx CMD: {c}".format(c=cmd))
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
