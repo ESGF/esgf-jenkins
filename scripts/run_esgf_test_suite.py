@@ -101,10 +101,14 @@ def run_esgf_test_suite(config_ini_file, workdir, run_options):
                                                         home=user_home)
     # singularity exec /tmp/singularity-2.5.2/esgf-test-suite_env.singularity.img /home/jenkins/miniconda2/bin/python esgf-test.py --with-id --verbosity=2 --verbose --tc-file /home/jenkins/esgf/esgf-dev1_config.ini -a '!dl,!myproxy,!slcs,!compute,
     singularity_cmd = "singularity exec /home/jenkins/esgf/esgf-test-suite_env.singularity.img"
-    cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
-                                                                                 std_opt=std_options,
-                                                                                 conf_opt=conf_file_options,
-                                                                                 opts=run_options)
+    cmd = "python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(std_opt=std_options,
+                                                                          conf_opt=conf_file_options,
+                                                                          opts=run_options)
+
+    #cmd = "{path}/python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(path=python_path,
+    #                                                                             std_opt=std_options,
+    #                                                                             conf_opt=conf_file_options,
+    #                                                                             opts=run_options)
     the_cmd = "{s} {c}".format(s=singularity_cmd,
                                c=cmd)
 
