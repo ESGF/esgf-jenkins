@@ -45,9 +45,8 @@ dest = "{ts}:{ts_jh}/esgf".format(n=vm_node,
                                   ts=test_suite_node,
                                   ts_jh=test_suite_node_jenkins_home)
 
-vm_dest = "{n}:{vm_jh}/esgf/{n}_config.ini".format(n=vm_node,
-                                                  vm_jh=vm_jenkins_home)
-
+vm_dest = "{n}:{vm_jh}/esgf".format(n=vm_node,
+                                    vm_jh=vm_jenkins_home)
 
 cp_ts_conf_cmd = "scp {s} {d}".format(s=source, d=dest)
 cp_vm_conf_cmd = "scp {s} {d}".format(s=source, d=vm_dest)
