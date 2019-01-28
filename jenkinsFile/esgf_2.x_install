@@ -23,7 +23,7 @@ def vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 def esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 
 def conf_dir = "/var/lib/jenkins/esgf"
-def mirror = "aims"
+def mirror = "fr"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
 
 def esgf_test_suite_branch = 'fix_esg-orp'
