@@ -15,9 +15,11 @@ parser = argparse.ArgumentParser(description="run esgf 2.x post install steps",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("-H", "--vm_jenkins_home", required=True, help="vm user jenkins home directory")
+parser.add_argument("-c", "--update_cog", default=False, action='store_true', help="update cog setting")
 
 args = parser.parse_args()
 workdir = args.vm_jenkins_home
+update_cog = args.update_cog
 
 sys.stdout.flush()
 
@@ -77,11 +79,10 @@ if status != SUCCESS:
 #
 # update /usr/local/cog/cog_config/cog_settings.cfg
 #
-file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
-var_val_pairs_list = ['USE_CAPTCHA=False']
-status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
-if status != SUCCESS:
-    sys.exit(status)
+if update_cog:
+    file_to_update = '/usr/local/cog/cog_config/cog_settings.cfg'
+    var_val_pairs_list = ['USE_CAPTCHA=False']
+    status = update_cog_settings_conf(var_val_pairs_list, '=', workdir)
 
 sys.exit(status)
 
