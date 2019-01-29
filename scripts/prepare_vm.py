@@ -7,7 +7,7 @@ this_dir = os.path.abspath(os.path.dirname(__file__))
 modules_dir = os.path.join(this_dir, '..', 'modules')
 sys.path.append(modules_dir)
 
-from Util import *
+#from Util import *
 from vm_util import *
 
 parser = argparse.ArgumentParser(description="prepare a virtual machine",
@@ -24,10 +24,15 @@ vmx = args.vmx
 vm_snapshot = args.snapshot
 vm_node = args.vm_node
 
+# check if vm is running (note that there may be a vm with different vmx file
+# for this vm that is running.
+vmx_filename = check_if_vm_is_running(vm_host, vm_node)
+
 # stop vm if running
-ret_code = stop_vm_if_running(vm_host, vmx)
-if ret_code != SUCCESS:
-    sys.exit(ret_code)
+if vmx_filename is not None:
+    ret_code = stop_vm(vm_host, vmx_filename)
+    if ret_code != SUCCESS:
+        sys.exit(ret_code)
 
 # revert vm to snapshot and start it
 ret_code = revert_vm_to_snapshot(vm_host, vmx, vm_snapshot)
@@ -42,7 +47,7 @@ ret_code = get_vm_ready(vm_node)
 if ret_code != SUCCESS:
     sys.exit(ret_code)
 
-ret_code = do_yum_update(vm_node)
+#ret_code = do_yum_update(vm_node)
 
 sys.exit(ret_code)
 
