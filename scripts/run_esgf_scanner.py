@@ -112,7 +112,7 @@ report_files = "packagelists.tgz {r}".format(r=report)
 tar_cmd = "tar -cvzf {tar_file} {files}".format(tar_file=tar_file,
                                                 files=report_files)
 
-scp_cmd = "scp {tar_file} {dest}".format(tar_file=tar_file,
+scp_cmd = "scp -o StrictHostKeyChecking=no {tar_file} {dest}".format(tar_file=tar_file,
                                              dest=scp_dest)
 cmds_list = [tar_cmd, scp_cmd]
 for cmd in cmds_list:

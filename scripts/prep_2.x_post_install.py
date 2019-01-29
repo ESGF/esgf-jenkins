@@ -30,10 +30,10 @@ sys.stdout.flush()
 #src_file = "myproxy-logon.exp.{n}".format(n=vm_node)
 
 cmds_list = [
-    "scp {dir}/keypairs/keypair.{n}.tar {n}:/tmp/keypair.tar".format(dir=dir, n=vm_node),
-    "scp {d}/tomcat.server.xml {n}:/tmp/server.xml".format(n=vm_node, d=dir),
-    "scp {d}/esgf-httpd.conf {n}:/tmp".format(n=vm_node, d=dir),
-    "scp {d}/2.x/auto-keypair.exp.{n} {n}:{h}/auto-keypair.exp".format(d=dir,
+    "scp -o StrictHostKeyChecking=no {dir}/keypairs/keypair.{n}.tar {n}:/tmp/keypair.tar".format(dir=dir, n=vm_node),
+    "scp -o StrictHostKeyChecking=no {d}/tomcat.server.xml {n}:/tmp/server.xml".format(n=vm_node, d=dir),
+    "scp -o StrictHostKeyChecking=no {d}/esgf-httpd.conf {n}:/tmp".format(n=vm_node, d=dir),
+    "scp -o StrictHostKeyChecking=no {d}/2.x/auto-keypair.exp.{n} {n}:{h}/auto-keypair.exp".format(d=dir,
                                                                        n=vm_node,
                                                                        h=vm_jenkins_home),
     ]

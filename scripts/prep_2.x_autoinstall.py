@@ -30,7 +30,7 @@ conf_dir = args.conf_dir
 vm_node = args.vm_node
 vm_jenkins_home = args.vm_jenkins_home
 autoinstall_conf = 'esg-autoinstall.conf'
-cp_config_cmd = "scp {c}/2.x/{conf}.{n} {n}:/tmp/{conf}".format(c=conf_dir,
+cp_config_cmd = "scp -o StrictHostKeyChecking=no {c}/2.x/{conf}.{n} {n}:/tmp/{conf}".format(c=conf_dir,
                                                                 conf=autoinstall_conf,
                                                                 n=vm_node)
 source = "{c}/esgf-test-suite/{n}_config.ini".format(c=conf_dir,
@@ -39,7 +39,7 @@ source = "{c}/esgf-test-suite/{n}_config.ini".format(c=conf_dir,
 vm_dest = "{n}:{vm_jh}/esgf".format(n=vm_node,
                                     vm_jh=vm_jenkins_home)
 
-cp_vm_conf_cmd = "scp {s} {d}".format(s=source, d=vm_dest)
+cp_vm_conf_cmd = "scp -o StrictHostKeyChecking=no {s} {d}".format(s=source, d=vm_dest)
 
 cmds = [cp_config_cmd,
         cp_vm_conf_cmd

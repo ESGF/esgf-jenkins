@@ -53,9 +53,10 @@ dest = "{ts}:{ts_jh}/esgf/{n}_config.ini".format(ts=test_suite_node,
 
 vm_dest = "{n}:{vm_jh}/esgf/{n}_config.ini".format(n=vm_node,
                                                    vm_jh=vm_jenkins_home)
+scp_cmd = "scp -o StrictHostKeyChecking=no"
 
-cp_ts_conf_cmd = "scp {s} {d}".format(s=source, d=dest)
-cp_vm_conf_cmd = "scp {s} {d}".format(s=source, d=vm_dest)
+cp_ts_conf_cmd = "{scp} {s} {d}".format(scp=scp_cmd, s=source, d=dest)
+cp_vm_conf_cmd = "{scp} {s} {d}".format(scp=scp_cmd, s=source, d=vm_dest)
 
 prop_file = "esgf.properties"
 
@@ -67,16 +68,19 @@ else:
                                                    n=vm_node)
 
 cmds_list = [
-    "scp {c}/3.x/{src_f} {n}:/tmp/{f}".format(c=conf_dir,
-                                              src_f=src_prop_file,
-                                              n=vm_node,
-                                              f=prop_file),
+    "{scp} {c}/3.x/{src_f} {n}:/tmp/{f}".format(scp=scp_cmd,
+                                                c=conf_dir,
+                                                src_f=src_prop_file,
+                                                n=vm_node,
+                                                f=prop_file),
     cp_ts_conf_cmd,
     cp_vm_conf_cmd,    
-    "scp {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(c=conf_dir,
-                                                       n=vm_node),
-    "scp {c}/keypairs/keypair.{n}.tar {n}:/tmp/keypair.tar".format(c=conf_dir,
-                                                      n=vm_node)
+    "{scp} {c}/3.x/esgf_pass {n}:/tmp/.esgf_pass".format(scp=scp_cmd,
+                                                         c=conf_dir,
+                                                         n=vm_node),
+    "{scp} {c}/keypairs/keypair.{n}.tar {n}:/tmp/keypair.tar".format(scp=scp_cmd,
+                                                                     c=conf_dir,
+                                                                     n=vm_node)
     ]
 
 for cmd in cmds_list:
