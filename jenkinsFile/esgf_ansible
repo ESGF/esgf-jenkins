@@ -3,7 +3,7 @@ currentBuild.result = "SUCCESS"
 
 esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
 //esgf_ansible_branch = "ncarlson"
-esgf_ansible_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
+esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 
 data_node = "${vm_node}.llnl.gov"
 index_idp_node = "${vm_node}.llnl.gov"
@@ -23,13 +23,13 @@ workdir = "/var/lib/jenkins/work/esgf-ansible-jenkins"
 vars_file = "/var/lib/jenkins/esgf/ansible/configs/${vm_node}.vars"
 hosts_file = "${workdir}/${vm_node}.hosts_file"
 
-create_hosts_script = "esgf_ansible_jenkins/scripts/create_hosts_file.py"
-prepare_vm = "esgf_ansible_jenkins/scripts/prepare_vm.py"
-post_install = "esgf_ansible_jenkins/scripts/run_post_install.py"
-run_publisher_test = "esgf_ansible_jenkins/scripts/run_publisher_test.py"
+create_hosts_script = "esgf-jenkins/scripts/create_hosts_file.py"
+prepare_vm = "esgf-jenkins/scripts/prepare_vm.py"
+post_install = "esgf-jenkins/scripts/run_post_install.py"
+run_publisher_test = "esgf-jenkins/scripts/run_publisher_test.py"
 
 // for running esgf-test-suite
-run_esgf_test_suite = "esgf_ansible_jenkins/scripts/run_esgf_test_suite.py"
+run_esgf_test_suite = "esgf-jenkins/scripts/run_esgf_test_suite.py"
 run_options = "!compute,!dl,!myproxy"
 run_options1 = "myproxy"
 run_options2 = "dl"
@@ -40,11 +40,11 @@ try {
     stage('checkout') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
-		dir("esgf_ansible") {
+		dir("esgf-ansible") {
                     git branch: "$esgf_ansible_branch", credentialsId: 'muryanto1', url: "${esgf_ansible_url}"
 		}
-		dir("esgf_ansible_jenkins") {
-                    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_ansible_jenkins_url}"
+		dir("esgf-jenkins") {
+                    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
  		}
 	    }
         }
@@ -62,10 +62,10 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 	        // create hosts file
-	        def sample_hosts_file = "${ws}/esgf_ansible/sample.hosts"
+	        def sample_hosts_file = "${ws}/esgf-ansible/sample.hosts"
 	        def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
-	        sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf_ansible/install.yml'"  
+	        sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf-ansible/install.yml'"  
             }
 	}
     }
@@ -73,9 +73,9 @@ try {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
-                sh "mkdir esgf_ansible_jenkins"
-		dir("esgf_ansible_jenkins") {
-		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_ansible_jenkins_url}"
+                sh "mkdir esgf-jenkins"
+		dir("esgf-jenkins") {
+		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
 		}
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
             }
@@ -85,7 +85,7 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
-		sh "bash -c '${set_env}; python --version; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf_ansible/start.yml'"
+		sh "bash -c '${set_env}; python --version; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf-ansible/start.yml'"
 		sleep 60
 	    }
         }
