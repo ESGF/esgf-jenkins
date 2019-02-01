@@ -77,6 +77,7 @@ try {
 		dir("esgf-jenkins") {
 		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
 		}
+                echo "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
             }
         }
