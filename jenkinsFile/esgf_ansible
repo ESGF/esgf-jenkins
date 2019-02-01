@@ -3,7 +3,7 @@ currentBuild.result = "SUCCESS"
 
 esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
 //esgf_ansible_branch = "ncarlson"
-esgf_ansible_jenkins_url = "https://github.com/muryanto1/esgf-ansible-jenkins.git"
+esgf_ansible_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 
 data_node = "${vm_node}.llnl.gov"
 index_idp_node = "${vm_node}.llnl.gov"
