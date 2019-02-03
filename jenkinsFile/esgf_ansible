@@ -87,13 +87,13 @@ try {
 	    withEnv(["ws=${pwd()}"]) {
 		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
 		sh "bash -c '${set_env}; python --version; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf-ansible/start.yml'"
-		sleep 60
 	    }
         }
     }
     stage('run_publisher_test') {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
+		sleep 120
                 echo "...run_publisher_test..."
                 sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
             }
