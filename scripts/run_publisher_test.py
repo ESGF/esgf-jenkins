@@ -21,7 +21,7 @@ args = parser.parse_args()
 branch = args.branch
 workdir = args.workdir
 esgf_conda_env = args.esgf_conda_env
-install_myproxyclient = args.myproxyclient
+
 
 conda_path = "/usr/local/conda/bin"
 set_env = "export UVCDAT_ANONYMOUS_LOG=False"
