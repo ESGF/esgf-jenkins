@@ -15,7 +15,7 @@ parser.add_argument("-b", "--branch", default='devel', help="git branch of esg-p
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
 parser.add_argument("-e", "--esgf_conda_env", default='esgf-pub', help="esgf conda environment to run test in")
 parser.add_argument("-i", "--install", help="Install a new version of the publisher", action="store_true")
-parser.add_argument("-p", "--myproxyclient", help="Install MyProxyClient", action="store_true")
+#parser.add_argument("-p", "--myproxyclient", help="Install MyProxyClient", action="store_true")
 
 args = parser.parse_args()
 branch = args.branch
@@ -86,12 +86,12 @@ def run_esgf_publisher_test(workdir, esgf_conda_env, unpublish=True):
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
-def install_myproxyclient(esgf_conda_env):
-
-    cmd = "{e}; pip install -U MyProxyClient".format(e=set_env)
-    print("xxxxxxxxx CMD: {c}".format(c=cmd))
-    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-    return(ret_code)
+#def install_myproxyclient(esgf_conda_env):
+#
+#    cmd = "{e}; pip install -U MyProxyClient".format(e=set_env)
+#    print("xxxxxxxxx CMD: {c}".format(c=cmd))
+#    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
+#    return(ret_code)
 
 def run_import_test(esgf_conda_env):
 
@@ -105,11 +105,11 @@ def run_import_test(esgf_conda_env):
 
 exit_status = 0
 
-if install_myproxyclient:
-    status = install_myproxyclient(esgf_conda_env)
-    if status != SUCCESS:
-        print("FAIL FAIL ...install_myproxyclient")
-        exit_status |= status
+#if install_myproxyclient:
+#    status = install_myproxyclient(esgf_conda_env)
+#    if status != SUCCESS:
+#        print("FAIL FAIL ...install_myproxyclient")
+#        exit_status |= status
 
 if (args.install):
     status = get_esg_publisher(workdir, esgf_conda_env, branch)
