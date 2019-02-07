@@ -97,7 +97,7 @@ try {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_publisher_test..."
-                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub -p"
+                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub"
             }
         }
     }
