@@ -44,6 +44,7 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prepare_vm..."
                 sh "python ${ws}/${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+		sleep 60
             }
         }
     }
