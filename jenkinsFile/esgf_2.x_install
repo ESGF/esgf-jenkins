@@ -86,7 +86,7 @@ try {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
-                sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
+                sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home} -c"
 		sh "sudo bash -c 'export TERM=vt100; expect ${vm_jenkins_home}/auto-keypair.exp'"
 		sh "sudo bash -c 'export TERM=vt100; /usr/local/bin/esg-node restart'"
 		sleep 120
