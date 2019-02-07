@@ -26,7 +26,7 @@ def conf_dir = "/var/lib/jenkins/esgf"
 def mirror = "aims"
 def run_esg_autoinstall_script = "${vm_jenkins_home}/repos/esgf-jenkins/scripts/run_2.x_esg_autoinstall.py"
 
-def esgf_test_suite_branch = 'fix_esg-orp'
+def esgf_test_suite_branch = 'master'
 def config_ini = '/home/jenkins/esgf/${vm_node}_config.ini'
 def run_options = "!compute,!dl,!myproxy"
 def run_options1 = "myproxy"
