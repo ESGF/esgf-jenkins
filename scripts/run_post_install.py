@@ -37,5 +37,13 @@ if status != 0:
     print("FAIL...update_cog_settings_conf ... for setting USE_CAPTCHA=False")
     sys.exit(status)
 
+#
+# add user 'jenkins' to 'tomcat' group
+# for esgf-test-suite's myproxy test
+#
+
+#cmd = "sudo bash -c \"usermod -a -G tomcat jenkins\""
+#status = run_cmd(cmd, True, False, True)
+
 sys.exit(status)
-#status = do_yum_update(vm_node, 'libarchive-devel')
+
