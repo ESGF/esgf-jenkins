@@ -15,6 +15,7 @@ vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 
 data_node = "${vm_node}.llnl.gov"
 index_idp_node = "${vm_node}.llnl.gov"
+pkg_version = "${payload_ref}"
 
 // on master
 conda2_path = "/var/lib/jenkins/work/miniconda2/bin/"
@@ -91,7 +92,7 @@ try {
 	        // create hosts file
 		def sample_hosts_file = "${ws}/esgf-ansible/sample.hosts"
 		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda3_path:/sbin:/usr/sbin:$PATH"
-                sh "${python3} ${ws}/${update_pkg_version} -d ${ws}/esgf-ansible -p ${esgf_repo} 
+                sh "${python3} ${ws}/${update_pkg_version} -d ${ws}/esgf-ansible -p ${esgf_repo} -v ${pkg_version}"
                 sh "${python3} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf-ansible/install.yml'"  
 
