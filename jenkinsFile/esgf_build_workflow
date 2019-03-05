@@ -33,7 +33,7 @@ hosts_file = "${workdir}/${vm_node}.hosts_file"
 
 esgf_build_url = "https://github.com/ESGF/esgf-build.git"
 esgf_build_branch = "multi_branch"
-esgf_jenkins_url = "https://github.com/muryanto1/esgf-jenkins.git"
+esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
 esgf_ansible_branch = "devel"
 
