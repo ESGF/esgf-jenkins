@@ -52,11 +52,16 @@ run_options2 = "dl"
 esgf_test_suite_branch = 'master'
 config_ini = '/home/jenkins/esgf/${vm_node}_config.ini'
 
+def skip_workflow = false
 
 try {
     stage('checkout') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
+	        if (${payload_ref_type} != 'tag') {
+		    skip_workflow = true
+		    error("Skipping the whole workflow since the trigger is not for tag creation")
+		}
 	        dir("esgf-build") {
                     git branch: "$esgf_build_branch", credentialsId: 'muryanto1', url: "$esgf_build_url"
 		}
@@ -150,6 +155,9 @@ try {
     }
 
 } catch (caughtException) {
+    if (skip_workflow) {
+        currentBuild.result = "SUCCESS"
+    }
     error = caughtException
     currentBuild.result = "FAILURE"
 }
