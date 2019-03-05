@@ -58,7 +58,7 @@ try {
     stage('checkout') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
-	        if (${payload_ref_type} != 'tag') {
+	        if (payload_ref_type != 'tag') {
 		    skip_workflow = true
 		    error("Skipping the whole workflow since the trigger is not for tag creation")
 		}
