@@ -4,6 +4,17 @@ currentBuild.result = "SUCCESS"
 // parameters
 // esgf_repo
 // esgf_repo_branch
+// vm_node
+// vmx_file
+// vm_snapshot
+
+// on vm
+vm_host = "grim.llnl.gov"
+vm_jenkins_home = "/home/jenkins"
+vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
+
+data_node = "${vm_node}.llnl.gov"
+index_idp_node = "${vm_node}.llnl.gov"
 
 // on master
 conda2_path = "/var/lib/jenkins/work/miniconda2/bin/"
@@ -13,12 +24,25 @@ python3 = "${conda3_path}/python"
 ant_path = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin"
 java_home = "/usr/local/java"
 java_path = "${java_home}/bin"
+conf_dir = "/var/lib/jenkins/esgf"
+
+workdir = "/var/lib/jenkins/work/esgf-ansible-jenkins"
+vars_file = "/var/lib/jenkins/esgf/ansible/configs/${vm_node}.vars"
+hosts_file = "${workdir}/${vm_node}.hosts_file"
 
 esgf_build_url = "https://github.com/ESGF/esgf-build.git"
 esgf_build_branch = "multi_branch"
-esgf_build_jenkins_url = "https://github.com/muryanto1/esgf-build-jenkins.git"
+esgf_jenkins_url = "https://github.com/muryanto1/esgf-jenkins.git"
 esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
 esgf_ansible_branch = "devel"
+
+// scripts
+update_pkg_version = "esgf-jenkins/scripts/update_pkg_version.py"
+prepare_vm = "esgf-jenkins/scripts/prepare_vm.py"
+create_hosts_script = "esgf-jenkins/scripts/create_hosts_file.py"
+post_install = "esgf-jenkins/scripts/run_post_install.py"
+run_publisher_test = "esgf-jenkins/scripts/run_publisher_test.py"
+
 
 try {
     stage('checkout') {
@@ -27,8 +51,8 @@ try {
 	        dir("esgf-build") {
                     git branch: "$esgf_build_branch", credentialsId: 'muryanto1', url: "$esgf_build_url"
 		}
-	        dir("esgf-build-jenkins") {
-                    git branch: "master", credentialsId: 'muryanto1', url: "$esgf_build_jenkins_url"
+	        dir("esgf-jenkins") {
+                    git branch: "master", credentialsId: 'muryanto1', url: "$esgf_jenkins_url"
 		}
 	        dir("esgf-ansible") {
                     git branch: "$esgf_ansible_branch", credentialsId: 'muryanto1', url: "$esgf_ansible_url"
@@ -52,12 +76,25 @@ try {
 	    }
         }
     }
+    stage('prepare_vm') {
+        node('master') {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...prepare_vm..."
+                sh "${python3} ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+		sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${vm_node}:${vm_jenkins_home}/esgf"
+            }
+        }
+    }
     stage('ansible_install') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
-	        dir("esgf-ansible") {
+	        // create hosts file
+		def sample_hosts_file = "${ws}/esgf-ansible/sample.hosts"
+		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
+                sh "${python3} ${ws}/${update_pkg_version} -d ${ws}/esgf-ansible -p ${esgf_repo} 
+                sh "${python3} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
+		sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf-ansible/install.yml'"  
 
-		}
 	    }
         }
     }
