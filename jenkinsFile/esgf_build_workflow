@@ -157,7 +157,8 @@ try {
 } catch (caughtException) {
     if (skip_workflow) {
         currentBuild.result = "SUCCESS"
+    } else {
+        error = caughtException
+        currentBuild.result = "FAILURE"
     }
-    error = caughtException
-    currentBuild.result = "FAILURE"
 }
