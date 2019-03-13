@@ -139,6 +139,7 @@ try {
 	        sleep 120
                 echo "...run_publisher_test..."
                 sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
+		sleep 60
             }
         }
     }
