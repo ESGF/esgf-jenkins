@@ -65,7 +65,7 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prepare_on_vm..."
 		echo "cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar"
-		sh "cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar"
+		sh "bash -c 'cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar'"
 		echo "...DONE EXTRACTING TAR FILE..."
             }
         }
