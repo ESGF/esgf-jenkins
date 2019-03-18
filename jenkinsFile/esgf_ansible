@@ -63,7 +63,6 @@ try {
     stage('prepare_on_vm') {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
-	        sleep 120
                 echo "...prepare_on_vm..."
 		echo "cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar"
 		sh "cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar"
