@@ -20,7 +20,7 @@ python = "${conda_path}/python"
 conf_dir = "/var/lib/jenkins/esgf"
 
 workdir = "/var/lib/jenkins/work/esgf-ansible-jenkins"
-vars_file = "/var/lib/jenkins/esgf/ansible/configs/${vm_node}.vars"
+//vars_file = "/var/lib/jenkins/esgf/ansible/configs/${vm_node}.vars"
 hosts_file = "${workdir}/${vm_node}.hosts_file"
 
 create_hosts_script = "esgf-jenkins/scripts/create_hosts_file.py"
@@ -55,21 +55,21 @@ try {
                 echo "...prepare_vm..."
                 sh "${python} ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
 		sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${vm_node}:${vm_jenkins_home}/esgf"
-		sh "scp -o StrictHostKeyChecking=no ${conf_dir}/certs/${vm_node}/${vm_node}.tar ${vm_node}:${vm_jenkins_home}/esgf"
+		//sh "scp -o StrictHostKeyChecking=no ${conf_dir}/certs/${vm_node}/${vm_node}.tar ${vm_node}:${vm_jenkins_home}/esgf"
 		echo "...DONE SCP..."
             }
         }
     }
-    stage('prepare_on_vm') {
-        node("${vm_node}") {
-            withEnv(["ws=${pwd()}"]) {
-                echo "...prepare_on_vm..."
-		echo "cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar"
-		sh "bash -c 'cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar'"
-		echo "...DONE EXTRACTING TAR FILE..."
-            }
-        }
-    }
+    //stage('prepare_on_vm') {
+    //    node("${vm_node}") {
+    //        withEnv(["ws=${pwd()}"]) {
+    //            echo "...prepare_on_vm..."
+    //		echo "cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar"
+    //		sh "bash -c 'cd ${vm_jenkins_home}/esgf; tar -tvf ${vm_node}.tar; tar -xvf ${vm_node}.tar'"
+    //		echo "...DONE EXTRACTING TAR FILE..."
+    //    }
+    //    }
+    //}
     stage('install') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
