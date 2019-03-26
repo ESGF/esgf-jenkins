@@ -60,13 +60,13 @@ try {
     }
     stage('install') {
         node('master') {
-	    withEnv(["ws=${pwd()}/esgf-ansible"]) {
+	    withEnv(["ws=${pwd()}"]) {
 	        // create hosts file
 	        def sample_hosts_file = "${ws}/esgf-ansible/sample.hosts"
 	        def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${conf_dir}/ansible/configs/${vm_node}.vars ${ws}/esgf-ansible/host_vars/${data_node}.yml"
-	        sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko install.yml'"  
+	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko install.yml'"  
             }
 	}
     }
