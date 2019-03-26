@@ -39,6 +39,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
     the_repo_dir = "{d}/esg-publisher".format(d=repo_dir)
     if os.path.isdir(the_repo_dir) is False:
         cmd = "git clone https://github.com/ESGF/esg-publisher {d}".format(d=the_repo_dir)
+        print("XXX CMD: {c}".format(c=cmd))
         ret_code = run_cmd(cmd, True, False, True)
         if ret_code != SUCCESS:
             print("FAIL...{c}".format(c=cmd))
@@ -46,10 +47,12 @@ def get_esg_publisher(workdir, env, branch='devel'):
 
     if branch != 'master':
         cmd = "git checkout {b}".format(b=branch)
+        print("XXX CMD: {c}".format(c=cmd))
         ret_code = run_cmd(cmd, True, False, True, the_repo_dir)
 
     cmd = "git pull"
     ret_code = run_cmd(cmd, True, False, True, "{d}".format(d=the_repo_dir))
+    print("XXX CMD: {c}".format(c=cmd))
     if ret_code != SUCCESS:
         print("FAIL...{c}".format(c=cmd))
         return ret_code
@@ -58,7 +61,7 @@ def get_esg_publisher(workdir, env, branch='devel'):
     set_env = "export UVCDAT_ANONYMOUS_LOG=False"
     cmd = "cd {dir}; {set_env}; python setup.py install".format(set_env=set_env,
                                                                 dir=dir)
-
+    print("XXX CMD: {c}".format(c=cmd))
     conda_path = "/usr/local/conda/bin"
     ret_code = run_in_conda_env_as_root(conda_path, env, cmd)
     return(ret_code)
@@ -82,7 +85,7 @@ def run_esgf_publisher_test(workdir, esgf_conda_env, unpublish=True):
     cmd = "cd {dir}; {set_env}; {cmd}".format(dir=tmp_dir,
                                               set_env=set_env,
                                               cmd=cmd)
-
+    print("XXX CMD: {c}".format(c=cmd))
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
