@@ -60,12 +60,13 @@ try {
     }
     stage('install') {
         node('master') {
-	    withEnv(["ws=${pwd()}"]) {
+	    withEnv(["ws=${pwd()}/esgf-ansible"]) {
 	        // create hosts file
 	        def sample_hosts_file = "${ws}/esgf-ansible/sample.hosts"
 	        def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
-	        sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko -e @${vars_file} ${ws}/esgf-ansible/install.yml'"  
+		sh "cp ${conf_dir}/ansible/configs/${vm_node}.vars ${ws}/esgf-ansible/host_vars/${data_node}.yml"
+	        sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko install.yml'"  
             }
 	}
     }
@@ -95,7 +96,7 @@ try {
             withEnv(["ws=${pwd()}"]) {
 		sleep 120
                 echo "...run_publisher_test..."
-                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
+                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub -b update_url_for_aims"
             }
         }
     }
