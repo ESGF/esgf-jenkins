@@ -96,7 +96,7 @@ try {
             withEnv(["ws=${pwd()}"]) {
 		sleep 120
                 echo "...run_publisher_test..."
-                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub -b update_url_for_aims"
+                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub"
             }
         }
     }
