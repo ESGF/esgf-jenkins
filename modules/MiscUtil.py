@@ -106,3 +106,15 @@ def update_file(file_to_update, str_to_replace, replacement_str, workdir):
     temp_file.close()
 
     copyfile(temp_file_full_path, file_to_update)
+
+def get_var_value(vars_file, var):
+    src_f = open(vars_file, "r")
+    var_value = None
+    for line in src_f:
+        match_str = "{var}:\s+(\S+)$".format(var=var)
+        match_obj = re.match(match_str, line)
+        if match_obj:
+            var_value = match_obj.group(1)
+            print("xxx var_value: {v}".format(v=var_value))
+            return var_value
+    return var_value
