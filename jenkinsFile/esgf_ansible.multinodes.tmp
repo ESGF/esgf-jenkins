@@ -40,8 +40,8 @@ data_run_options = "data,!dl"
 index_idp_run_options = "myproxy,cog"
 
 esgf_test_suite_branch = 'master'
-data_node_config_ini = '/home/jenkins/esgf/${vm_node}_config.ini'
-index_idp_node_config_ini = '/home/jenkins/esgf/${index_idp_node}_config.ini'
+data_node_config_ini = "/home/jenkins/esgf/${data_node}_config.ini"
+index_idp_node_config_ini = "/home/jenkins/esgf/${index_idp_node}_config.ini"
 
 try {
     stage('checkout') {
