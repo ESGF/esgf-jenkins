@@ -15,15 +15,11 @@ parser.add_argument("-b", "--branch", default='devel', help="git branch of esg-p
 parser.add_argument("-w", "--workdir", required=True, help="working directory where this script can write to")
 parser.add_argument("-e", "--esgf_conda_env", default='esgf-pub', help="esgf conda environment to run test in")
 parser.add_argument("-i", "--install", help="Install a new version of the publisher", action="store_true")
-parser.add_argument("-d", "--index_idp_node", default=None,
-                    help="index-idp node, Run myproxy-logon to get the cert files first")
-
 
 args = parser.parse_args()
 branch = args.branch
 workdir = args.workdir
 esgf_conda_env = args.esgf_conda_env
-index_idp_node = args.index_idp_node
 
 conda_path = "/usr/local/conda/bin"
 set_env = "export UVCDAT_ANONYMOUS_LOG=False"
@@ -104,10 +100,6 @@ def run_import_test(esgf_conda_env):
     ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
     return(ret_code)
 
-def run_myproxy_logon(esgf_conda_env, index_idp_node):
-    cmd = "myproxy-logon -b -T -s esgf-dev1.llnl.gov -l rootAdmin -o /root/.globus/certificate-file"
-    ret_code = run_in_conda_env_as_root(conda_path, esgf_conda_env, cmd)
-        
 #
 # main code
 #
@@ -122,12 +114,6 @@ exit_status = 0
 
 if (args.install):
     status = get_esg_publisher(workdir, esgf_conda_env, branch)
-    if status != SUCCESS:
-        print("FAIL FAIL ...get_esg_publisher")
-        exit_status |= status
-
-if index_idp_node:
-    status = run_myproxy_logon(esgf_conda_env, index_idp_node)
     if status != SUCCESS:
         print("FAIL FAIL ...get_esg_publisher")
         exit_status |= status
