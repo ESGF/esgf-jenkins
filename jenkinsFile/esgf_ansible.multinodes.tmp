@@ -37,7 +37,7 @@ run_myproxy_logon = "esgf-jenkins/scripts/run_myproxy_logon.py"
 // for running esgf-test-suite
 run_esgf_test_suite = "esgf-jenkins/scripts/run_esgf_test_suite.py"
 data_run_options = "data,!dl"
-index_idp_run_options = "myproxy,cog'
+index_idp_run_options = "myproxy,cog"
 
 esgf_test_suite_branch = 'master'
 data_node_config_ini = '/home/jenkins/esgf/${vm_node}_config.ini'
