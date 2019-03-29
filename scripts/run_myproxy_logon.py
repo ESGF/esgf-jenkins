@@ -22,6 +22,7 @@ parser.add_argument("-w", "--workdir",
 args = parser.parse_args()
 vars_file = args.vars_file
 index_idp_node = args.index_idp_node
+workdir = args.workdir
 
 # get admin_pass 
 admin_pass = get_var_value(vars_file, 'admin_pass')
