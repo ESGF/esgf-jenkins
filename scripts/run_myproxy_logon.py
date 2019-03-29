@@ -31,7 +31,7 @@ print("DEBUG...get_var_val returned: {v}".format(v=admin_pass))
 myproxy_logon_exp = os.path.join(this_dir, 'run_myproxy_logon.exp')
 
 update_file(myproxy_logon_exp, 'INDEX_IDP_NODE', index_idp_node, workdir)
-update_file(myproxy_logon_exp, 'MYPROXY_PASS', admin_pass)
+update_file(myproxy_logon_exp, 'MYPROXY_PASS', admin_pass, workdir)
 
 cmd = myproxy_logon_exp
 conda_path = "/usr/local/conda/bin"
