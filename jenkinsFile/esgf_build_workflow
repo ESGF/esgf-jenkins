@@ -10,6 +10,7 @@ currentBuild.result = "SUCCESS"
 
 // from webhook payload
 esgf_repo = "${payload_repository_name}"
+esgf_repo_tag = "${payload_ref}"
 
 // on vm
 vm_host = "grim.llnl.gov"
@@ -35,7 +36,7 @@ vars_file = "/var/lib/jenkins/esgf/ansible/configs/${vm_node}.vars"
 hosts_file = "${workdir}/${vm_node}.hosts_file"
 
 esgf_build_url = "https://github.com/ESGF/esgf-build.git"
-esgf_build_branch = "multi_branch"
+esgf_build_branch = "python"
 esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
 esgf_ansible_branch = "devel"
@@ -89,7 +90,7 @@ try {
 		    sh "bash -c '${set_env}; rm -rf ${ws}/${esgf_repo}'"
 		    //sh "bash -c '${set_env}; ${conda2_path}/conda env create -f environment.yml';"
                     //sh "bash -c '${set_env}; ${python2} esgf_build.py -d ${ws} -b ${esgf_repo_branch} --prerelease --synctag --upload ${esgf_repo}'"
-		    sh "bash -c '${set_env}; ${python2} esgf_build.py -d ${ws} -b ${esgf_repo_branch} --prerelease --upload ${esgf_repo}'"
+		    sh "bash -c '${set_env}; ${python2} esgf_build.py -d ${ws} -t ${esgf_repo_tag} --prerelease --upload ${esgf_repo}'"
 		}
 	    }
         }
