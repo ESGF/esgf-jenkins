@@ -112,7 +112,7 @@ try {
     stage('run_publisher_test') {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
-		sleep 120
+		//sleep 120
                 echo "...run_publisher_test..."
 		sh "${vm_python_path}/python ${ws}/${run_myproxy_logon} -f ${ws}/esgf-ansible/host_vars/${fqdn_data_node}.yml -x ${fqdn_index_idp_node} -w ${workdir}"
                 sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
