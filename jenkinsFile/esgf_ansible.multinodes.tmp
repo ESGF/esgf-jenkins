@@ -126,14 +126,14 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
 		echo "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${data_run_options} -w ${vm_jenkins_home} -c ${data_node_config_ini}"
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${data_run_options} -w ${vm_jenkins_home} -c ${data_node_config_ini}"
+		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${data_run_options} -w ${vm_jenkins_home} -c ${data_node_config_ini}"
             }
         }
         node("${index_idp_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
 		echo "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini}"
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini}"
+		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini}"
             }
         }
     }
