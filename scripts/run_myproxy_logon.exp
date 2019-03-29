@@ -2,7 +2,7 @@
 
 set timeout 600
 
-spawn myproxy-logon -b -T -s INDEX_IDP_NODE -l rootAdmin -o ~/.globus/certificate-file
+spawn myproxy-logon -b -T -s INDEX_IDP_NODE -l rootAdmin -o /root/.globus/certificate-file
 expect {
     "Enter MyProxy pass phrase:" {
 	send MYPROXY_PASS\n; exp_continue
