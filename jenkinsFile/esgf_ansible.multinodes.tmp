@@ -37,7 +37,8 @@ run_myproxy_logon = "esgf-jenkins/scripts/run_myproxy_logon.py"
 // for running esgf-test-suite
 run_esgf_test_suite = "esgf-jenkins/scripts/run_esgf_test_suite.py"
 data_run_options = "data,!dl"
-index_idp_run_options = "myproxy,cog"
+index_idp_run_options1 = "cog"
+index_idp_run_options2 = "myproxy"
 
 esgf_test_suite_branch = 'master'
 data_node_config_ini = "/home/jenkins/esgf/${data_node}_config.ini"
@@ -60,10 +61,10 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prepare_vm..."
-                //sh "${python} ${prepare_vm} -H ${vm_host} -x ${data_node_vmx_file} -s ${data_node_vm_snapshot} -n ${data_node}"
-                //sh "${python} ${prepare_vm} -H ${vm_host} -x ${index_idp_node_vmx_file} -s ${index_idp_node_vm_snapshot} -n ${index_idp_node}"
-		//sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${data_node}_config.ini ${data_node}:${vm_jenkins_home}/esgf"
-		//sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${index_idp_node}_config.ini ${index_idp_node}:${vm_jenkins_home}/esgf"
+                sh "${python} ${prepare_vm} -H ${vm_host} -x ${data_node_vmx_file} -s ${data_node_vm_snapshot} -n ${data_node}"
+                sh "${python} ${prepare_vm} -H ${vm_host} -x ${index_idp_node_vmx_file} -s ${index_idp_node_vm_snapshot} -n ${index_idp_node}"
+		sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${data_node}_config.ini ${data_node}:${vm_jenkins_home}/esgf"
+		sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${index_idp_node}_config.ini ${index_idp_node}:${vm_jenkins_home}/esgf"
             }
         }
     }
@@ -77,7 +78,7 @@ try {
  		sh "cp ${conf_dir}/ansible/configs/${data_node}.vars ${ws}/esgf-ansible/host_vars/${fqdn_data_node}.yml"
  		sh "cp ${conf_dir}/ansible/configs/${index_idp_node}.vars ${ws}/esgf-ansible/host_vars/${fqdn_index_idp_node}.yml"
 		sh "scp ${conf_dir}/ansible/configs/${index_idp_node}.vars ${data_node}:${vm_jenkins_home}/${fqdn_index_idp_node}.yml"
-	        //sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/install.yml'"  
+	        sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/install.yml'"  
             }
 	}
     }
@@ -85,18 +86,18 @@ try {
         node("${index_idp_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
-                //sh "mkdir esgf-jenkins"
+                sh "mkdir esgf-jenkins"
 		dir("esgf-jenkins") {
 		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
 		}
                 echo "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
-                //sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
+                sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
             }
         }
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
-                //sh "mkdir esgf-jenkins"
+                sh "mkdir esgf-jenkins"
 		dir("esgf-jenkins") {
 		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
 		}
@@ -107,7 +108,7 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
-		//sh "bash -c '${set_env}; python --version; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/start.yml'"
+		sh "bash -c '${set_env}; python --version; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/start.yml'"
 	    }
         }
     }
@@ -116,8 +117,8 @@ try {
             withEnv(["ws=${pwd()}"]) {
 		//sleep 120
                 echo "...run_publisher_test..."
-		//sh "${vm_python_path}/python ${ws}/${run_myproxy_logon} -f ${vm_jenkins_home}/${fqdn_index_idp_node}.yml -x ${fqdn_index_idp_node} -w ${vm_jenkins_home}"
-                //sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
+		sh "${vm_python_path}/python ${ws}/${run_myproxy_logon} -f ${vm_jenkins_home}/${fqdn_index_idp_node}.yml -x ${fqdn_index_idp_node} -w ${vm_jenkins_home}"
+                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
             }
         }
     }
@@ -133,7 +134,9 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
 		echo "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini}"
-		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini}"
+		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini1}"
+		echo "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini2}"
+		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini2}"
             }
         }
     }
