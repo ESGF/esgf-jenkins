@@ -115,6 +115,5 @@ def get_var_value(vars_file, var):
         match_obj = re.match(match_str, line)
         if match_obj:
             var_value = match_obj.group(1)
-            print("xxx var_value: {v}".format(v=var_value))
             return var_value
     return var_value

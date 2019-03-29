@@ -36,11 +36,12 @@ run_publisher_test = "esgf-jenkins/scripts/run_publisher_test.py"
 run_myproxy_logon = "esgf-jenkins/scripts/run_myproxy_logon.py"
 // for running esgf-test-suite
 run_esgf_test_suite = "esgf-jenkins/scripts/run_esgf_test_suite.py"
-run_options = "!compute,!dl,!myproxy"
-run_options1 = "myproxy"
-run_options2 = "dl"
+data_run_options = "data,!dl"
+index_idp_run_options = "myproxy,cog'
+
 esgf_test_suite_branch = 'master'
-//config_ini = '/home/jenkins/esgf/${vm_node}_config.ini'
+data_node_config_ini = '/home/jenkins/esgf/${vm_node}_config.ini'
+index_idp_node_config_ini = '/home/jenkins/esgf/${index_idp_node}_config.ini'
 
 try {
     stage('checkout') {
@@ -115,8 +116,8 @@ try {
             withEnv(["ws=${pwd()}"]) {
 		//sleep 120
                 echo "...run_publisher_test..."
-		sh "${vm_python_path}/python ${ws}/${run_myproxy_logon} -f ${vm_jenkins_home}/${fqdn_index_idp_node}.yml -x ${fqdn_index_idp_node} -w ${vm_jenkins_home}"
-                sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
+		//sh "${vm_python_path}/python ${ws}/${run_myproxy_logon} -f ${vm_jenkins_home}/${fqdn_index_idp_node}.yml -x ${fqdn_index_idp_node} -w ${vm_jenkins_home}"
+                //sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
             }
         }
     }
@@ -124,10 +125,13 @@ try {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options} -w ${vm_jenkins_home} -c ${config_ini}"
-		//sleep 10
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options1} -w ${vm_jenkins_home} -c ${config_ini}"
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options2} -w ${vm_jenkins_home} -c ${config_ini}"
+		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${data_node_run_options} -w ${vm_jenkins_home} -c ${data_node_config_ini}"
+            }
+        }
+        node("${index_idp_node}") {
+            withEnv(["ws=${pwd()}"]) {
+                echo "...run_tests_on_vm..."
+		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${index_idp_node_run_options} -w ${vm_jenkins_home} -c ${index_idp_node_config_ini}"
             }
         }
     }

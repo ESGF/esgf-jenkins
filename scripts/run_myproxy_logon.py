@@ -26,8 +26,6 @@ workdir = args.workdir
 
 # get admin_pass 
 admin_pass = get_var_value(vars_file, 'admin_pass')
-print("DEBUG...get_var_val returned: {v}".format(v=admin_pass))
-
 myproxy_logon_exp = os.path.join(this_dir, 'run_myproxy_logon.exp')
 
 update_file(myproxy_logon_exp, 'INDEX_IDP_NODE', index_idp_node, workdir)
