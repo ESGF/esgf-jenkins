@@ -99,8 +99,8 @@ try {
         node('master') {
             withEnv(["ws=${pwd()}"]) {
                 echo "...prepare_vm..."
-                sh "${python3} ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
-		sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${vm_node}:${vm_jenkins_home}/esgf"
+                //sh "${python3} ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+		//sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${vm_node}:${vm_jenkins_home}/esgf"
 		sleep 20
             }
         }
@@ -122,10 +122,10 @@ try {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
-                sh "mkdir esgf-jenkins"
-		dir("esgf-jenkins") {
-	            git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
-		}
+                //sh "mkdir esgf-jenkins"
+		//dir("esgf-jenkins") {
+	        //    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+		//}
                 echo "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
                 //sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
             }
