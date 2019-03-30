@@ -34,6 +34,9 @@ update_file(myproxy_logon_exp, 'MYPROXY_PASS', admin_pass, workdir)
 cmd = "yum install -y expect"
 status = run_cmd_as_root(cmd)
 
+cmd = "mkdir -p /root/.globus"
+status = run_cmd_as_root(cmd)
+
 cmd = myproxy_logon_exp
 conda_path = "/usr/local/conda/bin"
 status = run_in_conda_env_as_root(conda_path, 'esgf-pub', cmd)
