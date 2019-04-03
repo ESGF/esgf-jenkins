@@ -180,5 +180,5 @@ try {
   emailext body: "Please check status of build: http://aims1:8080/jenkins/job/esgf-build.${esgf_repo}/", 
   recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
   subject: "${esgf_repo} -- tag: ${esgf_repo_tag}",
-  to: 'muryanto1@llnl.gov'
+  to: 'muryanto1@llnl.gov,hill119@llnl.gov'
 }
