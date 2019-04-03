@@ -177,6 +177,8 @@ try {
         currentBuild.result = "FAILURE"
     }
 } finally {
-//emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
-emailext body: "Please check status of build: http://aims1:8080/jenkins/job/esgf-build.${esgf_repo}/", recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: "${esgf_repo} -- tag: ${esgf_repo_tag}"
+  emailext body: "Please check status of build: http://aims1:8080/jenkins/job/esgf-build.${esgf_repo}/", 
+  recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+  subject: "${esgf_repo} -- tag: ${esgf_repo_tag}",
+  to: 'muryanto1@llnl.gov'
 }
