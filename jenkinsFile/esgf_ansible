@@ -25,6 +25,7 @@ hosts_file = "${workdir}/${vm_node}.hosts_file"
 
 create_hosts_script = "esgf-jenkins/scripts/create_hosts_file.py"
 prepare_vm = "esgf-jenkins/scripts/prepare_vm.py"
+restart_vm = "esgf-jenkins/scripts/restart_vm.py"
 post_install = "esgf-jenkins/scripts/run_post_install.py"
 run_publisher_test = "esgf-jenkins/scripts/run_publisher_test.py"
 
@@ -66,7 +67,9 @@ try {
 	        def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
-	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko install.yml'"  
+	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko install.yml'"
+                sh "${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+		sleep 120		
             }
 	}
     }
