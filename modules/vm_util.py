@@ -31,7 +31,7 @@ def check_if_vm_is_running(vm_host, vm):
             n_running_vm = m.group(1)
             if n_running_vm == 0:
                 break
-        if vm in a_line:
+        if vm in a_line.lower():
             print("FOUND the vm file: {s}".format(s=a_line))
             vmx_filename = a_line.rstrip()
 
