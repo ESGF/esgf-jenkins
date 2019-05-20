@@ -24,4 +24,11 @@ workdir = args.workdir
 py_ver = args.py_ver
 
 status, conda_path = install_miniconda(workdir, py_ver)
+if status != SUCCESS:
+    sys.exit(status)
+
+conda_cmd = os.path.join(conda_path, 'conda')
+cmd = "{c} install pip".format(c=conda_cmd)
+status = run_cmd(cmd)
+
 sys.exit(status)
