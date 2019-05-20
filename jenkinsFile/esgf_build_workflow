@@ -22,9 +22,9 @@ index_idp_node = "${vm_node}.llnl.gov"
 pkg_version = "${payload_ref}"
 
 // on master
-conda2_path = "/var/lib/jenkins/work/miniconda2/bin/"
+conda_path = "/var/lib/jenkins/work/miniconda2/bin/"
 conda3_path = "/var/lib/jenkins/work/miniconda3/bin/"
-python2 = "${conda2_path}/python"
+// python2 = "${conda2_path}/python"
 python3 = "${conda3_path}/python"
 ant_path = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin"
 java_home = "/usr/local/java"
@@ -41,6 +41,7 @@ esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
 esgf_ansible_branch = "devel"
 
 // scripts
+install_miniconda = "esgf-jenkins/scripts/install_miniconda.py"
 update_pkg_version = "esgf-jenkins/scripts/update_pkg_version.py"
 prepare_vm = "esgf-jenkins/scripts/prepare_vm.py"
 create_hosts_script = "esgf-jenkins/scripts/create_hosts_file.py"
@@ -81,6 +82,8 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 	        dir("esgf-build") {
+		    sh "bash -c "${conda_path}/python ${install_miniconda} -w ${ws} -p 'py2'"
+		    def conda2_path = "${ws}/miniconda2/bin"                    
 		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
 		    sh "bash -c '${set_env}; which conda; which pip; git --version'"
 		    sh "bash -c '${set_env}; ${conda2_path}/pip install -r requirements.txt';"
