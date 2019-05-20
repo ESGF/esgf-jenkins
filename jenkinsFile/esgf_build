@@ -56,7 +56,7 @@ try {
 	        dir("esgf-build") {
 	            def conda2_path = "${ws}/miniconda/bin"
 	            def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
- 	 	    sh "bash -c '${set_env}; pytest -s'"
+ 	 	    sh "bash -c '${set_env}; conda activate esgf-build; pytest -s; conda deactivate'"
 		}
 	    }
         }
