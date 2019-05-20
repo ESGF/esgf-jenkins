@@ -9,7 +9,7 @@ sys.path.append(modules_dir)
 from Const import *
 from CondaUtils import *
 
-valid_py_vers = PYTHON_VERSIONS
+valid_py_vers = ["py2", "py3", "py2.7", "py3.6", "py3.7"]
 
 parser = argparse.ArgumentParser(description="install miniconda",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
