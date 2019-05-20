@@ -83,7 +83,8 @@ try {
 	    withEnv(["ws=${pwd()}"]) {
 	        dir("esgf-build") {
 		    sh "bash -c '${conda_path}/python ${ws}/${install_miniconda} -w ${ws} -p py2'"
-		    def conda2_path = "${ws}/miniconda/bin"                    
+		    def conda2_path = "${ws}/miniconda/bin"
+		    def python2 = "${conda2_path}/python"
 		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
 		    sh "bash -c '${set_env}; which conda; which pip; git --version'"
 		    sh "bash -c '${set_env}; ${conda2_path}/pip install -r requirements.txt';"
