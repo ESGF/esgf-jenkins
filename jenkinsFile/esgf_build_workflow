@@ -83,7 +83,7 @@ try {
 	    withEnv(["ws=${pwd()}"]) {
 	        dir("esgf-build") {
 		    sh "bash -c '${conda_path}/python ${ws}/${install_miniconda} -w ${ws} -p py2'"
-		    def conda2_path = "${ws}/miniconda2/bin"                    
+		    def conda2_path = "${ws}/miniconda/bin"                    
 		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
 		    sh "bash -c '${set_env}; which conda; which pip; git --version'"
 		    sh "bash -c '${set_env}; ${conda2_path}/pip install -r requirements.txt';"
@@ -115,7 +115,6 @@ try {
                 sh "${python3} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
 		sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/install.yml'"  
-
 	    }
         }
     }

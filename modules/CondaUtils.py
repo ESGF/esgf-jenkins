@@ -22,8 +22,8 @@ def install_miniconda(workdir, py_ver):
 
     if os.path.isdir(conda_dir) == True:
         print("INFO: {dir} already exists".format(dir=conda_dir))
-        print("Conda is already installed.")
-        return(SUCCESS, conda_path)
+        cmd = "rm -rf conda_dir"
+        ret_code = run_cmd(cmd, True, False, True)
 
 
     url = "https://repo.continuum.io/miniconda"
