@@ -82,7 +82,7 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 	        dir("esgf-build") {
-		    sh "bash -c "${conda_path}/python ${install_miniconda} -w ${ws} -p 'py2'"
+		    sh "bash -c '${conda_path}/python ${install_miniconda} -w ${ws} -p py2'"
 		    def conda2_path = "${ws}/miniconda2/bin"                    
 		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
 		    sh "bash -c '${set_env}; which conda; which pip; git --version'"
