@@ -1,0 +1,68 @@
+def error = null
+currentBuild.result = "SUCCESS"
+
+// from webhook payload
+//esgf_repo = "${payload_repository_name}"
+//esgf_repo_tag = "${payload_ref}"
+
+// on master
+conda_path = "/var/lib/jenkins/work/miniconda2/bin/"
+//conda2_path = "/var/lib/jenkins/work/miniconda2/bin/"
+//conda3_path = "/var/lib/jenkins/work/miniconda3/bin/"
+//python2 = "${conda2_path}/python"
+//python3 = "${conda3_path}/python"
+ant_path = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin"
+java_home = "/usr/local/java"
+java_path = "${java_home}/bin"
+conf_dir = "/var/lib/jenkins/esgf"
+
+esgf_build_url = "https://github.com/ESGF/esgf-build.git"
+esgf_build_branch = "pytest"
+esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
+
+install_miniconda = "esgf-jenkins/scripts/install_miniconda.py"
+
+try {
+    stage('checkout') {
+        node('master') {
+	    withEnv(["ws=${pwd()}"]) {
+	        dir("esgf-build") {
+                    git branch: "$esgf_build_branch", credentialsId: 'muryanto1', url: "$esgf_build_url"
+                }
+		dir("esgf-jenkins") {
+                    git branch: "master", credentialsId: 'muryanto1', url: "$esgf_jenkins_url"
+		}
+            }
+        }
+    }
+    stage('prep_env') {
+        node('master') {
+	    withEnv(["ws=${pwd()}"]) {
+	        dir("esgf-build") {
+		    sh "bash -c '${conda_path}/python ${ws}/${install_miniconda} -w ${ws} -p py2'"
+	            def conda2_path = "${ws}/miniconda/bin"
+	            def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
+		    sh "bash -c '${set_env}; which conda; which pip; git --version'"
+		    sh "bash -c '${set_env}; ${conda2_path}/pip install -r requirements.txt';"
+		    sh "bash -c '${set_env}; pwd'"
+		}
+	    }
+        }
+    }
+    stage('unit_test') {
+        node('master') {
+	    withEnv(["ws=${pwd()}"]) {
+	        dir("esgf-build") {
+	            def conda2_path = "${ws}/miniconda/bin"
+	            def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
+ 	 	    sh "bash -c '${set_env}; pytest -s'"
+		}
+	    }
+        }
+    }
+
+} catch (caughtException) {
+    error = caughtException
+    currentBuild.result = "FAILURE"
+}
+
