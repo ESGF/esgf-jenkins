@@ -22,7 +22,7 @@ def install_miniconda(workdir, py_ver):
 
     if os.path.isdir(conda_dir) == True:
         print("INFO: {dir} already exists".format(dir=conda_dir))
-        cmd = "rm -rf conda_dir"
+        cmd = "rm -r {dir}".format(dir=conda_dir)
         ret_code = run_cmd(cmd, True, False, True)
 
 
