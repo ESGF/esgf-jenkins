@@ -94,7 +94,7 @@ try {
 		    //sh "bash -c '${set_env}; pwd'"
 		    sh "bash -c '${set_env}; rm -rf ${ws}/${esgf_repo}'"
 		    sh "bash -c '${set_env}; ${conda2_path}/conda env create -f dev_ops_env.yml';"
-		    sh "bash -c '${set_env}; ${activate}; which python; python builder/esgf_build.py -d ${ws} -t ${esgf_repo_tag} --prerelease --upload ${esgf_repo}'"
+		    sh "bash -c '${set_env}; ${activate}; python builder/esgf_build.py -d ${ws} -t ${esgf_repo_tag} --prerelease --upload ${esgf_repo}'"
 		}
 	    }
         }
@@ -170,7 +170,8 @@ try {
 	        dir("esgf-build") {
 		    echo "...remove_prerelease_tag..."
 		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
-		    sh "bash -c '${set_env}; ${python2} esgf_build.py -d ${ws} -t ${esgf_repo_tag} --upload ${esgf_repo}'"
+		    def activate = "source activate dev_ops"
+		    sh "bash -c '${set_env}; ${activate}; python builder/esgf_build.py -d ${ws} -t ${esgf_repo_tag} --upload ${esgf_repo}'"
 		}
 	    }
         }
