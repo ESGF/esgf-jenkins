@@ -94,7 +94,7 @@ try {
 		    //sh "bash -c '${set_env}; pwd'"
 		    sh "bash -c '${set_env}; rm -rf ${ws}/${esgf_repo}'"
 		    sh "bash -c '${set_env}; ${conda2_path}/conda env create -f dev_ops_env.yml';"
-		    sh "bash -c '${set_env}; ${activate}; ${python2} builder/esgf_build.py -d ${ws} -t ${esgf_repo_tag} --prerelease --upload ${esgf_repo}'"
+		    sh "bash -c '${set_env}; ${activate}; which python; python builder/esgf_build.py -d ${ws} -t ${esgf_repo_tag} --prerelease --upload ${esgf_repo}'"
 		}
 	    }
         }
