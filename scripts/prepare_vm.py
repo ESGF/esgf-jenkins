@@ -2,6 +2,7 @@ import sys
 import os
 import argparse
 import re
+import time
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
 modules_dir = os.path.join(this_dir, '..', 'modules')
@@ -43,6 +44,7 @@ ret_code = start_vm(vm_host, vmx)
 if ret_code != SUCCESS:
     sys.exit(ret_code)
 
+time.sleep(5)
 ret_code = get_vm_ready(vm_node)
 if ret_code != SUCCESS:
     sys.exit(ret_code)
