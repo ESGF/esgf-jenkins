@@ -67,7 +67,7 @@ try {
 	        def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
-	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko install.yml'"
+	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko --timeout 60 install.yml'"
 		sleep 30
                 sh "${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
 		sleep 120		
@@ -91,7 +91,7 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
-		sh "bash -c '${set_env}; python --version; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/stop.yml ${ws}/esgf-ansible/start.yml'"
+		sh "bash -c '${set_env}; python --version; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko --timeout 60 ${ws}/esgf-ansible/stop.yml ${ws}/esgf-ansible/start.yml'"
 		sleep 120
 		sh "bash -c '${set_env}; python --version; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/status.yml'"
 	    }
