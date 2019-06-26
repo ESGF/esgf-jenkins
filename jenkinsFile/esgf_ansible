@@ -109,6 +109,7 @@ try {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...run_tests_on_vm..."
+		sh "cat ${config_ini}"
 		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options} -w ${vm_jenkins_home} -c ${config_ini}"
 		sleep 10
 		sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options1} -w ${vm_jenkins_home} -c ${config_ini}"
