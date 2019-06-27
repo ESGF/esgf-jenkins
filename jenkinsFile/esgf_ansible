@@ -68,9 +68,9 @@ try {
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
 	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -u root -c paramiko --timeout 60 install.yml'"
-		sleep 30
+		//sleep 30
                 //sh "${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
-		//sleep 120		
+		sleep 120		
             }
 	}
     }
