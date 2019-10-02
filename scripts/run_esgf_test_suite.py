@@ -84,7 +84,7 @@ def run_esgf_test_suite(config_ini_file, workdir, run_options):
     conf_file_options = "--tc-file {config_ini}".format(config_ini=config_ini_file,
                                                         home=user_home)
     singularity_cmd = "singularity exec /home/jenkins/esgf/esgf-test-suite_env.singularity.img"
-    cmd = "python esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(std_opt=std_options,
+    cmd = "python3 esgf-test.py {std_opt} {conf_opt} -a \'{opts}\'".format(std_opt=std_options,
                                                                           conf_opt=conf_file_options,
                                                                           opts=run_options)
     the_cmd = "{s} {c}".format(s=singularity_cmd,
