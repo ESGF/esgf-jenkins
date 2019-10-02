@@ -12,7 +12,7 @@ from Util import *
 parser = argparse.ArgumentParser(description="run esgf-test-suite",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument("-b", "--branch", default='v2.4.3', help="esgf-test-suite version")
+parser.add_argument("-b", "--branch", default='v3.0.0', help="esgf-test-suite version")
 parser.add_argument("-p", "--python_path", required=True, help="python path")
 parser.add_argument("-o", "--run_test_suite_options", 
                     default='!compute,!cog_create_user,!slcs',
