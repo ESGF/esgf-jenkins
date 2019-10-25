@@ -1,7 +1,8 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
+// esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
+esgf_ansible_url = "${remote_ansible_repo}"
 esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 
 data_node = "${vm_node}.llnl.gov"
@@ -40,7 +41,7 @@ try {
                     git branch: "$esgf_ansible_branch", credentialsId: 'muryanto1', url: "${esgf_ansible_url}"
 		}
 		dir("esgf-jenkins") {
-                    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+                    git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
  		}
 	    }
         }
