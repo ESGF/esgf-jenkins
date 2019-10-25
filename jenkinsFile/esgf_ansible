@@ -1,16 +1,13 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
-//esgf_ansible_branch = "ncarlson"
+// esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
+esgf_ansible_url = ${remote_ansible_repo}
 esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 
 data_node = "${vm_node}.llnl.gov"
 index_idp_node = "${vm_node}.llnl.gov"
 
-//vm_host = "grim.llnl.gov"
-//vmx_file = "/var/lib/jenkins/vmware/${vm_node}/${vm_node}.vmx"
-//vm_snapshot = "SnapshotForJenkins"
 vm_jenkins_home = "/home/jenkins"
 vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
 
@@ -20,7 +17,6 @@ python = "${conda_path}/python"
 conf_dir = "/var/lib/jenkins/esgf"
 
 workdir = "/var/lib/jenkins/work/esgf-ansible-jenkins"
-//vars_file = "/var/lib/jenkins/esgf/ansible/configs/${vm_node}.vars"
 hosts_file = "${workdir}/${vm_node}.hosts_file"
 
 create_hosts_script = "esgf-jenkins/scripts/create_hosts_file.py"
