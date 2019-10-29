@@ -52,10 +52,6 @@ try {
                 echo "...prepare_vm..."
                 sh "${python} ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
 		sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${vm_node}:${vm_jenkins_home}/esgf"
-                echo "XXX XXX XXX"
-                sh "which java"
-                sh "ls -l /bin/java"
-                sh "java --version"
             }
         }
     }
@@ -68,13 +64,9 @@ try {
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
 	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -c paramiko --timeout 60 install.yml'"
-                echo "XXX XXX XXX after install"
-                sh "which java"
-                sh "ls -l /bin/java"
-                sh "java --version"
-		sleep 30
-                //sh "date; ${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
-		//sleep 45		
+		sleep 10
+                sh "date; ${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+		sleep 10
             }
 	}
     }
