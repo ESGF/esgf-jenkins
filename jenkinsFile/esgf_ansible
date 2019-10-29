@@ -67,6 +67,8 @@ try {
 		sleep 10
                 sh "date; ${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
 		sleep 10
+                sh "date; ssh -o StrictHostKeyChecking=no -t jenkins@grim 'vmrun list'"
+		sleep 10
             }
 	}
     }
