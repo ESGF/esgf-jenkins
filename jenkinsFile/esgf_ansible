@@ -65,10 +65,10 @@ try {
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
 	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -c paramiko --timeout 60 install.yml'"
 		sleep 10
-                sh "date; ${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
-		sleep 10
-                sh "date; ssh -o StrictHostKeyChecking=no -t jenkins@grim 'vmrun list'"
-		sleep 10
+                //sh "date; ${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
+		//sleep 10
+                //sh "date; ssh -o StrictHostKeyChecking=no -t jenkins@grim 'vmrun list'"
+		//sleep 10
             }
 	}
     }
