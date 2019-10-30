@@ -74,7 +74,9 @@ try {
                 sh "mkdir esgf-jenkins"
                 echo "...after mkdir esgf-jenkins"
 		dir("esgf-jenkins") {
+		    echo "...going to get esgf-jenkins repo..."
 		    git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+		    echo "...AFTER going to get esgf-jenkins repo..."
 		}
                 echo "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
