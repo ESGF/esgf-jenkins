@@ -63,7 +63,7 @@ try {
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
 	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -c paramiko --timeout 60 install.yml'"
-		sleep 45
+		sleep 60
             }
 	}
     }
@@ -72,8 +72,9 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
                 sh "mkdir esgf-jenkins"
+                echo "...after mkdir esgf-jenkins"
 		dir("esgf-jenkins") {
-		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+		    git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
 		}
                 echo "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
