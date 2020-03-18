@@ -1,14 +1,14 @@
 def error = null
 currentBuild.result = "SUCCESS"
 
-esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
+esgf_ansible_url = "${remote_ansible_repo}"
 esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
 
 data_node = "${vm_node}.llnl.gov"
 index_idp_node = "${vm_node}.llnl.gov"
 
 vm_jenkins_home = "/home/jenkins"
-vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
+vm_python_path = "${vm_jenkins_home}/miniconda3/bin"
 
 // on master
 conda_path = "/var/lib/jenkins/work/miniconda3/bin"
@@ -40,7 +40,7 @@ try {
                     git branch: "$esgf_ansible_branch", credentialsId: 'muryanto1', url: "${esgf_ansible_url}"
 		}
 		dir("esgf-jenkins") {
-                    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+                    git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
  		}
 	    }
         }
@@ -63,9 +63,7 @@ try {
                 sh "${python} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
 		sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
 	        sh "bash -c '${set_env}; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -c paramiko --timeout 60 install.yml'"
-		sleep 30
-                sh "${python} ${restart_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
-		sleep 45		
+		sleep 60
             }
 	}
     }
@@ -74,8 +72,11 @@ try {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
                 sh "mkdir esgf-jenkins"
+                echo "...after mkdir esgf-jenkins"
 		dir("esgf-jenkins") {
-		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+		    echo "...going to get esgf-jenkins repo..."
+		    git branch: "${esgf_jenkins_branch}", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
+		    echo "...AFTER going to get esgf-jenkins repo..."
 		}
                 echo "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
                 sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
@@ -87,7 +88,8 @@ try {
 	    withEnv(["ws=${pwd()}"]) {
 		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda_path:/sbin:/usr/sbin:$PATH"
 		sh "bash -c '${set_env}; python --version; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -c paramiko --timeout 60 ${ws}/esgf-ansible/stop.yml ${ws}/esgf-ansible/start.yml'"
-		sleep 180
+		// sleep 180
+                sleep 300
 		sh "bash -c '${set_env}; python --version; cd ${ws}/esgf-ansible; ansible-playbook -i ${hosts_file} -v -c paramiko ${ws}/esgf-ansible/status.yml'"
 	    }
         }
