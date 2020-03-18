@@ -70,7 +70,6 @@ try {
     stage('post_install') {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
-                echo "XXX XXX vm_python_path: ${vm_python_path}"
                 echo "...post_install..."
                 sh "mkdir esgf-jenkins"
                 echo "...after mkdir esgf-jenkins"
