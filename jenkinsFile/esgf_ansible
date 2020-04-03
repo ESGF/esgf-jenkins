@@ -73,7 +73,7 @@ try {
         node("${vm_node}") {
             withEnv(["ws=${pwd()}"]) {
                 echo "...post_install..."
-                sh "mkdir esgf-jenkins"
+                sh "mkdir -p esgf-jenkins"
 		dir("esgf-jenkins") {
 		    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
 		}
