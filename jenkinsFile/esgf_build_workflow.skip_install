@@ -2,190 +2,56 @@ def error = null
 currentBuild.result = "SUCCESS"
 
 // parameters
-// esgf_repo
+// esgf_repo_url
 // esgf_repo_branch
-// vm_node
-// vmx_file
-// vm_snapshot
 
-// from webhook payload
-esgf_repo = "${payload_repository_name}"
-esgf_repo_tag = "${payload_ref}"
-
-// on vm
-vm_host = "grim.llnl.gov"
-vm_jenkins_home = "/home/jenkins"
-vm_python_path = "${vm_jenkins_home}/miniconda2/bin"
-
-data_node = "${vm_node}.llnl.gov"
-index_idp_node = "${vm_node}.llnl.gov"
-pkg_version = "${payload_ref}"
-
-// on master
-conda_path = "/var/lib/jenkins/work/miniconda2/bin/"
-conda3_path = "/var/lib/jenkins/work/miniconda3/bin/"
-// python2 = "${conda2_path}/python"
-python3 = "${conda3_path}/python"
-ant_path = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin"
+ant_cmd = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin/ant"
 java_home = "/usr/local/java"
-java_path = "${java_home}/bin"
-conf_dir = "/var/lib/jenkins/esgf"
 
-workdir = "/var/lib/jenkins/work/esgf-ansible-jenkins"
-hosts_file = "${workdir}/${vm_node}.hosts_file"
-
-//esgf_build_url = "https://github.com/ESGF/esgf-build.git"
-//esgf_build_branch = "python"
-esgf_build_url = "https://github.com/ESGF/esgf-devOps.git"
-esgf_build_branch = "devel"
-esgf_jenkins_url = "https://github.com/ESGF/esgf-jenkins.git"
-esgf_ansible_url = "https://github.com/ESGF/esgf-ansible.git"
-esgf_ansible_branch = "devel"
-
-// scripts
-install_miniconda = "esgf-jenkins/scripts/install_miniconda.py"
-update_pkg_version = "esgf-jenkins/scripts/update_pkg_version.py"
-prepare_vm = "esgf-jenkins/scripts/prepare_vm.py"
-create_hosts_script = "esgf-jenkins/scripts/create_hosts_file.py"
-post_install = "esgf-jenkins/scripts/run_post_install.py"
-run_publisher_test = "esgf-jenkins/scripts/run_publisher_test.py"
-
-// for running esgf-test-suite
-run_esgf_test_suite = "esgf-jenkins/scripts/run_esgf_test_suite.py"
-run_options = "!compute,!dl,!myproxy"
-run_options1 = "myproxy"
-run_options2 = "dl"
-esgf_test_suite_branch = 'master'
-config_ini = '/home/jenkins/esgf/${vm_node}_config.ini'
-
-def skip_workflow = false
+esgf_jenkins_url = "https://github.com/esgf/esgf-jenkins.git"
+esgf_jenkins_branch = "build-assets"
 
 try {
     stage('checkout') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
-	        if (payload_ref_type != 'tag') {
-		    skip_workflow = true
-		    error("Skipping the whole workflow since the trigger is not for tag creation")
-		}
-	        dir("esgf-build") {
-                    git branch: "$esgf_build_branch", credentialsId: 'muryanto1', url: "$esgf_build_url"
-		}
 	        dir("esgf-jenkins") {
-                    git branch: "master", credentialsId: 'muryanto1', url: "$esgf_jenkins_url"
+                    git branch: "$esgf_jenkins_branch", credentialsId: 'muryanto1', url: "$esgf_jenkins_url"
 		}
-	        //dir("esgf-ansible") {
-                //    git branch: "$esgf_ansible_branch", credentialsId: 'muryanto1', url: "$esgf_ansible_url"
-		//}
 	    }
         }
     }
     stage('build') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
-	        dir("esgf-build") {
-		    sh "bash -c '${conda_path}/python ${ws}/${install_miniconda} -w ${ws} -p py2'"
-		    def conda2_path = "${ws}/miniconda/bin"
-		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
-		    def activate = "source activate dev_ops"
-		    sh "bash -c '${set_env}; which conda; which pip; git --version'"
-		    //sh "bash -c '${set_env}; ${conda2_path}/pip install -r requirements.txt';"
-		    //sh "bash -c '${set_env}; pwd'"
-		    sh "bash -c '${set_env}; rm -rf ${ws}/${esgf_repo}'"
-		    sh "bash -c '${set_env}; ${conda2_path}/conda env create -f dev_ops_env.yml';"
-		    sh "bash -c '${set_env}; ${activate}; python builder/esgf_build.py -d ${ws} -t ${esgf_repo_tag} --prerelease --upload ${esgf_repo}'"
+ 	        dir("esgf-jenkins") {
+		    def workdir = "${ws}/workdir"
+                    def make_params = "workdir=${workdir} ant_cmd=${ant_cmd} java_home=${java_home}"
+		    def release_tag = payload_ref
+		    sh "mkdir -p ${workdir}"
+		    sh "make clean workdir=${workdir} repo=${esgf_repo_url}"
+		    sh "make build_assets ${make_params} repo=${esgf_repo_url} branch=${esgf_repo_branch} tag=${release_tag}"
 		}
 	    }
-        }
+	}
     }
-    stage('prepare_vm') {
-        node('master') {
-            withEnv(["ws=${pwd()}"]) {
-                echo "...prepare_vm..."
-                //sh "${python3} ${prepare_vm} -H ${vm_host} -x ${vmx_file} -s ${vm_snapshot} -n ${vm_node}"
-		//sh "scp -o StrictHostKeyChecking=no ${conf_dir}/esgf-test-suite/${vm_node}_config.ini ${vm_node}:${vm_jenkins_home}/esgf"
-		//sleep 20
-            }
-        }
-    }
-    stage('ansible_install') {
+    stage('upload') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
-	        // create hosts file
-		def sample_hosts_file = "${ws}/esgf-ansible/sample.hosts"
-		def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda3_path:/sbin:/usr/sbin:$PATH"
-                //sh "${python3} ${ws}/${update_pkg_version} -d ${ws}/esgf-ansible -p ${esgf_repo} -v ${pkg_version}"
-                //sh "${python3} ${ws}/${create_hosts_script} -d ${data_node} -i ${index_idp_node} -o ${hosts_file}"
-		//sh "cp ${vars_file} ${ws}/esgf-ansible/host_vars/${data_node}.yml"
-		//sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/install.yml'"  
-	    }
-        }
-    }
-    stage('post_install') {
-        node("${vm_node}") {
-            withEnv(["ws=${pwd()}"]) {
-                echo "...post_install..."
-                //sh "mkdir esgf-jenkins"
-		//dir("esgf-jenkins") {
-	        //    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_jenkins_url}"
-		//}
-                //echo "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
-                //sh "${vm_python_path}/python ${ws}/${post_install} -H ${vm_jenkins_home}"
+	        withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) { 
+		    dir("esgf-jenkins") {
+			def workdir = "${ws}/workdir"
+			def release_tag = payload_ref
+			def script = "${ws}/esgf-jenkins/scripts/upload_github_release_asset.bash"
+			def params = "workdir=${workdir} repo=${esgf_repo_url} branch=${esgf_repo_branch} tag=${release_tag}"
+			sh "make upload ${params} token=${GITHUB_TOKEN} owner=esgf"
+   	            }
+	        }
             }
-        }
-    }
-    stage('start_services') {
-        node('master') {
-	    withEnv(["ws=${pwd()}"]) {
-	        def set_env = "export TERM=vt100; export ANSIBLE_NOCOWS=1; export ANSIBLE_HOST_KEY_CHECKING=False; export PATH=$conda3_path:/sbin:/usr/sbin:$PATH"
-		//sh "bash -c '${set_env}; ansible-playbook -i ${hosts_file} -v -u root -c paramiko ${ws}/esgf-ansible/start.yml'"
-	    }
-        }
-    }
-    stage('run_publisher_test') {
-        node("${vm_node}") {
-            withEnv(["ws=${pwd()}"]) {
-	        //sleep 120
-                echo "...run_publisher_test..."
-                //sh "${vm_python_path}/python ${ws}/${run_publisher_test} -w ${vm_jenkins_home} -e esgf-pub "
-		//sleep 60
-            }
-        }
-    }
-    stage('run_tests_on_vm') {
-        node("${vm_node}") {
-            withEnv(["ws=${pwd()}"]) {
-                echo "...run_tests_on_vm..."
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options} -w ${vm_jenkins_home} -c ${config_ini}"
-		//sleep 10
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options1} -w ${vm_jenkins_home} -c ${config_ini}"
-		//sh "${vm_python_path}/python ${ws}/${run_esgf_test_suite} -b ${esgf_test_suite_branch} -p ${vm_python_path} -o ${run_options2} -w ${vm_jenkins_home} -c ${config_ini}"
-            }
-        }
-    }
-    stage('remove_prelease_tag') {
-        node('master') {
-	    withEnv(["ws=${pwd()}"]) {
-	        dir("esgf-build") {
-		    echo "...remove_prerelease_tag..."
-		    def conda2_path = "${ws}/miniconda/bin"
-		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
-		    def activate = "source activate dev_ops"
-		    sh "bash -c '${set_env}; ${activate}; python builder/esgf_build.py -d ${ws} -t ${esgf_repo_tag} --upload ${esgf_repo}'"
-		}
-	    }
         }
     }
 } catch (caughtException) {
-    if (skip_workflow) {
-        currentBuild.result = "SUCCESS"
-    } else {
-        error = caughtException
-        currentBuild.result = "FAILURE"
-    }
-} finally {
-  emailext body: "Please check status of build: http://aims1:8080/jenkins/job/esgf-build.${esgf_repo}/", 
-  recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-  subject: "${esgf_repo} -- tag: ${esgf_repo_tag}",
-  to: 'muryanto1@llnl.gov'
+    error = caughtException
+    currentBuild.result = "FAILURE"
 }
+
