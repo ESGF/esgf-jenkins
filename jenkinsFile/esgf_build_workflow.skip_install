@@ -1,3 +1,4 @@
+
 def error = null
 currentBuild.result = "SUCCESS"
 
@@ -29,7 +30,7 @@ try {
                     def make_params = "workdir=${workdir} ant_cmd=${ant_cmd} java_home=${java_home}"
 		    def release_tag = payload_ref
 		    sh "mkdir -p ${workdir}"
-		    sh "make clean workdir=${workdir} repo=${esgf_repo_url}"
+		    // sh "make clean workdir=${workdir} repo=${esgf_repo_url}"
 		    sh "make build_assets ${make_params} repo=${esgf_repo_url} branch=${esgf_repo_branch} tag=${release_tag}"
 		}
 	    }
