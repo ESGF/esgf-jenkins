@@ -11,7 +11,7 @@ vm_jenkins_home = "/home/jenkins"
 vm_python_path = "${vm_jenkins_home}/miniconda3/bin"
 
 // on master
-conda_path = "/var/lib/jenkins/work/miniconda3/bin"
+conda_path = "/var/lib/jenkins/work/miniconda3-jenkins/bin"
 python = "${conda_path}/python"
 conf_dir = "/var/lib/jenkins/esgf"
 
