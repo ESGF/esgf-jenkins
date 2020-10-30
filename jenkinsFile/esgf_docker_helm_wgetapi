@@ -1,0 +1,48 @@
+pipeline {
+  agent none
+  environment {
+    REGISTRY = "${env.BRANCH_NAME == "master" ? env.REGISTRY_PUBLIC : env.REGISTRY_PRIVATE}"
+    CACHE_TYPE = "local"
+    CACHE_PATH = "/nfs/buildkit-cache"
+  }
+  stages {
+    stage("Deploy") {
+      agent {
+        label "jenkins-buildkit"
+      }
+      steps {
+        container(name: "buildkit", shell: "/bin/sh") {
+          dir("esgf-docker") {
+            git branch: "wget_api_install_values", url: "https://github.com/muryanto1/esgf-docker.git"
+          }
+          lock("development") {
+            dir("esgf-docker") {
+              sh """
+helm repo add stable https://kubernetes-charts.storage.googleapis.com --ca-file /ssl/cspca.crt
+helm dependency build deploy/kubernetes/chart
+helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/chart/my_values.yaml
+              """
+            }
+          }
+        }
+      } 
+    }
+    stage("Test") {
+      agent {
+        label "jenkins-conda"
+      }
+      steps {
+        container("conda") {
+	  withEnv(["ws=${pwd()}"]) {
+            dir("esgf-wget") {
+              git branch: "add_parameterized_tests", url: "https://github.com/esgf/esgf-wget.git"
+              sh "conda update -n base -c defaults conda -y"
+	      sh "conda install -n base -c conda-forge pytest wget curl"
+	      sh "export WGET_API_HOST_URL=https://nimbus15.llnl.gov:8443; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_data.json tests/tests/test_download.py"
+            }
+          }
+        }
+      }
+    }
+  }
+}
