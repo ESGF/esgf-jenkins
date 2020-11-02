@@ -1,3 +1,15 @@
+// parameters
+// esgf_wget_branch, ex: "add_parameterized_tests"
+// esgf_docker_branch, ex: "wget_api_install_values"
+// wget_api_host_url, ex: "https://nimbus15.llnl.gov:8443"
+
+esgf_wget_url = "https://github.com/esgf/esgf-wget.git"
+
+// esgf_docker_url is the github repo of esgf-docker that has the helm chart to be tested.
+// This workflow assumes there is a 'deploy/kubernetes/chart/my_values.yaml' under that repo.
+esgf_docker_url = "https://github.com/muryanto1/esgf-docker.git"
+
+
 pipeline {
   agent none
   environment {
@@ -13,7 +25,7 @@ pipeline {
       steps {
         container(name: "buildkit", shell: "/bin/sh") {
           dir("esgf-docker") {
-            git branch: "wget_api_install_values", url: "https://github.com/muryanto1/esgf-docker.git"
+            git branch: "wget_api_install_values", url: "${esgf_docker_url}"
           }
           lock("development") {
             dir("esgf-docker") {
@@ -35,14 +47,31 @@ helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/ch
         container("conda") {
 	  withEnv(["ws=${pwd()}"]) {
             dir("esgf-wget") {
-              git branch: "add_parameterized_tests", url: "https://github.com/esgf/esgf-wget.git"
+              git branch: "${esgf_wget_branch}", url: "${esgf_wget_url}"
               sh "conda update -n base -c defaults conda -y"
 	      sh "conda install -n base -c conda-forge pytest wget curl"
-	      sh "export WGET_API_HOST_URL=https://nimbus15.llnl.gov:8443; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_data.json tests/tests/test_download.py"
+	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_data.json tests/tests/test_download.py"
+	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_offset_limit.json tests/tests/test_download_offset_limit.py"
             }
           }
         }
       }
+    }      
+    stage("cleanup") {
+      agent {
+        label "jenkins-buildkit"
+      }
+      steps {
+        container(name: "buildkit", shell: "/bin/sh") {
+          lock("development") {
+            dir("esgf-docker") {
+              sh """
+helm -n development delete esgf
+              """
+            }
+          }
+        }
+      } 
     }
   }
 }
