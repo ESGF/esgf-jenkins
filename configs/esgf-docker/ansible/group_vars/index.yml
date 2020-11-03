@@ -1,0 +1,22 @@
+image_tag: future-architecture
+solr_replicas:
+  - name: remote-site
+    master_url: https://esgf-fedtest.llnl.gov/solr
+    poll_interval: "06:00:00"
+
+wget_api_image_prefix: muryanto1
+wget_api_image_tag: "1.8"
+wget_api_image_pull: "{{ image_pull }}"
+wget_api_image_repository: "esgf-wget"
+
+wget_api:
+  secret_key: "&5aq3uq6t8j2y)e2ul@*7jd20=iqp)u141@@7#zu3o3zup_fh+"
+  allowed_hosts: "*,localhost"
+  solr_url: "https://esgf-node.llnl.gov/solr"
+  shards_xml: "/esg/config/esgf_shards_static.xml"
+  script_file_default_limit: 500
+  script_file_max_limit: 50000
+  data_upload_max_number_fields: 10240
+  config_path: "/esg/config"
+  config: "esgf_wget_config"
+
