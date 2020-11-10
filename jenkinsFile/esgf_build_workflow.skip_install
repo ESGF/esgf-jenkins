@@ -7,7 +7,8 @@ currentBuild.result = "SUCCESS"
 // esgf_repo_branch
 
 ant_cmd = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin/ant"
-java_home = "/usr/local/java"
+// java_home = "/usr/local/java"
+java_home = "/bin/java"
 
 esgf_jenkins_url = "https://github.com/esgf/esgf-jenkins.git"
 esgf_jenkins_branch = "master"
