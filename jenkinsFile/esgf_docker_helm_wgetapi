@@ -57,21 +57,5 @@ helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/ch
         }
       }
     }      
-    stage("cleanup") {
-      agent {
-        label "jenkins-buildkit"
-      }
-      steps {
-        container(name: "buildkit", shell: "/bin/sh") {
-          lock("development") {
-            dir("esgf-docker") {
-              sh """
-helm -n development delete esgf
-              """
-            }
-          }
-        }
-      } 
-    }
   }
 }
