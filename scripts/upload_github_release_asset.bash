@@ -48,6 +48,7 @@ fi
 
 # Validate token.
 echo "...validate token..."
+echo "DEBUG...curl -o /dev/null -sH "$AUTH" $GH_REPO"
 curl -o /dev/null -sH "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or network issue!";  exit 1; }
 
 # Read asset tags.
