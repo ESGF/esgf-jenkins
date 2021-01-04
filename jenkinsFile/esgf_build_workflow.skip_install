@@ -11,7 +11,7 @@ ant_cmd = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin/ant"
 java_home = "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.275.b01-0.el7_9.x86_64/"
 
 esgf_jenkins_url = "https://github.com/esgf/esgf-jenkins.git"
-esgf_jenkins_branch = "master"
+esgf_jenkins_branch = "fix_java_home"
 
 try {
     stage('checkout') {
