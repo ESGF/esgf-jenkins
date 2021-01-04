@@ -22,7 +22,8 @@
 
 # Check dependencies.
 set -e
-xargs=$(which gxargs || which xargs)
+# xargs=$(which gxargs || which xargs)
+# xargs=$(which xargs)
 
 # Validate settings.
 [ "$TRACE" ] && set -x
@@ -46,9 +47,11 @@ if [[ "$tag" == 'LATEST' ]]; then
 fi
 
 # Validate token.
+echo "...validate token..."
 curl -o /dev/null -sH "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or network issue!";  exit 1; }
 
 # Read asset tags.
+echo "...read asset tags..."
 response=$(curl -sH "$AUTH" $GH_TAGS)
 
 # Get ID of the asset based on given filename.
