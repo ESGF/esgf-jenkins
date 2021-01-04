@@ -48,15 +48,12 @@ fi
 
 # Validate token.
 echo "...validate token..."
-echo "DEBUG...curl -o /dev/null -sH "$AUTH" $GH_REPO"
 curl -o /dev/null -sH "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or network issue!";  exit 1; }
 
 # Read asset tags.
 echo "...read asset tags..."
-echo "DEBUG...curl -sH \"$AUTH\" $GH_TAGS"
 response=$(curl -sH "$AUTH" $GH_TAGS)
 
-echo "...DEBUG...response: $response.."
 # Get ID of the asset based on given filename.
 eval $(echo "$response" | grep -m 1 "id.:" | grep -w id | tr : = | tr -cd '[[:alnum:]]=')
 [ "$id" ] || { echo "Error: Failed to get release id for tag: $tag"; echo "$response" | awk 'length($0)<100' >&2; exit 1; }
