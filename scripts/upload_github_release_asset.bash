@@ -53,6 +53,7 @@ curl -o /dev/null -sH "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or 
 
 # Read asset tags.
 echo "...read asset tags..."
+echo "DEBUG...curl -sH \"$AUTH\" $GH_TAGS"
 response=$(curl -sH "$AUTH" $GH_TAGS)
 
 echo "...DEBUG...response: $response.."
