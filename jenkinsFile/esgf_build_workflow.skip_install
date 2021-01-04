@@ -8,7 +8,7 @@ currentBuild.result = "SUCCESS"
 
 ant_cmd = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin/ant"
 // java_home = "/usr/local/java"
-java_home = "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.272.b10-1.el7_9.x86_64/"
+java_home = "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.275.b01-0.el7_9.x86_64/"
 
 esgf_jenkins_url = "https://github.com/esgf/esgf-jenkins.git"
 esgf_jenkins_branch = "master"
@@ -31,7 +31,7 @@ try {
                     def make_params = "workdir=${workdir} ant_cmd=${ant_cmd} java_home=${java_home}"
 		    def release_tag = payload_ref
 		    sh "mkdir -p ${workdir}"
-		    sh "make clean workdir=${workdir} repo=${esgf_repo_url}"
+		    // sh "make clean workdir=${workdir} repo=${esgf_repo_url}"
 		    sh "make build_assets ${make_params} repo=${esgf_repo_url} branch=${esgf_repo_branch} tag=${release_tag}"
 		}
 	    }
