@@ -13,7 +13,17 @@ wget_api:
   secret_key: "&5aq3uq6t8j2y)e2ul@*7jd20=iqp)u141@@7#zu3o3zup_fh+"
   allowed_hosts: "*,localhost"
   solr_url: "https://esgf-node.llnl.gov/solr"
-  shards_xml: "esgf_shards_static.xml"
+  shards_xml:
+    - localhost:8983/solr
+    - localhost:8985/solr
+    - localhost:8987/solr
+    - localhost:8988/solr
+    - localhost:8990/solr
+    - localhost:8993/solr
+    - localhost:8994/solr
+    - localhost:8995/solr
+    - localhost:8996/solr
+    - localhost:8997/solr
   allowed_projects_json: "esgf_wgetapi_allowed_projects.json"
   allowed_projects:
     - "CMIP6"
