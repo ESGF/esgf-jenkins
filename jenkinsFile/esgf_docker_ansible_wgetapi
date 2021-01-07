@@ -43,6 +43,7 @@ pipeline {
                 sh "ls -l ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini"
 		sh "ls -l ./deploy/ansible/playbook.yml"
 		sh "cat ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini"
+		sh "cat ${ws}/esgf-docker/deploy/ansible/roles/index/templates/esgf_wgetapi_allowed_projects.json.j2"
                 sh "bash -c 'export ANSIBLE_HOST_KEY_CHECKING=False; export TERM=vt100; export ANSIBLE_NOCOWS=1; ansible-playbook -i ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini -v --become-user root --user ${SSH_USER} --become-method=sudo --private-key ${SSH_KEY} --extra-vars \"ansible_become_user=root ansible_become_password=${PASSWORD}\" ./deploy/ansible/playbook.yml'"
 	      }
             }
