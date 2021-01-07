@@ -15,7 +15,9 @@ wget_api:
   solr_url: "https://esgf-node.llnl.gov/solr"
   shards_xml: "/esg/config/esgf_shards_static.xml"
   allowed_projects_json: "/esg/config/esgf_allowed_projects.json"
-  allowed_projects: ["CMIP6", "CMIP5"]
+  allowed_projects:
+    - "CMIP6"
+    - "CMIP5"
   script_file_default_limit: 500
   script_file_max_limit: 50000
   max_dir_length: 50

@@ -30,7 +30,7 @@ pipeline {
           lock("development") {
             dir("esgf-docker") {
               sh """
-helm repo add stable https://kubernetes-charts.storage.googleapis.com --ca-file /ssl/cspca.crt
+helm repo add stable https://charts.helm.sh/stable --ca-file /ssl/cspca.crt
 helm dependency build deploy/kubernetes/chart
 helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/chart/my_values.yaml
               """
