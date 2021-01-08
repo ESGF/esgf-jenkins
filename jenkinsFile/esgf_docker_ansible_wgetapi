@@ -1,7 +1,7 @@
 // parameters
 // esgf_wget_branch, ex: "add_parameterized_tests"
 // esgf_docker_branch, ex: "wget_api_install_values"
-// wget_api_host_url, ex: "https://nimbus15.llnl.gov:8443"
+// wget_api_host_url, ex: "http://greyworm2-rh7.llnl.gov"
 // esgf_jenkins_branch, ex: "add_esgf_docker"
 
 esgf_wget_url = "https://github.com/esgf/esgf-wget.git"
@@ -46,6 +46,24 @@ pipeline {
 		sh "cat ${ws}/esgf-docker/deploy/ansible/roles/index/templates/esgf_wgetapi_allowed_projects.json.j2"
                 sh "bash -c 'export ANSIBLE_HOST_KEY_CHECKING=False; export TERM=vt100; export ANSIBLE_NOCOWS=1; ansible-playbook -i ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini -v --become-user root --user ${SSH_USER} --become-method=sudo --private-key ${SSH_KEY} --extra-vars \"ansible_become_user=root ansible_become_password=${PASSWORD}\" ./deploy/ansible/playbook.yml'"
 	      }
+            }
+          }
+        }
+      }
+    }
+    stage("Test") {
+      agent {
+        label "jenkins-conda"
+      }
+      steps {
+        container("conda") {
+	  withEnv(["ws=${pwd()}"]) {
+            dir("esgf-wget") {
+              git branch: "${esgf_wget_branch}", url: "${esgf_wget_url}"
+              sh "conda update -n base -c defaults conda -y"
+	      sh "conda install -n base -c conda-forge pytest wget curl"
+	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download.py"
+//	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download_not_allowed.py"
             }
           }
         }

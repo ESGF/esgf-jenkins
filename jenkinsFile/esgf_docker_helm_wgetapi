@@ -58,8 +58,8 @@ helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/ch
               git branch: "${esgf_wget_branch}", url: "${esgf_wget_url}"
               sh "conda update -n base -c defaults conda -y"
 	      sh "conda install -n base -c conda-forge pytest wget curl"
-	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_data.json tests/tests/test_download.py"
-	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_offset_limit.json tests/tests/test_download_offset_limit.py"
+	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download.py"
+//	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download_not_allowed.py"
             }
           }
         }
