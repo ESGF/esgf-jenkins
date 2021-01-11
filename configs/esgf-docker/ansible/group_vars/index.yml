@@ -11,7 +11,7 @@ wget_api_image_repository: "esgf-wget"
 
 wget_api:
   secret_key: "&5aq3uq6t8j2y)e2ul@*7jd20=iqp)u141@@7#zu3o3zup_fh+"
-  allowed_hosts: "*,localhost"
+  allowed_hosts: "*"
   solr_url: "https://esgf-node.llnl.gov/solr"
   solr_shards:
     - localhost:8983/solr
