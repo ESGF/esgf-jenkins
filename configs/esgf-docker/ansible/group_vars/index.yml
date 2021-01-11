@@ -5,7 +5,7 @@ solr_replicas:
     poll_interval: "06:00:00"
 
 wget_api_image_prefix: muryanto1
-wget_api_image_tag: "1.10"
+wget_api_image_tag: "1.11"
 wget_api_image_pull: "{{ image_pull }}"
 wget_api_image_repository: "esgf-wget"
 

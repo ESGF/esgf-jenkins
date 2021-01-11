@@ -31,14 +31,11 @@ pipeline {
               sh "conda update -n base -c defaults conda -y"
 	      sh "conda install -n base -c conda-forge ansible"
             }
-	    echo "XXX going to esgf-jenkins"
 	    dir("esgf-jenkins") {
               git branch: "${esgf_jenkins_branch}", url: "${esgf_jenkins_url}"
             }
-            echo "XXX withCredentials"
             withCredentials([sshUserPrivateKey(credentialsId: 'ssh-jenkins-greyworm2-rh7', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER'), usernamePassword(credentialsId: 'jenkins-on-greyworm2-rh7', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               dir("esgf-docker") {
-	        echo "XXX getting ${esgf_docker_url}"
                 git branch: "${esgf_docker_branch}", url: "${esgf_docker_url}"
                 sh "ls -l ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini"
 		sh "ls -l ./deploy/ansible/playbook.yml"
@@ -63,7 +60,7 @@ pipeline {
               sh "conda update -n base -c defaults conda -y"
 	      sh "conda install -n base -c conda-forge pytest wget curl"
 	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download.py"
-//	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download_not_allowed.py"
+	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download_not_allowed.py"
             }
           }
         }
