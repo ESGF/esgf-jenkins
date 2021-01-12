@@ -1,0 +1,14 @@
+image_tag: future-architecture
+
+data_mounts:
+  - host_path: /p/css03/scratch/CMIP6
+    mount_path: /data
+
+data_datasets:
+  - name: DATA
+    path: esgf_data
+    location: /data
+
+data_security_context_user: "56140"
+data_security_context_groups: [ "1000", "56141" ]
+

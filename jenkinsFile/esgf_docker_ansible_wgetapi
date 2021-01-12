@@ -1,0 +1,71 @@
+// parameters
+// esgf_wget_branch, ex: "add_parameterized_tests"
+// esgf_docker_branch, ex: "wget_api_install_values"
+// wget_api_host_url, ex: "http://greyworm2-rh7.llnl.gov"
+// esgf_jenkins_branch, ex: "add_esgf_docker"
+
+esgf_wget_url = "https://github.com/esgf/esgf-wget.git"
+esgf_jenkins_url = "https://github.com/esgf/esgf-jenkins.git"
+
+// esgf_docker_url is the github repo of esgf-docker that has the helm chart to be tested.
+// This workflow assumes there is a 'deploy/kubernetes/chart/my_values.yaml' under that repo.
+esgf_docker_url = "https://github.com/muryanto1/esgf-docker.git"
+
+pipeline {
+  agent none
+  environment {
+    REGISTRY = "${env.BRANCH_NAME == "master" ? env.REGISTRY_PUBLIC : env.REGISTRY_PRIVATE}"
+    CACHE_TYPE = "local"
+    CACHE_PATH = "/nfs/buildkit-cache"
+  }
+  stages {
+    stage("Setup") {
+      agent {
+        label "jenkins-conda"
+      }
+      steps {
+        container("conda") {
+	  withEnv(["ws=${pwd()}"]) {
+            dir("esgf-wget") {
+              git branch: "${esgf_wget_branch}", url: "${esgf_wget_url}"
+              sh "conda update -n base -c defaults conda -y"
+	      sh "conda install -n base -c conda-forge ansible"
+            }
+	    dir("esgf-jenkins") {
+              git branch: "${esgf_jenkins_branch}", url: "${esgf_jenkins_url}"
+            }
+            withCredentials([sshUserPrivateKey(credentialsId: 'ssh-jenkins-greyworm2-rh7', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER'), usernamePassword(credentialsId: 'jenkins-on-greyworm2-rh7', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+              dir("esgf-docker") {
+                git branch: "${esgf_docker_branch}", url: "${esgf_docker_url}"
+                sh "ls -l ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini"
+		sh "ls -l ./deploy/ansible/playbook.yml"
+		sh "cat ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini"
+		sh "cat ${ws}/esgf-docker/deploy/ansible/roles/index/templates/esgf_wgetapi_allowed_projects.json.j2"
+                sh "bash -c 'export ANSIBLE_HOST_KEY_CHECKING=False; export TERM=vt100; export ANSIBLE_NOCOWS=1; ansible-playbook -i ${ws}/esgf-jenkins/configs/esgf-docker/ansible/greyworm2-rh7.inventory.ini -v --become-user root --user ${SSH_USER} --become-method=sudo --private-key ${SSH_KEY} --extra-vars \"ansible_become_user=root ansible_become_password=${PASSWORD}\" ./deploy/ansible/playbook.yml'"
+	      }
+            }
+          }
+        }
+      }
+    }
+    stage("Test") {
+      agent {
+        label "jenkins-conda"
+      }
+      steps {
+        container("conda") {
+	  withEnv(["ws=${pwd()}"]) {
+            dir("esgf-wget") {
+              git branch: "${esgf_wget_branch}", url: "${esgf_wget_url}"
+              sh "conda update -n base -c defaults conda -y"
+	      sh "conda install -n base -c conda-forge pytest wget curl"
+	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download.py"
+	      sh "export WGET_API_HOST_URL=${wget_api_host_url}; pytest --capture=tee-sys --data ${ws}/esgf-wget/tests/test_data/test_download.json tests/tests/test_download_not_allowed.py"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
