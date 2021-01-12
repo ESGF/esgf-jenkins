@@ -55,6 +55,8 @@ helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/ch
         container("conda") {
 	  withEnv(["ws=${pwd()}"]) {
             dir("esgf-wget") {
+              echo "...sleep for 20 seconds to give the containers to come up fully..."
+              sleep 20
               git branch: "${esgf_wget_branch}", url: "${esgf_wget_url}"
               sh "conda update -n base -c defaults conda -y"
 	      sh "conda install -n base -c conda-forge pytest wget curl"
