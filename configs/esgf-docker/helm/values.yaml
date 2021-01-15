@@ -65,7 +65,7 @@ data:
       mountPath: /data
       volumeSpec:
         hostPath:
-          path: /p/css03/scratch/CMIP6
+          path: /p/css03/esgf_publish/CMIP6
       mountOptions:
         mountPropagation: HostToContainer
 
