@@ -22,10 +22,10 @@ pipeline {
   stages {
     stage("Deploy") {
       agent {
-        label "jenkins-buildkit"
+        label "utils"
       }
       steps {
-        container(name: "buildkit", shell: "/bin/sh") {
+        container(name: "utils") {
           withEnv(["ws=${pwd()}"]) {	
             dir("esgf-docker") {
               git branch: "${esgf_docker_branch}", url: "${esgf_docker_url}"
