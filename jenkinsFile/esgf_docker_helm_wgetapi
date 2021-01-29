@@ -26,6 +26,7 @@ pipeline {
       }
       steps {
         container(name: "utils") {
+          sh "cat configs/esgf-docker/helm/values.yaml"
           withEnv(["ws=${pwd()}"]) {	
             dir("esgf-docker") {
               git branch: "${esgf_docker_branch}", url: "${esgf_docker_url}"
