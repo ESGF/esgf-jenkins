@@ -1,7 +1,7 @@
 
 # The hostname for the deployment
 # hostname: localhost
-hostname: nimbus15.llnl.gov
+hostname: nimbus1.llnl.gov
 
 ###
 # Image defaults
@@ -165,7 +165,10 @@ data:
     startTimeout: 300
     # The resource allocations for the THREDDS container
     # See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-    resources: {}
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
     # Extra environment variables for the THREDDS container
     # See https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
     extraEnv: []
@@ -198,7 +201,10 @@ data:
     hpa: {}
     # The resource allocations for the file server container
     # See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-    resources: {}
+    resources:
+      limits:
+        cpu: 1
+        memory: 2Gi
     # Extra environment variables for the file server container
     # See https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
     extraEnv: []
@@ -244,7 +250,10 @@ index:
     # The default resource allocations for all Solr containers
     # Can be overridden on a per-shard basis
     # See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-    resources: {}
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
     # Additional labels for all Solr resources
     labels: {}
     # The node selector for Solr pods
@@ -302,7 +311,10 @@ index:
     replicaCount: 1
     # The resource allocations for the search container
     # See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-    resources: {}
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
     # Extra environment variables for the search container
     # See https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
     extraEnv: []
