@@ -39,6 +39,7 @@ pipeline {
 helm repo add stable https://charts.helm.sh/stable --ca-file /ssl/cspca.crt
 helm dependency build deploy/kubernetes/chart
 cp ${ws}/esgf-jenkins/configs/esgf-docker/helm/values.yaml deploy/kubernetes/chart/my_values.yaml
+helm -n development delete esgf || exit 1
 helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/chart/my_values.yaml
               """
               }
