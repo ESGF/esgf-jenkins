@@ -22,10 +22,10 @@ pipeline {
   stages {
     stage("Deploy") {
       agent {
-        label "jenkins-buildkit"
+        label "utils"
       }
       steps {
-        container(name: "buildkit", shell: "/bin/sh") {
+        container(name: "utils") {
           withEnv(["ws=${pwd()}"]) {	
             dir("esgf-docker") {
               git branch: "${esgf_docker_branch}", url: "${esgf_docker_url}"
@@ -38,8 +38,9 @@ pipeline {
                 sh """
 helm repo add stable https://charts.helm.sh/stable --ca-file /ssl/cspca.crt
 helm dependency build deploy/kubernetes/chart
-cp ${ws}/esgf-jenkins/configs/esgf-docker/helm/values.yaml deploy/kubernetes/chart/my_values.yaml
-helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/chart/my_values.yaml
+cp ${ws}/configs/esgf-docker/helm/values.yaml deploy/kubernetes/chart/my_values.yaml
+helm -n development delete esgf || true
+helm -n development install esgf deploy/kubernetes/chart -f deploy/kubernetes/chart/my_values.yaml --wait --timeout 300s
               """
               }
 	    }
