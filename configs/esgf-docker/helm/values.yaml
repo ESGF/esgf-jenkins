@@ -62,10 +62,10 @@ data:
   #   name (optional): The name for the volume - if not given, this is derived from the mount path
   mounts:
     - name: data
-      mountPath: /data
+      mountPath: /css03_data
       volumeSpec:
         hostPath:
-          path: /p/css03/esgf_publish/CMIP6
+          path: /p/css03/esgf_publish
       mountOptions:
         mountPropagation: HostToContainer
 
@@ -87,9 +87,9 @@ data:
   #   location: The location of the dataset *inside the container* (see mounts above)
   #   filters (optional): A list of filter specifications for the datasetScan element
   datasets:
-    - name: CMIP6
-      path: esgf_data
-      location: /data
+    - name: CSS03
+      path: css03_data
+      location: /css03_data
 
     # e.g.
     # - name: CMIP5
@@ -162,7 +162,7 @@ data:
       #         averageUtilization: 70
     # The startup time for the THREDDS container
     # For large pre-existing catalogs, this maybe need to be large (default 5 mins)
-    startTimeout: 300
+    startTimeout: 600
     # The resource allocations for the THREDDS container
     # See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
     resources:
